@@ -3,7 +3,7 @@ import loginStyle from '~/styles/home.css'
 
 export default function Login() {
   return (
-    <main id="content">
+    <main id="block-container">
       <h1>Opportune</h1>
       <p>Tuning the opportunities you will have at your company to the maximum.</p>
 	  <Form method="post" id="login">
@@ -22,6 +22,7 @@ export default function Login() {
         	<Link to="/dashboard">Login</Link>
      	</p>
 	  </Form>
+	  <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
     </main>
   );
 }

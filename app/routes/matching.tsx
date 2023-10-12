@@ -6,14 +6,18 @@ import MainNavigation from '~/components/MainNav';
 
 export default function Matching() {
 	return (
-		<main id="content">
-			<h1>Matching Survey</h1>
-			<header>
+		<div id="flex-container">
+			<div id="sidebar">
 				<MainNavigation />
-			</header>
-			<p>Start your internship off in the team of best opportunity.</p>
-			<Survey />
-		</main>
+			</div>
+			<div id="content">
+				<h1>Matching Survey</h1>
+				<Survey />
+				<p className="cta">
+					<Link to="/dashboard">Back</Link>
+				</p>
+			</div>
+		</div>
 	)
 }
 

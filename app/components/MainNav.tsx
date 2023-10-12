@@ -1,27 +1,28 @@
-import { NavLink } from '@remix-run/react';
+import { Link } from '@remix-run/react';
+import { NavData } from '~/components/NavData';
+import styles from '~/styles/main.css'
 
-function MainNavigation() {
+export default function MainNavigation() {
   return (
     <nav id="main-navigation">
-      <ul>
-        <li className="nav-item">
-          <NavLink to="/dashboard">Home</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/profile">Profile</NavLink>
-        </li>
-		<li className="nav-item">
-          <NavLink to="/teams">Teams</NavLink>
-        </li>
-		<li className="nav-item">
-          <NavLink to="/matching">Matching</NavLink>
-        </li>
-		<li className="nav-item">
-          <NavLink to="/onboarding">Onboarding</NavLink>
-        </li>
-      </ul>
-    </nav>
+		<ul className="nav-list">
+			{NavData.map((val, key) => {
+				return (
+					<li className="nav-row" key={key}>
+						<Link to={val.link}>
+							<div>
+								{val.icon}
+								{val.title}
+							</div>
+						</Link>
+					</li>
+				)
+			})}
+		</ul>
+	</nav>
   );
 }
 
-export default MainNavigation;
+export function links() {
+	return [{ rel: 'stylesheet', href: styles }];
+}

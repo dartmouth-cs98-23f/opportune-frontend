@@ -1,7 +1,22 @@
-#content {
+#flex-container {
+	display: flex;
 	text-align: center;
 	color: var(--color-primary-10);
-  }
+}
+
+#block-container {
+	text-align: center;
+	color: var(--color-primary-10);
+}
+
+#sidebar {
+	width: 20%;
+}
+
+#content {
+	flex: 1;
+	padding: 20px;
+}
   
 .cta {
 	margin-top: 2rem;

@@ -3,7 +3,7 @@ import loginStyle from '~/styles/home.css'
 
 export default function SignUp() {
   return (
-    <main id="content">
+    <div id="block-container">
       	<h1>Opportune</h1>
       	<Form method="post" id="login">
 			<p>
@@ -18,9 +18,8 @@ export default function SignUp() {
 		<p className="cta">
 			<Link to="/login">Confirm</Link>
 		</p>
-		
-
-    </main>
+		<p>Already have an account? <Link to="/login">Sign in</Link></p>
+    </div>
   );
 }
 

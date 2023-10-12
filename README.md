@@ -11,9 +11,8 @@ TODO:  descriptions of code organization and tools and libraries used
 
 ## Setup
 
-TODO: how to get the project dev environment up and running, npm install etc
-
 ```sh
+npm install
 npm run dev
 ```
 
@@ -26,7 +25,3 @@ Stephen Wang, Karina Montiel, Ryan Luu
 
 ## Acknowledgments
 - [Remix Docs](https://remix.run/docs)
-
-
-# Welcome to Remix!
-
