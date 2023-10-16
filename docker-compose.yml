@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  # Backend service
+  opportune_frontend:
+    build: .
+    ports: 
+      # local->container
+      - 4000:3000
+    environment:
+      PORT: 3000
+    
