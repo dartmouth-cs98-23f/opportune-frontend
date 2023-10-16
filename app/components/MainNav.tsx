@@ -1,6 +1,6 @@
-import { Link } from '@remix-run/react';
 import { NavData } from '~/components/NavData';
-import styles from '~/styles/main.css'
+import { NavLink } from 'react-router-dom';
+import styles from '~/styles/home.css'
 
 export default function MainNavigation() {
   return (
@@ -9,12 +9,12 @@ export default function MainNavigation() {
 			{NavData.map((val, key) => {
 				return (
 					<li className="nav-row" key={key}>
-						<Link to={val.link}>
+						<NavLink to={val.link}>
 							<div>
 								{val.icon}
 								{val.title}
 							</div>
-						</Link>
+						</NavLink>
 					</li>
 				)
 			})}

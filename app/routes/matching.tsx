@@ -2,7 +2,6 @@ import { Link } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import Survey from '~/components/Survey'
 import MainNavigation from '~/components/MainNav';
-// import BackButton from '~/components/BackButton';
 
 export default function Matching() {
 	return (
