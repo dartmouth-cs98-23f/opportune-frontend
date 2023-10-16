@@ -9,4 +9,10 @@ services:
       - 4000:3000
     environment:
       PORT: 3000
-    
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    name: opportune-frontend-network
+    driver: bridge
