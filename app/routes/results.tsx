@@ -1,8 +1,7 @@
 import { Link } from '@remix-run/react';
 import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import SurveyUtil from '~/components/survey_qs/SurveyUtil';
 import Progress from '~/components/survey_qs/Progress';
 import Scale from '~/components/survey_qs/Scale';
@@ -18,32 +17,13 @@ const questionList = [
   <Textbox question="What was the rationale behind your first choice team?" />, <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 ]
 
-// let responseData = Array(questionList.length)
 
-// for (let i = 0; i < responseData.length; i++) {
-// 	let responses = {};
-// 	if (questionList[i].type === Scale) {
-// 		responses[`question-${i}`] = -1;
-// 	} else if (questionList[i].type === Ranking) {
-// 		responses[`question-${i}`] = [];
-// 	} else  {
-// 		responses[`question-${i}`] = "";
-// 	} 
-// }
-
-
-export default function Matching() {
-	// TODO: state management of responses
-	const {step, stepComp, isFirstStep, isLastStep,
-		   previous, next, getProgress} = SurveyUtil(questionList)
-
+export default function Results() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo" src="opportune_logo.png"></img>
-				<Link className='logout-button' to="/login"> 
-					<ArrowLeftOnRectangleIcon /> 
-				</Link>
+				<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 			</div>
 			<div id="content">
 				<h2>Welcome Oppenheim </h2>
@@ -51,16 +31,11 @@ export default function Matching() {
 					<MainNavigation />
 				</div>
 				<motion.div initial={{ opacity: 0 }}
-			     animate={{ opacity: 1 }}
-			     exit={{ opacity: 0 }}
-				 transition={{ duration: 0.5 }}>
-					<Progress pct={getProgress()}/>
-					{stepComp}
-					<p className="cta">
-						{isFirstStep ? <Link to="" onClick={previous}>Previous</Link> : null}
-						{isLastStep ? <Link to="" onClick={next}>Next</Link> : null}
-						{!isLastStep ? <Link to="/results">View Results </Link> : null}
-					</p>
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+							transition={{ duration: 0.3 }}>
+					<p>Matching results will be out on July 2.</p>
+					<p className="cta"> <Link to="/matching">Edit Responses </Link></p>
 				</motion.div>
 			</div>
 		</div>

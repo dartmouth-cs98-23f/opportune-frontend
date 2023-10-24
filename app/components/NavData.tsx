@@ -1,37 +1,36 @@
 import { Link } from '@remix-run/react';
-import React from 'react'; 
-import { Squares2X2Icon, UserCircleIcon, CalendarDaysIcon,
-         UserGroupIcon, ArrowLeftOnRectangleIcon, FireIcon } from '@heroicons/react/24/outline'
+import { UserCircleIcon, UserGroupIcon, 
+	     FireIcon, PaperAirplaneIcon, RectangleStackIcon} from '@heroicons/react/24/outline'
 
 export const NavData = [
 	{
-		title: "Dashboard",
-		icon: <Squares2X2Icon />,
-		link: "/dashboard"
-	},
-	{
-		title: "Profile",
+		title: "Basic Info",
 		icon: <UserCircleIcon />,
-		link: "/profile"
+		link: "/profile",
+		class: null
 	},
 	{
-		title: "Teams",
+		title: "Available teams",
 		icon: <UserGroupIcon />,
-		link: "/teams"
+		link: "/teams",
+		class: null
 	},
 	{
 		title: "Matching",
 		icon: <FireIcon />,
-		link: "/matching"
+		link: "/matching",
+		class: null
 	},
 	{
-		title: "Events",
-		icon: <CalendarDaysIcon />,
-		link: "/events"
+		title: "Results",
+		icon: <PaperAirplaneIcon />,
+		link: "/results",
+		class: null
 	},
 	{
-		title: "Logout",
-		icon: <ArrowLeftOnRectangleIcon />,
-		link: "/login"
+		title: "Project",
+		icon: <RectangleStackIcon />,
+		link: "",
+		class: "icon-locked"
 	},
 ]

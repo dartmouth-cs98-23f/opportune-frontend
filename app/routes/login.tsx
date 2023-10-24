@@ -1,26 +1,21 @@
 import { Link, Form } from '@remix-run/react';
 import loginStyle from '~/styles/home.css'
 
+// required tags on username and password
 export default function Login() {
   return (
-    <main id="block-container">
+    <main className="block-container">
       <h1>Opportune</h1>
       <p>Tuning the opportunities you will have at your company to the maximum.</p>
 	  <Form method="post" id="login">
+		<p><b>Username:</b> john.doe.24@dartmouth.edu </p>
 		<p>
-			<label htmlFor="username">Username</label>
-			<input type="text" id="username" name="username" required />
-		</p>
-		<p>
-			<label htmlFor="password">Password</label>
-			<input type="password" name="password" required />
+			<label htmlFor="password"><b>Password:</b></label>
+			<input type="password" name="password" />
 		</p>
 		<div className="form-actions">
-			<button> {'Login'} </button>
+			<Link to="/profile"> {'Login'} </Link>
 		</div>
-		<p className="cta">
-        	<Link to="/dashboard">Login</Link>
-     	</p>
 	  </Form>
 	  <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
     </main>

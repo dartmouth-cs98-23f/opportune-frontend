@@ -1,55 +1,87 @@
-#block-container {
+/* containers */
+.block-container {
 	text-align: center;
 	color: var(--color-primary-10);
+	height: 100vh;
 }
 
-#flex-container {
+.flex-container {
 	display: flex;
+	flex-direction: column;
 	text-align: center;
+	background-color: teal;
 	color: var(--color-primary-10);
+	height: 100vh;
+	overflow: auto;
 }
 
+/* flex elements */
 #sidebar {
-	flex: 0.15;
+	flex: 0.05;
+	flex-basis: 0%;
+	background-color: rgba(34, 80, 108);
+}
+
+#sidebar a {
+	color: var(--color-primary-10);
+	transition: 0.3s;
+}
+
+#sidebar a:hover,
+#sidebar a.active {
+	color: var(--color-secondary-200);
+	transition: 0.3s;
+}
+
+.logout-button {
+	display: inline;
+	width: 50px;
+	height: 50px;
+	float: right;
+	margin-right: 10px;
+}
+
+.profile-button {
+	display: inline;
+	width: 50px;
+	height: 50px;
+	float: right;
 }
 
 #content {
-	flex: 1;
-	justify-content: space-between;
+	flex: 0.95;
+	flex-basis: 0%;
 	padding: 20px;
-	background-color: teal;
 }
  
 /* NAV */
 #main-navigation {
 	padding: 2rem 5%;
-	background-color: rgba(34, 80, 108);
+	height: 100%;
 }
   
 #main-navigation ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	display: inline-block;
 	gap: 1.5rem;
 	justify-content: center;
-}
-
-#main-navigation li {
-	list-style: none;
-	padding: 0;
+	text-decoration: none;
 }
 
 #main-navigation li svg {
-	transform: scale(0.75);
+	width: 50px;
+	height: 50px;
 }
 
 .nav-row {
-	margin-bottom: 35px;
-	width: 100%;
+	margin-left: 50px;
+	margin-right: 50px;
+	display: inline-block;
 }
 
 .nav-row a {
+	list-style: none;
 	text-decoration: none;
 	color: var(--color-primary-10);
 	transition: 0.3s;
@@ -61,20 +93,113 @@
 	transition: 0.3s;
 }
 
+.icon-locked {
+	opacity: 0.5;
+	color: lightgrey;
+}
+
+.icon-title {
+	margin-top: 2px;
+}
+
+/* QUESTIONS */
+
+/* scale */
+.option-list {
+	list-style: none;
+}
+
+.option-bubble {
+	display: inline;
+}
+
+.option-bubble button {
+	text-decoration: none;
+	border-radius: 50%;
+	background-color: lightskyblue;
+	margin: 15px;
+	padding: 10px;
+	transition: 0.3s;
+}
+
+.option-bubble button:hover,
+.option-bubble button.active {
+	background-color:var(--color-secondary-100);
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+/* ranking */
+.rank-card {
+	background-color: rgba(212, 212, 223, 0.55);
+	display: block;
+	margin: 20px auto;
+	padding: 1px;
+	width: 20%;
+	border-radius: 10px;
+	transition: 0.3s;
+}
+
+.rank-card:hover {
+	cursor: pointer;
+	background-color: rgba(212, 212, 223, 0.45);
+	transition: 0.3s;
+}
+
+.rank-box {
+	background-color: rgba(224, 255, 255, 0.33);
+	padding: 15px;
+	border-radius: 10px;
+}
+
+/* text */
+.text-q {
+	width: 75%;
+	background-color: rgba(255, 254, 254, 0.5);
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	color: teal;
+}
+
+/* progress */
+.progress-container {
+	background-color: gainsboro;
+	border-radius: 10px;
+	width: 100%;
+}
+
+#progress {
+	padding: 5px;
+	background-color: skyblue;
+	border-radius: 10px;
+	width: 0%;
+	transition: width 0.7s;
+}
+
+
 /* TEAMS */
 .team-box {
 	text-align: left;
 	justify-content:center;
-	background-color: rgba(128, 128, 128, 0.7);
-	height: 25%;
+	background-color: rgba(135, 207, 235, 0.33);
+	height: 20%;
 	border-radius: 10px;
+	transition: 0.3s;
+}
+
+.team-box:hover {
+	background-color: rgba(135, 207, 235, 0.40);
+	transition: 0.3s;
 }
 
 .team-text {
+	margin: 15px;
 	padding: 5px;
 }
 
-/* button */
+/* BUTTONS */
 .cta {
 	margin-top: 2rem;
 }
@@ -83,6 +208,7 @@
 	text-decoration: none;
 	background-color: var(--color-secondary-100);
 	color: var(--color-primary-800);
+	margin: 10px;
 	padding: 0.5rem 2rem;
 	border-radius: 4px;
 	font-size: 1.5rem;
@@ -90,4 +216,42 @@
   
 .scta a:hover {
 	background-color: var(--color-secondary-200);
+}
+
+/* FORMS */
+.form-actions a {
+	text-decoration: none;
+	background-color: var(--color-secondary-100);
+	color: var(--color-primary-800);
+	margin: 10px;
+	padding: 0.5rem 2rem;
+	border-radius: 4px;
+	font-size: 1.5rem;
+}
+
+.education-form input, 
+.education-form label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.education-form input {
+	text-align: center;
+	margin: auto;
+}
+
+/* LOGO */
+.opportune-logo {
+	display: inline;
+	width: 40px;
+    height: 40px;
+	float: left;
+	margin-left: 10px;
+	margin-top: 5px;
+	transition: 0.3s;
+}
+
+.opportune-logo:hover {
+	opacity: 0.85;
+	transition: 0.3s;
 }

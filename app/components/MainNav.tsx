@@ -10,9 +10,9 @@ export default function MainNavigation() {
 				return (
 					<li className="nav-row" key={key}>
 						<NavLink to={val.link}>
-							<div>
+							<div className={val.class ? val.class : ''}>
 								{val.icon}
-								{val.title}
+								<p className="icon-title">{val.title}</p>
 							</div>
 						</NavLink>
 					</li>

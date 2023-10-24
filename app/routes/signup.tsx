@@ -3,7 +3,7 @@ import loginStyle from '~/styles/home.css'
 
 export default function SignUp() {
   return (
-    <div id="block-container">
+    <div className="block-container">
       	<h1>Opportune</h1>
       	<Form method="post" id="login">
 			<p>

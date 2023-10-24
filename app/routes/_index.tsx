@@ -3,7 +3,7 @@ import loginStyle from '~/styles/home.css';
 
 export default function Index() {
   return (
-    <div id="block-container">
+    <div className="block-container">
       	<h1>Opportune</h1>
       	<p>Tuning the opportunities you will have at your company to the maximum.</p>
 		<p className="cta">
