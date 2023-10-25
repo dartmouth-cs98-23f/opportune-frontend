@@ -1,6 +1,6 @@
 import styles from '~/styles/home.css';
 import { useState } from 'react';
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 
 interface Question {
@@ -16,10 +16,7 @@ export default function Scale(props:Question) {
   }
   
   return (
-	<motion.div initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				exit={{ opacity: 0 }}
-				transition={{ duration: 0.4 }}>
+	<div>
 		<p>{props.question}</p>
 		<div>
 			<ul className='option-list'>
@@ -33,7 +30,7 @@ export default function Scale(props:Question) {
 				})}
 			</ul>
 		</div>
-	</motion.div>
+	</div>
   )
 }
 

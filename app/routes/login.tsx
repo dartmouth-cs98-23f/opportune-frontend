@@ -7,20 +7,27 @@ export default function Login() {
     <main className="block-container">
       <h1>Opportune</h1>
       <p>Tuning the opportunities you will have at your company to the maximum.</p>
-	  <Form method="post" id="login">
-		<p><b>Username:</b> john.doe.24@dartmouth.edu </p>
+	  <Form action="/accounts?index" method="get" id="login">
+	 	 <p>
+			<label htmlFor="username">Username: </label>
+			<input type="text" id="username" name="username" required />
+		</p>
 		<p>
 			<label htmlFor="password"><b>Password:</b></label>
 			<input type="password" name="password" />
 		</p>
 		<div className="form-actions">
-			<Link to="/profile"> {'Login'} </Link>
+			<p className="cta">
+				<Link to="/profile">Login</Link>
+			</p>
 		</div>
 	  </Form>
 	  <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
     </main>
   );
 }
+
+/* <button type="submit">Login</button> */
 
 export function links() {
 	return [{ rel: 'stylesheet', href: loginStyle }];

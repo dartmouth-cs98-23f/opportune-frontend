@@ -9,7 +9,7 @@ import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 const questionList = [
   <PlainText text="Let's get started!" />,
@@ -50,10 +50,7 @@ export default function Matching() {
 				<div id="menubar">
 					<MainNavigation />
 				</div>
-				<motion.div initial={{ opacity: 0 }}
-			     animate={{ opacity: 1 }}
-			     exit={{ opacity: 0 }}
-				 transition={{ duration: 0.5 }}>
+				<div>
 					<Progress pct={getProgress()}/>
 					{stepComp}
 					<p className="cta">
@@ -61,12 +58,17 @@ export default function Matching() {
 						{isLastStep ? <Link to="" onClick={next}>Next</Link> : null}
 						{!isLastStep ? <Link to="/results">View Results </Link> : null}
 					</p>
-				</motion.div>
+				</div>
 			</div>
 		</div>
 	)
 }
 
+/* motion.div initial={{ opacity: 0 }}
+			     animate={{ opacity: 1 }}
+			     exit={{ opacity: 0 }}
+				 transition={{ duration: 0.5 }} */
+		
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];
 }

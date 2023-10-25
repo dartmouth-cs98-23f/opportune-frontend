@@ -2,7 +2,7 @@ import { Link } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 const teamInfo = [
 	{
@@ -35,11 +35,7 @@ export default function Teams() {
 					<MainNavigation />
 				</div>
 				{teamInfo.map((team) => {
-					return <motion.div className="team-box"
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							transition={{ duration: 0.3 }}>
+					return <div className="team-box">
 						<div className="team-text">
 							<h3>{team.name}</h3>
 							<p> {team.description} </p>
@@ -47,7 +43,7 @@ export default function Teams() {
 								<li> {team.tech} </li>
 							</p>
 						</div>
-					</motion.div>
+					</div>
 				})}
 				<p className="cta">
 				    <Link to="/matching">Next</Link>

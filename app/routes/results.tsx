@@ -8,7 +8,7 @@ import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 const questionList = [
   <PlainText text="Let's get started!" />,
@@ -30,13 +30,10 @@ export default function Results() {
 				<div id="menubar">
 					<MainNavigation />
 				</div>
-				<motion.div initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							transition={{ duration: 0.3 }}>
+				<div>
 					<p>Matching results will be out on July 2.</p>
 					<p className="cta"> <Link to="/matching">Edit Responses </Link></p>
-				</motion.div>
+				</div>
 			</div>
 		</div>
 	)

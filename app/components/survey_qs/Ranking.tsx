@@ -4,7 +4,7 @@ import TeamCard from '~/components/survey_qs/TeamCard';;
 import { Link } from '@remix-run/react';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 
 // generate list of teams and slots
 const TeamList = [
@@ -38,10 +38,7 @@ export default function Ranking(props:Question) {
   }
 
   return (
-	<motion.div initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-			    exit={{ opacity: 0 }}
-				transition={{ duration: 0.4 }}>
+	<div>
 		<DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 		<p>{props.question}</p>
 		    
@@ -55,7 +52,7 @@ export default function Ranking(props:Question) {
 			</div>
 			
 		</DndContext>
-	</motion.div>
+	</div>
   )
 
 }
