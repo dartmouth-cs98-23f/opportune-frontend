@@ -1,5 +1,7 @@
 # Opportune
 
+## About
+ 
 <img src="team.jpeg" alt="team" width="200"/>
 
 A platform to tune an internship opportunity to the fullest. After interns receive an offer at a company, we help them get to know the teams and match them to the team of best fit.
@@ -8,6 +10,7 @@ After the matching, we hope to provide a dedicated hub for the intern so that th
 ## Architecture
 Frontend: Remix Run, HTML/CSS
 Backend: Express, MongoDB
+- Remix-Run: Remix is a seamless server and browser runtime that provides snappy page loads and instant transitions by leveraging distributed systems and native browser features instead of clunky static builds. Built on the Web Fetch API (instead of Node) it can run anywher
 
 Frontend
 * `/` landing page
@@ -18,7 +21,6 @@ Frontend
 * `/profile` intern profile
 * `/teams` team information / meetings page
 * `/events`
-
 
 ## Setup
 Frontend
@@ -32,11 +34,9 @@ Backend
 Matching Engine
 
 
-## Deployment
-TODO: how to deploy the project
-
 ## Authors
-Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
+CS98 Frontend Team: Stephen Wang, Karina Montiel, Ryan Luu
+
 
 ## Acknowledgments
 - [Remix Docs](https://remix.run/docs)
