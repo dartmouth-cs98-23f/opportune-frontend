@@ -4,6 +4,7 @@ services:
   # Backend service
   opportune_frontend:
     build: .
+    container_name: opportune_frontend
     ports: 
       # local->container
       - 4000:3000
