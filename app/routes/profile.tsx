@@ -10,7 +10,6 @@ import Scale from '~/components/survey_qs/Scale';
 						<UserCircleIcon />
 					</Link> */}
 
-{/* <MainNavigation /> */}
 export default function Profile() {
 	return (
 		<div className="flex-container">
@@ -28,6 +27,39 @@ export default function Profile() {
 				<div className="form-container">
 					<div>
 						<Form action="/" method="post" className="education-form">
+							<h3>Personal</h3>
+							
+							<div className="field-container">
+								<label htmlFor="first-name"> First Name </label>
+								<input name="first-name" type="text" />
+							</div>
+
+							<div className="field-container">
+								<label htmlFor="last-name"> Last Name </label>
+								<input name="last-name" type="text" />
+							</div>
+
+							<div className="field-container">
+								<label htmlFor="race"> Race </label>
+								<select id="race" name="race">
+									<option value="White">White</option>
+									<option value="Black">Black</option>
+									<option value="Hispanic/Latino">Hispanic/Latino</option>
+									<option value="Asian">Asian</option>
+									<option value="American Indian">American Indian</option>
+									<option value="Pacific Islander">Pacific Islander</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+
+							<div className="field-container">
+								<label htmlFor="sex"> Sex </label>
+								<select id="sex" name="sex">
+									<option value="Male">Male</option>
+									<option value="Female">Female</option>
+								</select>
+							</div>
+
 							<h3>Education</h3>
 							<div className="field-container">
 							<label htmlFor="school"> School </label>
@@ -41,8 +73,22 @@ export default function Profile() {
 							
 							<div className="field-container">
 							<label htmlFor="grad-month"> Graduation month </label>
-							<input name="grad-month" type="text" />
+							<select id="grad-month" name="grad-month">
+								<option value="January">January</option>
+								<option value="February">February</option>
+								<option value="March">March</option>
+								<option value="April">April</option>
+								<option value="May">May</option>
+								<option value="June">June</option>
+								<option value="July">July</option>
+								<option value="August">August</option>
+								<option value="September">September</option>
+								<option value="October">October</option>
+								<option value="November">November</option>
+								<option value="December">December</option>
+							</select>
 							</div>
+							
 
 							<div className="field-container">
 							<label htmlFor="grad-year"> Graduation year </label>
@@ -53,20 +99,8 @@ export default function Profile() {
 							<label htmlFor="major"> Major </label>
 							<input name="major" type="text" />
 							</div>
-							<p className="cta longer">
-								<button type="submit">Save</button>
-							</p>
-						</Form>
-					</div>
-					<div>
-						
-						<Form action="/profile" method="post" className="education-form">
-							<h3>Address and basic info</h3>
-							<div className="field-container">
-							<label htmlFor="full-name"> Full Name </label>
-							<input name="full-name" type="text" />
-							</div>
 
+							<h3>Address and basic info</h3>
 							<div className="field-container">
 							<label htmlFor="email-address"> Email Address </label>
 							<input name="email-address" type="text" />
@@ -78,7 +112,7 @@ export default function Profile() {
 							</div>
 
 							<div className="field-container">
-							<label htmlFor="city"> City </label>
+							<label htmlFor="city"> City  </label>
 							<input name="city" type="text" />
 							</div>
 
@@ -91,21 +125,18 @@ export default function Profile() {
 							<label htmlFor="zip"> Zip Code </label>
 							<input name="zip" type="text" />
 							</div>
-
-							<p className="cta longer">
-								<button type="submit">Save</button>
-							</p>
 						</Form>
-						<p className="cta bottom-right">
-							<Link to="/teams">Next</Link>
-						</p>
 					</div>
 				</div>
+				<p className="cta">
+					<Link to="/teams">Next</Link>
+				</p>
 			</div>
 		</div>
 	)
 }
 
+// https://egghead.io/blog/validating-remix-form-data-using-zod-and-typescript-in-action-functions
 
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

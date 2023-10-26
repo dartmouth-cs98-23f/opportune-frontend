@@ -15,21 +15,11 @@ const questionList = [
   <PlainText text="Let's get started!" />,
   <Scale question="How comfortable are you with Python?"/>,
   <Ranking id={2} question="Rank the following teams (best to worst)" />, 
-  <Textbox question="What was the rationale behind your first choice team?" />, <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
+  <Textbox question="What was the rationale behind your first choice team?" />, 
+  <Textbox question="What was the rationale behind your second choice team?" />,
+  <Textbox question="What was the rationale behind your third choice team?" />,
+  <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 ]
-
-// let responseData = Array(questionList.length)
-
-// for (let i = 0; i < responseData.length; i++) {
-// 	let responses = {};
-// 	if (questionList[i].type === Scale) {
-// 		responses[`question-${i}`] = -1;
-// 	} else if (questionList[i].type === Ranking) {
-// 		responses[`question-${i}`] = [];
-// 	} else  {
-// 		responses[`question-${i}`] = "";
-// 	} 
-// }
 
 
 export default function Matching() {

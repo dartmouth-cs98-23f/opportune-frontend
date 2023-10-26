@@ -5,7 +5,7 @@ import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 // import { motion } from 'framer-motion';
 
 
-export default function Results() {
+export default function Project() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
@@ -18,8 +18,8 @@ export default function Results() {
 					<MainNavigation />
 				</div>
 				<div>
-					<p>Matching results will be out on July 2.</p>
-					<p className="cta"> <Link to="/matching">Edit Responses </Link></p>
+					<p>You will be able to see your project details after you are matched on July 2.</p>
+					<p className="cta"> <Link to="/results">Back to Results </Link></p>
 				</div>
 			</div>
 		</div>

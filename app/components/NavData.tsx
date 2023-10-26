@@ -7,30 +7,30 @@ export const NavData = [
 		title: "Basic Info",
 		icon: <UserCircleIcon />,
 		link: "/profile",
-		class: null
+		class: "pointer"
 	},
 	{
 		title: "Available teams",
 		icon: <UserGroupIcon />,
 		link: "/teams",
-		class: null
+		class: "pointer"
 	},
 	{
 		title: "Matching",
 		icon: <FireIcon />,
 		link: "/matching",
-		class: null
+		class: "pointer"
 	},
 	{
 		title: "Results",
 		icon: <PaperAirplaneIcon />,
 		link: "/results",
-		class: null
+		class: "pointer"
 	},
 	{
 		title: "Project",
 		icon: <RectangleStackIcon />,
-		link: "",
-		class: "icon-locked"
+		link: "/project",
+		class: "pointer icon-locked"
 	},
 ]
