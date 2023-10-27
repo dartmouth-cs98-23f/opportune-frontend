@@ -10,10 +10,10 @@ export default function MainNavigation() {
 				return (
 					<li className="nav-row" key={key}>
 						<NavLink to={val.link}>
-							<div>
-								{val.icon}
-								{val.title}
+							<div className={val.class ? val.class : ''}>
+								<p className="icon-title">{val.title}</p>
 							</div>
+							
 						</NavLink>
 					</li>
 				)
@@ -22,6 +22,8 @@ export default function MainNavigation() {
 	</nav>
   );
 }
+
+// {val.icon}
 
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

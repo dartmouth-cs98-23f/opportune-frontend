@@ -1,5 +1,5 @@
 import { Link, Form } from '@remix-run/react';
-import { redirect } from '@remix-run/node';
+import { redirect, ActionFunctionArgs } from '@remix-run/node';
 import loginStyle from '~/styles/home.css';
 import axios from 'axios';
 
@@ -33,19 +33,19 @@ export async function action({
 export default function SignUp() {
 
   return (
-    <div id="block-container">
+    <div className="block-container">
       	<h1>Opportune</h1>
       	<Form method="post" action="/signup" id="login">
-			<p>
-				<label htmlFor="username">Pick a username: </label>
-				<input type="text" id="username" name="username" required />
-			</p>
-			<p>
-				<label htmlFor="password">Pick a strong password: </label>
-				<input type="password" name="password" required />
-			</p>	
-			<button type="submit">Submit</button>
-	  	</Form>
+          <p>
+            <label id="username">Pick a username: </label>
+            <input type="text" id="username" name="username" required />
+          </p>
+          <p>
+            <label id="password">Pick a strong password: </label>
+            <input type="password" name="password" required />
+          </p>
+          <button type="submit">Submit</button>
+	  	  </Form>
 		<p>Already have an account? <Link to="/login">Sign in</Link></p>
     </div>
   );

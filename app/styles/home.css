@@ -1,55 +1,94 @@
-#block-container {
+/* containers */
+.block-container {
 	text-align: center;
 	color: var(--color-primary-10);
+	height: 100vh;
 }
 
-#flex-container {
+.flex-container {
 	display: flex;
+	flex-direction: column;
 	text-align: center;
+	background-color: white;
 	color: var(--color-primary-10);
+	height: 100vh;
+	overflow: auto;
 }
 
+.horiz-flex-container {
+	display: flex;
+}
+
+/* flex elements */
 #sidebar {
-	flex: 0.15;
+	flex: 0.05;
+	flex-basis: 0%;
+	background-color: #22506C;
+}
+
+#sidebar a {
+	color: var(--color-primary-10);
+	transition: 0.3s;
+}
+
+#sidebar a:hover,
+#sidebar a.active {
+	color: var(--color-secondary-200);
+	transition: 0.3s;
+}
+
+.logout-button {
+	display: inline;
+	width: 50px;
+	height: 50px;
+	float: right;
+	margin-right: 10px;
+}
+
+.profile-button {
+	display: inline;
+	width: 50px;
+	height: 50px;
+	float: right;
 }
 
 #content {
-	flex: 1;
-	justify-content: space-between;
+	flex: 0.95;
+	flex-basis: 0%;
 	padding: 20px;
-	background-color: teal;
 }
  
 /* NAV */
 #main-navigation {
-	padding: 2rem 5%;
-	background-color: rgba(34, 80, 108);
+	padding: 2rem 0;
+	height: 100%;
+	display: inline-block;
 }
   
 #main-navigation ul {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	display: inline-block;
 	gap: 1.5rem;
 	justify-content: center;
-}
-
-#main-navigation li {
-	list-style: none;
-	padding: 0;
+	text-decoration: none;
 }
 
 #main-navigation li svg {
-	transform: scale(0.75);
+	width: 40px;
+	height: 40px;
 }
 
 .nav-row {
-	margin-bottom: 35px;
-	width: 100%;
+	margin-left: 10px;
+	margin-right: 10px;
+	display: inline-block;
 }
 
 .nav-row a {
+	pointer-events: none;
+   	cursor: default;
+	list-style: none;
 	text-decoration: none;
 	color: var(--color-primary-10);
 	transition: 0.3s;
@@ -57,37 +96,271 @@
   
 .nav-row a:hover,
 .nav-row a.active {
-	color: var(--color-secondary-200);
+	color: white;
 	transition: 0.3s;
 }
+
+.icon-title {
+	color: #F5E6C9;
+	padding: 8px;
+	margin: 0;
+}
+
+.nav-row a.active .icon-title {
+	display: inline-block;
+	color: white;
+}
+
+/* nav pointer shape */
+/* https://css-tricks.com/the-shapes-of-css/ */
+.pointer {
+	width: 180px;
+	height: 40px;
+	position: relative;
+	background: #F5E6C9;
+	transition: 0.3s;
+}
+
+.pointer:after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-left: 20px solid white;
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+}
+
+.pointer:before {
+	content: "";
+	position: absolute;
+	right: -20px;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-left: 20px solid #F5E6C9;
+	border-top: 20px solid transparent;
+	border-bottom: 20px solid transparent;
+	transition: border-left 0.3s;
+}
+
+
+/* regular styles */
+.nav-row a.active .pointer {
+	background-color: #22506C;
+}
+
+.nav-row a.active .pointer:before {
+	border-left: 20px solid #22506C;
+	transition: border-left 0.3s;
+}
+
+/* locked styles */
+.pointer.icon-locked {
+	background-color: lightgrey;
+}
+
+.pointer.icon-locked:before {
+	border-left: 20px solid lightgrey;
+}
+
+.pointer.icon-locked .icon-title {
+	color: lightgrey;
+}
+
+.nav-row a.active .pointer.icon-locked {
+	background-color: darkgrey;
+}
+
+.nav-row a.active .pointer.icon-locked:before {
+	border-left: 20px solid darkgrey;
+}
+
+/* QUESTIONS */
+
+/* scale */
+
+/* ranking */
+.rank-card {
+	background-color: rgba(212, 212, 223, 0.55);
+	display: block;
+	margin: 20px auto;
+	padding: 1px;
+	width: 20%;
+	border-radius: 10px;
+	transition: 0.3s;
+}
+
+.rank-card:hover {
+	cursor: pointer;
+	background-color: rgba(212, 212, 223, 0.45);
+	transition: 0.3s;
+}
+
+.rank-box {
+	background-color: #22506c10;
+	padding: 15px;
+	border-radius: 10px;
+}
+
+/* text */
+.text-q {
+	width: 75%;
+	background-color: rgba(255, 254, 254, 0.5);
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	font-family: Mulish, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+}
+
+/* progress */
+.progress-container {
+	background-color: gainsboro;
+	border-radius: 10px;
+	width: 100%;
+}
+
+#progress {
+	padding: 5px;
+	background-color: skyblue;
+	border-radius: 10px;
+	width: 0%;
+	transition: width 0.7s;
+}
+
 
 /* TEAMS */
 .team-box {
 	text-align: left;
 	justify-content:center;
-	background-color: rgba(128, 128, 128, 0.7);
-	height: 25%;
+	background-color: white;
 	border-radius: 10px;
+	transition: 0.3s;
+	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+}
+
+.teams-container {
+	width: 65%;
+}
+
+.meets-container {
+	margin-left: 25px;
+	width: 35%;
+}
+
+.team-box:hover {
+	background-color: rgba(135, 207, 235, 0.40);
+	cursor: pointer;
+	transition: 0.3s;
 }
 
 .team-text {
+	margin: 15px;
 	padding: 5px;
 }
 
-/* button */
+/* BUTTONS */
 .cta {
 	margin-top: 2rem;
 }
   
-.cta a {
+.cta a, .cta button {
+	text-decoration: none;
+	background-color: #F5E6C9;
+	color: black;
+	margin: 10px;
+	padding: 0.5rem 2rem;
+	border-radius: 4px;
+	font-size: 1.5rem;
+	transition: 0.3s;
+}
+
+  
+.cta a:hover,
+.scta a:hover,
+.cta button:hover {
+	background-color: #22506C;
+	color: white;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.longer a {
+	padding: 0.5rem 5rem;
+}
+
+.bottom-right a {
+	float: right;
+}
+
+/* FORMS */
+.form-actions a {
 	text-decoration: none;
 	background-color: var(--color-secondary-100);
 	color: var(--color-primary-800);
+	margin: 10px;
 	padding: 0.5rem 2rem;
 	border-radius: 4px;
 	font-size: 1.5rem;
 }
-  
-.scta a:hover {
-	background-color: var(--color-secondary-200);
+
+.form-container {
+	display: flex;
+	margin: 5px;
+	justify-content: space-between;
+	text-align: left;
+}
+
+.field-container {
+	text-align: left;
+	display: inline-block;
+	width: 50%;
+}
+
+.education-form {
+	background-color: white;
+	border-radius: 10px; 
+	margin: 10px;
+	padding: 20px;
+	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+}
+
+.education-form input, 
+.education-form label,
+.education-form select {
+	margin: 5px;
+}
+
+.education-form input,
+.education-form select {
+	font-family: Mulish, Roboto;
+	font-weight: bold;
+	font-size: 14px;
+	color: #6E757A;
+	width: 90%;
+	padding: 12px;
+	border-radius: 10px;
+	border-color: #05467C;
+	border-width: thin;
+	margin-bottom: 15px;
+
+}
+
+/* LOGO */
+.opportune-logo {
+	display: inline;
+	width: 40px;
+    height: 40px;
+	float: left;
+	margin-left: 10px;
+	margin-top: 5px;
+	transition: 0.3s;
+}
+
+.opportune-logo:hover {
+	opacity: 0.85;
+	transition: 0.3s;
 }
