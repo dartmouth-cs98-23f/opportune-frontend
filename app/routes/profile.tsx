@@ -27,7 +27,7 @@ export default function Profile() {
 				<div className="form-container">
 					<div>
 						<Form action="/" method="post" className="education-form">
-							<h3>Personal</h3>
+							<h3>Demographics</h3>
 							
 							<div className="field-container">
 								<label htmlFor="first-name"> First Name </label>
@@ -60,17 +60,11 @@ export default function Profile() {
 								</select>
 							</div>
 
-							<h3>Education</h3>
-							<div className="field-container">
-							<label htmlFor="school"> School </label>
-							<input name="school" type="text" />
-							</div>
+							<h3>Photo</h3>
+							<h4>Upload a new photo</h4>
+							<p>No photo selected</p>
 
-							<div className="field-container">
-							<label htmlFor="school-email"> School email </label>
-							<input name="school-email" type="text" />
-							</div>
-							
+							<h3>Education</h3>
 							<div className="field-container">
 							<label htmlFor="grad-month"> Graduation month </label>
 							<select id="grad-month" name="grad-month">

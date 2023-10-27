@@ -22,6 +22,24 @@ const teamInfo = [
 	}
 ]
 
+const meetInfo = [
+	{
+		event: "Chat with Jacob (AI Team)",
+		date: "30 June, 2023",
+		time: "(10 AM - 10:30 AM)"
+	},
+	{
+		event: "Chat with Spencer (Platform team)",
+		date: "30 June, 2023", 
+		time: "(11 AM - 11:30 AM)"
+	},
+	{
+		event: "Chat with Alex (UI team)",
+		date: "30 June, 2023", 
+		time: "(1 PM - 1:30 PM)"
+	},
+]
+
 export default function Teams() {
 	return (
 		<div className="flex-container">
@@ -34,6 +52,9 @@ export default function Teams() {
 				<div id="menubar">
 					<MainNavigation />
 				</div>
+
+				<div className="horiz-flex-container">
+				<div className="teams-container">
 				{teamInfo.map((team) => {
 					return <div className="team-box">
 						<div className="team-text">
@@ -45,7 +66,22 @@ export default function Teams() {
 						</div>
 					</div>
 				})}
+				</div>
+				<div className="meets-container">
+				{meetInfo.map((meet) => {
+					return <div className="team-box">
+						<div className="team-text">
+							<h3> {meet.event} </h3>
+							<p> {meet.date} </p>
+							<p> {meet.time} </p>
+						</div>
+					</div>
+				})}
+				</div>
+				</div>
+
 				<p className="cta">
+					<Link to="/profile">Previous</Link>
 				    <Link to="/matching">Next</Link>
 				</p>
 			</div>

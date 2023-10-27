@@ -1,5 +1,6 @@
 import styles from '~/styles/home.css';
 import { useState } from 'react';
+import { Slider } from '@mui/material';
 // import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 
@@ -7,7 +8,13 @@ interface Question {
 	question: string;
 } 
 
-let scores = [1, 2, 3, 4, 5]
+const marks = [
+	{ value: 1, label: '1' },
+	{ value: 2, label: '2' },
+	{ value: 3, label: '3' },
+	{ value: 4, label: '4' },
+	{ value: 5, label: '5' }
+];
 
 export default function Scale(props:Question) {
   const [active, setActive] = useState<number>(0)
@@ -18,17 +25,10 @@ export default function Scale(props:Question) {
   return (
 	<div>
 		<p>{props.question}</p>
-		<div>
-			<ul className='option-list'>
-				{scores.map((score) => {
-					return <li className="option-bubble" key={score}>
-					<button
-						onClick={() => handleBubbleClick(score)}
-						className={active === score ? "active" : ""}> {score}
-					</button>
-					</li>
-				})}
-			</ul>
+		<div className="slider">
+			<Slider size="medium" defaultValue={1} min={1} max={5}
+			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
+			sx={{ width: '60%' }} />
 		</div>
 	</div>
   )

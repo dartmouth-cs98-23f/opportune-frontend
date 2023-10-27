@@ -44,6 +44,7 @@ export default function Matching() {
 					<Progress pct={getProgress()}/>
 					{stepComp}
 					<p className="cta">
+						<Link to="/teams">Back to Teams</Link>
 						{isFirstStep ? <Link to="" onClick={previous}>Previous</Link> : null}
 						{isLastStep ? <Link to="" onClick={next}>Next</Link> : null}
 						{!isLastStep ? <Link to="/results">View Results </Link> : null}
