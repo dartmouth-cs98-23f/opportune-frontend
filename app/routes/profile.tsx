@@ -3,18 +3,16 @@ import styles from '~/styles/home.css'
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
-import Scale from '~/components/survey_qs/Scale';
+import ImageUpload from '~/components/ImageUpload';
+import TextField from '~/components/TextField';
+import SelectField from '~/components/SelectField';
 // import { motion } from "framer-motion";
-
-{/* <Link className='profile-button' to=""> 
-						<UserCircleIcon />
-					</Link> */}
 
 export default function Profile() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo" src="opportune_logo.png"></img>
+				<img className="opportune-logo-small" src="opportune_logo.svg"></img>
 				<Link className='logout-button' to="/login">
 					<ArrowLeftOnRectangleIcon /> 
 				</Link>
@@ -26,99 +24,30 @@ export default function Profile() {
 				</div>
 				<div className="form-container">
 					<div>
-						<Form action="/" method="post" className="education-form">
+						<Form action="/" method="post" className="info-form">
 							<h3>Demographics</h3>
-							
-							<div className="field-container">
-								<label htmlFor="first-name"> First Name </label>
-								<input name="first-name" type="text" />
-							</div>
-
-							<div className="field-container">
-								<label htmlFor="last-name"> Last Name </label>
-								<input name="last-name" type="text" />
-							</div>
-
-							<div className="field-container">
-								<label htmlFor="race"> Race </label>
-								<select id="race" name="race">
-									<option value="White">White</option>
-									<option value="Black">Black</option>
-									<option value="Hispanic/Latino">Hispanic/Latino</option>
-									<option value="Asian">Asian</option>
-									<option value="American Indian">American Indian</option>
-									<option value="Pacific Islander">Pacific Islander</option>
-									<option value="Other">Other</option>
-								</select>
-							</div>
-
-							<div className="field-container">
-								<label htmlFor="sex"> Sex </label>
-								<select id="sex" name="sex">
-									<option value="Male">Male</option>
-									<option value="Female">Female</option>
-								</select>
-							</div>
-
-							<h3>Photo</h3>
-							<h4>Upload a new photo</h4>
-							<p>No photo selected</p>
+							<TextField label="First Name" classLabel="first-name"/>
+							<TextField label="Last Name" classLabel="last-name"/>
+							<SelectField label="Race" classLabel="race" 
+							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} />
+							<SelectField label="Sex" classLabel="sex" 
+							 options={["Male", "Female"]} />
 
 							<h3>Education</h3>
-							<div className="field-container">
-							<label htmlFor="grad-month"> Graduation month </label>
-							<select id="grad-month" name="grad-month">
-								<option value="January">January</option>
-								<option value="February">February</option>
-								<option value="March">March</option>
-								<option value="April">April</option>
-								<option value="May">May</option>
-								<option value="June">June</option>
-								<option value="July">July</option>
-								<option value="August">August</option>
-								<option value="September">September</option>
-								<option value="October">October</option>
-								<option value="November">November</option>
-								<option value="December">December</option>
-							</select>
-							</div>
-							
-
-							<div className="field-container">
-							<label htmlFor="grad-year"> Graduation year </label>
-							<input name="grad-year" type="text" />
-							</div>
-
-							<div className="field-container">
-							<label htmlFor="major"> Major </label>
-							<input name="major" type="text" />
-							</div>
+							<SelectField label="Graduation month" classLabel="grad-month" 
+							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} />
+							<TextField label="Graduation year" classLabel="grad-year"/>
+							<TextField label="Major" classLabel="major"/>
 
 							<h3>Address and basic info</h3>
-							<div className="field-container">
-							<label htmlFor="email-address"> Email Address </label>
-							<input name="email-address" type="text" />
-							</div>
-							
-							<div className="field-container">
-							<label htmlFor="address"> Address </label>
-							<input name="address" type="text" />
-							</div>
+							<TextField label="Email Address" classLabel="email-address"/>
+							<TextField label="Address" classLabel="address"/>
+							<TextField label="City" classLabel="city"/>
+							<TextField label="State/Province" classLabel="state"/>
+							<TextField label="Zip Code" classLabel="zip"/>
 
-							<div className="field-container">
-							<label htmlFor="city"> City  </label>
-							<input name="city" type="text" />
-							</div>
-
-							<div className="field-container">
-							<label htmlFor="state"> State/Province </label>
-							<input name="state" type="text" />
-							</div>
-
-							<div className="field-container">
-							<label htmlFor="zip"> Zip Code </label>
-							<input name="zip" type="text" />
-							</div>
+							<h3>Profile Picture</h3>
+							<ImageUpload />
 						</Form>
 					</div>
 				</div>
@@ -129,8 +58,6 @@ export default function Profile() {
 		</div>
 	)
 }
-
-// https://egghead.io/blog/validating-remix-form-data-using-zod-and-typescript-in-action-functions
 
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

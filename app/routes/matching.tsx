@@ -14,16 +14,20 @@ import PlainText from '~/components/survey_qs/PlainText';
 const questionList = [
   <PlainText text="Let's get started!" />,
   <Scale question="How comfortable are you with Python?"/>,
-  <Ranking id={2} question="Rank the following teams (best to worst)" />, 
+  <Scale question="How comfortable are you with Java?"/>,
+  <Scale question="How comfortable are you with C++?"/>,
+  <Ranking question="Rank the following teams (best to worst)" />, 
   <Textbox question="What was the rationale behind your first choice team?" />, 
   <Textbox question="What was the rationale behind your second choice team?" />,
   <Textbox question="What was the rationale behind your third choice team?" />,
   <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 ]
 
+// TODO: state management of responses
+const responses = null;
+
 
 export default function Matching() {
-	// TODO: state management of responses
 	const {step, stepComp, isFirstStep, isLastStep,
 		   previous, next, getProgress} = SurveyUtil(questionList)
 
@@ -44,10 +48,12 @@ export default function Matching() {
 					<Progress pct={getProgress()}/>
 					{stepComp}
 					<p className="cta">
-						<Link to="/teams">Back to Teams</Link>
 						{isFirstStep ? <Link to="" onClick={previous}>Previous</Link> : null}
 						{isLastStep ? <Link to="" onClick={next}>Next</Link> : null}
 						{!isLastStep ? <Link to="/results">View Results </Link> : null}
+					</p>
+					<p className="cta">
+						<Link to="/teams">Back to Teams</Link>
 					</p>
 				</div>
 			</div>

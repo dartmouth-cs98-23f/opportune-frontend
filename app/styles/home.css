@@ -1,8 +1,10 @@
 /* containers */
 .block-container {
 	text-align: center;
+	background-color: white;
 	color: var(--color-primary-10);
 	height: 100vh;
+	overflow: auto;
 }
 
 .flex-container {
@@ -225,7 +227,7 @@
 
 #progress {
 	padding: 5px;
-	background-color: skyblue;
+	background-color: #22506cbf;
 	border-radius: 10px;
 	width: 0%;
 	transition: width 0.7s;
@@ -252,7 +254,7 @@
 }
 
 .team-box:hover {
-	background-color: rgba(135, 207, 235, 0.40);
+	background-color: #22506c13;
 	cursor: pointer;
 	transition: 0.3s;
 }
@@ -308,9 +310,7 @@
 }
 
 .form-container {
-	display: flex;
 	margin: 5px;
-	justify-content: space-between;
 	text-align: left;
 }
 
@@ -320,7 +320,7 @@
 	width: 50%;
 }
 
-.education-form {
+.info-form {
 	background-color: white;
 	border-radius: 10px; 
 	margin: 10px;
@@ -328,14 +328,17 @@
 	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
 }
 
-.education-form input, 
-.education-form label,
-.education-form select {
-	margin: 5px;
+.info-form input, 
+.info-form label,
+.info-form select {
+	margin-top: 5px;
+	margin-left: 5%;
+	margin-right: 5%;
 }
 
-.education-form input,
-.education-form select {
+.info-form input,
+.info-form select,
+.login-field input {
 	font-family: Mulish, Roboto;
 	font-weight: bold;
 	font-size: 14px;
@@ -346,11 +349,46 @@
 	border-color: #05467C;
 	border-width: thin;
 	margin-bottom: 15px;
+}
 
+.image-input {
+	display: inline;
+}
+
+.custom-file-upload {
+	text-decoration: none;
+	background-color: #F5E6C9;
+	color: black;
+	padding: 0.2rem 2rem;
+	border-radius: 4px;
+	font-size: 1.2rem;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.custom-file-upload:hover {
+	background-color: #05467C;
+	color: white;
+	transition: 0.3s;
+}
+
+
+input[type="file"] {
+    display: none;
+}
+
+.login-field {
+	display: block;
+	width: 40%;
+	margin: 0 auto;
+}
+
+.login-field input {
+	margin-top: 5px;
 }
 
 /* LOGO */
-.opportune-logo {
+.opportune-logo-small {
 	display: inline;
 	width: 40px;
     height: 40px;
@@ -360,7 +398,17 @@
 	transition: 0.3s;
 }
 
-.opportune-logo:hover {
+.opportune-logo-small:hover {
 	opacity: 0.85;
 	transition: 0.3s;
+}
+
+.opportune-logo-large {
+	display: inline-block;
+	width: 120px;
+    height: 120px;
+	margin-left: 10px;
+	margin-top: 5px;
+	transition: 0.3s;
+	filter: drop-shadow(0px 0px 10px lightgrey);
 }

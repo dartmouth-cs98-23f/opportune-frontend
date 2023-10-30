@@ -35,12 +35,14 @@ export default function SignUp() {
   return (
     <div className="block-container">
       	<h1>Opportune</h1>
+		<img className="opportune-logo-large" src="opportune_logo.svg"></img>
+		<p>Tuning the opportunities you will have at your company to the maximum.</p>
       	<Form method="post" action="/signup" id="login">
-          <p>
+          <p className="login-field">
             <label id="username">Pick a username: </label>
             <input type="text" id="username" name="username" required />
           </p>
-          <p>
+          <p className="login-field">
             <label id="password">Pick a strong password: </label>
             <input type="password" name="password" required />
           </p>

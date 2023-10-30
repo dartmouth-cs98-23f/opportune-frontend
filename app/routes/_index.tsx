@@ -5,6 +5,7 @@ export default function Index() {
   return (
     <div className="block-container">
       	<h1>Opportune</h1>
+		<img className="opportune-logo-large" src="opportune_logo.svg"></img>
       	<p>Tuning the opportunities you will have at your company to the maximum.</p>
 		<p className="cta">
 			<Link to="/login">Get Started</Link>

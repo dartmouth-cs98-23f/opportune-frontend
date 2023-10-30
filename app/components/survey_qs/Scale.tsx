@@ -1,6 +1,7 @@
 import styles from '~/styles/home.css';
 import { useState } from 'react';
 import { Slider } from '@mui/material';
+
 // import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 

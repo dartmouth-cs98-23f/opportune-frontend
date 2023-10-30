@@ -15,15 +15,12 @@ const TeamList = [
 
 // take the question prompt
 interface Question {
-	id: number;
 	question: string;
 }
 
 export default function Ranking(props:Question) {
   const [teams, setTeams] = useState(TeamList);
   const teamIds = useMemo(() => teams.map((team) => team.id), [teams]);
-
-  console.log(teams);
 
   function handleDragEnd(event: any) {
 	const { active, over } = event;
