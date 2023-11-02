@@ -24,7 +24,7 @@ export async function action({
 		return null
 	}
 	
-	return redirect(`/dashboard`);
+	return redirect(`/profile`);
   }
 
 
@@ -36,8 +36,8 @@ export default function Login() {
       <p>Tuning the opportunities you will have at your company to the maximum.</p>
 	  <Form method="post" action="/login" id="login">
 	  	<p className="login-field">
-			<label htmlFor="username"><b>Email address</b></label>
-			<input name="username" />
+			<label htmlFor="email"><b>Email address</b></label>
+			<input name="email" />
 		</p>
 
 		<p className="login-field">

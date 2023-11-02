@@ -103,7 +103,6 @@
 }
 
 .icon-title {
-	color: #F5E6C9;
 	padding: 8px;
 	margin: 0;
 }
@@ -169,7 +168,7 @@
 }
 
 .pointer.icon-locked .icon-title {
-	color: lightgrey;
+	color: black;
 }
 
 .nav-row a.active .pointer.icon-locked {
@@ -296,6 +295,11 @@
 
 .bottom-right a {
 	float: right;
+}
+
+button[type="submit"] {
+	font-family: Mulish, Roboto;
+	border: none;
 }
 
 /* FORMS */

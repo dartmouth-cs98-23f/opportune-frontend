@@ -12,13 +12,15 @@ export async function action({
 	for(const [key, value] of body.entries()) {
 		myJson[key] = value;
 	}
+	
+	myJson["user_type"] = "new_hire";
 
 	console.log(JSON.stringify(myJson));
 
 	try {
 		const response = await axios.post('http://opportune_backend:3000/auth/register', myJson);
 
-		if(response.status == 204) {
+		if (response.status == 204) {
 			console.log("Username is already in use.")
 			return null
 		}
@@ -39,8 +41,8 @@ export default function SignUp() {
 		<p>Tuning the opportunities you will have at your company to the maximum.</p>
       	<Form method="post" action="/signup" id="login">
           <p className="login-field">
-            <label id="username">Pick a username: </label>
-            <input type="text" id="username" name="username" required />
+            <label id="email">Pick a username: </label>
+            <input type="text" id="email" name="email" required />
           </p>
           <p className="login-field">
             <label id="password">Pick a strong password: </label>

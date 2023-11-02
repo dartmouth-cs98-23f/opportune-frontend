@@ -5,8 +5,8 @@ export default function ImageUpload() {
 
   return (
 	<div className="image-input">
-		<label for="file-upload" class="custom-file-upload"> Upload image </label>
-		<input type="file" name="file-upload" id="file-upload" accept="image/*" onChange={(event) => {
+		<label for="image_url" class="custom-file-upload"> Upload image </label>
+		<input type="file" name="image_url" id="image_url" accept="image/*" onChange={(event) => {
 			setUploadedImg(event.target.files[0].name);
 		}}>
 		</input>

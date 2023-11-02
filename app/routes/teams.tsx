@@ -44,7 +44,7 @@ export default function Teams() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo" src="opportune_logo.png"></img>
+				<img className="opportune-logo-small" src="opportune_logo.png"></img>
 				<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 			</div>
 			<div id="content">
