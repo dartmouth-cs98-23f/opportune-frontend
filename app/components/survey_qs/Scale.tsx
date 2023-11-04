@@ -1,7 +1,6 @@
 import styles from '~/styles/home.css';
 import { useState } from 'react';
 import { Slider } from '@mui/material';
-
 // import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 
@@ -18,18 +17,21 @@ const marks = [
 ];
 
 export default function Scale(props:Question) {
-  const [active, setActive] = useState<number>(0)
-  function handleBubbleClick(new_score: number) {
-	setActive(new_score);
+  const [score, setScore] = useState<number | number[]>(1)
+  const skill = props.question.trim().split(" ").pop().replace("?", "");
+
+  function handleChange(new_score: number | number[]) {
+	setScore(new_score);
   }
   
   return (
-	<div>
+	<div className="scale-container">
 		<p>{props.question}</p>
 		<div className="slider">
-			<Slider size="medium" defaultValue={1} min={1} max={5}
+			<Slider size="medium" value={score} min={1} max={5}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
-			sx={{ width: '60%' }} />
+			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
+			<input type="hidden" name={skill} value={score}></input>
 		</div>
 	</div>
   )

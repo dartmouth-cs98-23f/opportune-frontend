@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -10,7 +10,8 @@ import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import axios from 'axios';
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunction, json, redirect } from '@remix-run/node';
+import { useState } from 'react';
 // import { motion } from 'framer-motion';
 
 const questionList = [
@@ -25,29 +26,84 @@ const questionList = [
   <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 ]
 
-/* export async function action({request}: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
+	const _action = body.get("_action");
 
-	var myJson = {};
-	for (const [key, value] of body.entries()) {
-		myJson[key] = value;
+	const profile = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+		headers: {
+		  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+		  "Content-Type": "application/json",
+		},
+	})
+
+	// handle field based on question type
+	if (_action === "Scale") {
+		// format: {name: "Python", score: "5"}
+		var myJson = {};
+		for (const [key, value] of body.entries()) {
+			if (key !== "_action") {
+				console.log(key + ', ' + value); 
+				myJson["name"] = key;
+				myJson["score"] = parseInt(value, 10);
+			}
+		}
+
+		try {
+			profile.data.newHire.skills.push(myJson)
+			const newSkills = JSON.stringify(profile.data);
+			console.log(profile.data.newHire.skills);
+			console.log(newSkills);
+			const response = await axios.patch('http://opportune_backend:3000/users/newhire/skills', 
+				newSkills, {
+				headers: {
+				  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+				  "Content-Type": "application/json",
+				},
+			});
+			console.log("Post");
+			console.log(response.data);
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
 	}
 
-	console.log(JSON.stringify(myJson));
+	if (_action === "Ranking") {
+		console.log("Entered ranking body");
+	}
 
-	try {
-		const response = await axios.post('http://opportune_backend:3000/match?algorithm={algorithm}', myJson);
-	} catch(error) {
-		console.log(error)
-		return null
+	if (_action === "Textbox") {
+		console.log("Entered textbox body");
 	}
 	
-	return redirect('/results');
-} */
+	return redirect("/matching");
+}
+
+export let loader: LoaderFunction = async() => {
+	try {
+		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+			headers: {
+			  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+			  "Content-Type": "application/json",
+			},
+		});
+
+		if (response.status === 200) {
+			const data = response.data;
+			console.log(data);
+			return json({ data });
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
 
 export default function Matching() {
 	const {step, stepComp, isFirstStep, isLastStep,
-		   previous, next, getProgress} = SurveyUtil(questionList)
+		   previous, next, getProgress} = SurveyUtil(questionList);
+	const [matchData, setMatchData] = useState({});
 
 	return (
 		<div className="flex-container">
@@ -64,14 +120,19 @@ export default function Matching() {
 				</div>
 				<div>
 					<Progress pct={getProgress()}/>
-					{stepComp}
+					<Form action="/matching" method="post">
+						{stepComp}
+						<p className="cta">
+							{isFirstStep ? <Link to="" onClick={previous} className="prev-button">Previous</Link> : null}
+							{isLastStep ? <button type="submit" name="_action" 
+							               value={stepComp.type.name} >Save</button> : null}
+							{isLastStep ? <button onClick={next} >Next</button> : null}
+							{!isLastStep ? <button type="submit">Submit</button> : null}
+						</p>
+					</Form>
+					
 					<p className="cta">
-						{isFirstStep ? <Link to="" onClick={previous}>Previous</Link> : null}
-						{isLastStep ? <Link to="" onClick={next}>Next</Link> : null}
-						{!isLastStep ? <button type="submit">Submit</button> : null}
-					</p>
-					<p className="cta">
-						<Link to="/teams">Back to Teams</Link>
+						<Link to="/teams" className="prev-button">Back to Teams</Link>
 					</p>
 				</div>
 			</div>
@@ -81,8 +142,6 @@ export default function Matching() {
 
 /* <Link to="/results">View Results </Link> */
 /* <Form method="post" action="/matching" id="login"> </Form> */
-
-// keep a state list of form responses with parameters? 
 
 /* motion.div initial={{ opacity: 0 }}
 			     animate={{ opacity: 1 }}

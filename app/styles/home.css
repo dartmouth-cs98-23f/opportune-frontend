@@ -183,6 +183,15 @@
 
 /* scale */
 
+.scale-container {
+	padding: 20px;
+	margin: 10px;
+}
+
+.invisible-input {
+	display: none;
+}
+
 /* ranking */
 .rank-card {
 	background-color: rgba(212, 212, 223, 0.55);
@@ -300,6 +309,18 @@
 button[type="submit"] {
 	font-family: Mulish, Roboto;
 	border: none;
+}
+
+.cta a.prev-button {
+	background-color: #f5f0e5;
+	color: rgb(101, 101, 101);
+	transition: 0.3s;
+}
+
+.cta a.prev-button:hover {
+	background-color: #22506c82;
+	color: white;
+	transition: 0.3s;
 }
 
 /* FORMS */

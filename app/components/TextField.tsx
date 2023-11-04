@@ -12,3 +12,5 @@ export default function TextField(props:Field) {
 	</div>
   )
 }
+
+// disable / edit form sections

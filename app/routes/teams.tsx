@@ -81,7 +81,7 @@ export default function Teams() {
 				</div>
 
 				<p className="cta">
-					<Link to="/profile">Previous</Link>
+					<Link to="/profile" className="prev-button">Previous</Link>
 				    <Link to="/matching">Next</Link>
 				</p>
 			</div>

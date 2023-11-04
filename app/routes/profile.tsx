@@ -28,7 +28,7 @@ export async function action({request}: ActionFunctionArgs) {
 			  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
 			  "Content-Type": "application/json",
 			},
-		});
+		})
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -49,6 +49,7 @@ export let loader: LoaderFunction = async () => {
 
 		if (response.status === 200) {
 			const data = response.data;
+			console.log(data);
 			return json({ data });
 		}
 	} catch (error) {
@@ -61,6 +62,12 @@ export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
 	const basicInfoFields = basicInfo.data.newHire
 
+	/* const basicInfoFields = {
+		first_name: "", last_name: "", race: "", sex: "", 
+		school: "", grad_month: "", grad_year: "", major: "",
+		email: "", address: "", city: "", state_province: "", zip_code: ""
+	} */
+
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
@@ -70,7 +77,8 @@ export default function Profile() {
 				</Link>
 			</div>
 			<div id="content">
-				<h2>Welcome Oppenheim </h2>
+				<h2>Welcome {basicInfoFields.first_name ? 
+				             basicInfoFields.first_name : "Intern"} </h2>
 				<div id="menubar">
 					<MainNavigation />
 				</div>
@@ -81,14 +89,14 @@ export default function Profile() {
 							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.first_name}/>
 							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.last_name} />
 							<SelectField label="Race" classLabel={basicInfoFields.race}
-							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} />
+							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} value={basicInfoFields.race} />
 							<SelectField label="Sex" classLabel={basicInfoFields.sex}
-							 options={["Male", "Female"]} />
+							 options={["Male", "Female"]} value={basicInfoFields.sex} />
 
 							<h3>Education</h3>
 							<TextField label="School" classLabel="school" value={basicInfoFields.school} />
 							<SelectField label="Graduation month" classLabel={basicInfoFields.grad_month}
-							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} />
+							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} value={basicInfoFields.grad_month} />
 							<TextField label="Graduation year" classLabel="grad_year" value={basicInfoFields.grad_year} />
 							<TextField label="Major" classLabel="major" value={basicInfoFields.major} />
 
@@ -100,7 +108,7 @@ export default function Profile() {
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.zip_code}/>
 
 							<h3>Profile Picture</h3>
-							<ImageUpload />
+							<ImageUpload file={basicInfoFields.image_url}/>
 							<p className="cta">
 								<button type="submit">Next</button>
 							</p>
