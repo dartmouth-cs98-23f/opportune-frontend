@@ -7,13 +7,18 @@ import ImageUpload from '~/components/ImageUpload';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import axios from 'axios';
-import { ActionFunctionArgs, redirect, json, LoaderFunction } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunctionArgs, redirect, json, LoaderFunction } from '@remix-run/node';
 import { useState } from 'react';
+import { getSession } from '../utils/sessions';
 // import { motion } from "framer-motion";
 
 export async function action({request}: ActionFunctionArgs) {
 	
 	const body = await request.formData();
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
 
 	var myJson = {};
 	for (const [key, value] of body.entries()) {
@@ -25,7 +30,7 @@ export async function action({request}: ActionFunctionArgs) {
 	try {
 		const response = await axios.patch('http://opportune_backend:3000/users/newhire/profile', myJson, {
 			headers: {
-			  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			},
 		})
@@ -37,12 +42,20 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect(`/teams`);
 }
 
-
-export let loader: LoaderFunction = async () => {
+export async function loader({
+	request,
+}: LoaderFunctionArgs) {
 	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("here");
+		console.log(session);
+
 		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {
-			  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			},
 		});

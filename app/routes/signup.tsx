@@ -27,6 +27,7 @@ export async function action({
 
 	} catch(error) {
 		console.log(error)
+		return redirect('/signup')
 	}
 	
 	return redirect(`/login`);

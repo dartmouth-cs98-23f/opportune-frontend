@@ -1,13 +1,37 @@
-import { Link, Form } from '@remix-run/react';
-import { redirect, ActionFunctionArgs } from '@remix-run/node';
+import { Link, Form, useLoaderData } from '@remix-run/react';
+import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import loginStyle from '~/styles/home.css'
 import axios from 'axios';
-import TextField from '~/components/TextField';
+import { getSession, commitSession } from "../utils/sessions";
+
+export async function loader({
+	request,
+}: LoaderFunctionArgs) {
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
+	if (session.has("auth")) {
+		return redirect("/profile");
+	}
+
+	const data = { error: session.get("error")};
+
+	return json(data, {
+		headers: {
+			"Set-Cookie": await commitSession(session),
+		},
+	})
+}
 
 export async function action({
 	request,
   }: ActionFunctionArgs) {
 	const body = await request.formData();
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
 
 	var myJson = {};
 	for (const [key, value] of body.entries()) {
@@ -18,17 +42,28 @@ export async function action({
 
 	try {
 		const response = await axios.post('http://opportune_backend:3000/auth/login', myJson);
+		session.set("auth", response.data.token);
 
 	} catch(error) {
 		console.log(error)
-		return null
+		return redirect('/login', {
+			headers: {
+				"Set-Cookie": await commitSession(session),
+			}
+		})
 	}
 	
-	return redirect(`/profile`);
+	return redirect(`/profile`, {
+		headers: {
+			"Set-Cookie": await commitSession(session),
+		}
+	});
   }
 
 
 export default function Login() {
+	const { currentUser, error } = useLoaderData<typeof loader>();
+
   return (
     <main className="block-container">
       <h1>Opportune</h1>
