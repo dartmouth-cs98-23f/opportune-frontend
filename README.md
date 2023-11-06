@@ -10,17 +10,16 @@ After the matching, we hope to provide a dedicated hub for the intern so that th
 ## Architecture
 Frontend: Remix Run, HTML/CSS
 Backend: Express, MongoDB
-- Remix-Run: Remix is a seamless server and browser runtime that provides snappy page loads and instant transitions by leveraging distributed systems and native browser features instead of clunky static builds. Built on the Web Fetch API (instead of Node) it can run anywher
 
 Frontend
 * `/` landing page
     * `/login` login page
     * `/signup` signup page
-* `/dashboard` intern home page
+* `/profile` basic information survey for intern
+* `/teams` information about each team the intern may be matched on
 * `/matching` matching survey
-* `/profile` intern profile
-* `/teams` team information / meetings page
-* `/events`
+* `/results` matching results
+* `/project` (locked) - project management flow for next term
 
 ## Setup
 Frontend
@@ -33,10 +32,8 @@ Backend
 
 Matching Engine
 
-
 ## Authors
-CS98 Frontend Team: Stephen Wang, Karina Montiel, Ryan Luu
-
+Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
 
 ## Acknowledgments
 - [Remix Docs](https://remix.run/docs)

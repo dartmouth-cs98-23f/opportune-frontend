@@ -11,8 +11,10 @@ export default function SurveyUtil(questionList: ReactElement[]) {
 
 	// next page
 	function next() {
+		console.log(step);
 		if (step < questionList.length) setStep(step + 1);
 		else setStep(step);
+		console.log(step);
 	}
 
 	// update progress bar

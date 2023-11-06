@@ -6,20 +6,15 @@ import { DndContext, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 // import { motion } from 'framer-motion';
 
-// generate list of teams and slots
-const TeamList = [
-	{id: "team-1", name: "Finance"},
-	{id: "team-2", name: "ML/AI"},
-	{id: "team-3", name: "Cybersecurity"}
-]
-
 // take the question prompt
-interface Question {
+interface Ranking {
 	question: string;
+	teams: {id: string, name: string}[];
+	prefs: {name: string, score: number}[];
 }
 
-export default function Ranking(props:Question) {
-  const [teams, setTeams] = useState(TeamList);
+export default function Ranking(props:Ranking) {
+  const [teams, setTeams] = useState(props.teams);
   const teamIds = useMemo(() => teams.map((team) => team.id), [teams]);
 
   function handleDragEnd(event: any) {
@@ -38,16 +33,24 @@ export default function Ranking(props:Question) {
 	<div>
 		<DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
 		<p>{props.question}</p>
-		    
 			<div className="rank-box">
 				<SortableContext items={teamIds}>
 				<p> Best </p>
-				{teams.map(slot => 
-				 <TeamCard name={slot.name} key={slot.id} id={slot.id} class="rank-card" />)}
+				{props.prefs ? 
+					props.prefs.map((slot, idx) => 
+					<TeamCard name={slot.name} id={String(idx)} class="rank-card" />) :
+					teams.map((slot, idx) => 
+					<TeamCard name={slot.name} id={String(idx)} class="rank-card" />
+				)}
+				{props.prefs ?
+					props.prefs.map((slot, idx) =>
+					<input type="hidden" name={slot.name} value={idx}/>) :
+					teams.map((slot, idx) =>
+					<input type="hidden" name={slot.name} value={idx}/>
+				)}
 				<p> Worst </p>
 				</SortableContext>
 			</div>
-			
 		</DndContext>
 	</div>
   )

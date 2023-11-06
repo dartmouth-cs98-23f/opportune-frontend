@@ -1,11 +1,12 @@
 import styles from '~/styles/home.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
 // import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 
 interface Question {
 	question: string;
+	existingSkills: {name: string; score: number}[];
 } 
 
 const marks = [
@@ -17,13 +18,23 @@ const marks = [
 ];
 
 export default function Scale(props:Question) {
-  const [score, setScore] = useState<number | number[]>(1)
+  // get skill score if user submitted before
   const skill = props.question.trim().split(" ").pop().replace("?", "");
+  const skillIdx = props.existingSkills.findIndex(s => s.name === skill);
+  const savedScore = (skillIdx !== -1 ? props.existingSkills[skillIdx].score: 1);
 
-  function handleChange(new_score: number | number[]) {
+  // score state
+  const [score, setScore] = useState(savedScore);
+  function handleChange(new_score: any) {
 	setScore(new_score);
   }
+
+  // update saved score when tech stack changes
+  useEffect(() => {
+	setScore(savedScore);
+  }, [skill])
   
+  // component
   return (
 	<div className="scale-container">
 		<p>{props.question}</p>

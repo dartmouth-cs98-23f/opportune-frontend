@@ -59,14 +59,14 @@ export let loader: LoaderFunction = async () => {
 };
 
 export default function Profile() {
-	const basicInfo = useLoaderData<typeof loader>();
-	const basicInfoFields = basicInfo.data.newHire
+	// const basicInfo = useLoaderData<typeof loader>();
+	// const basicInfoFields = basicInfo.data.newHire
 
-	/* const basicInfoFields = {
+	const basicInfoFields = {
 		first_name: "", last_name: "", race: "", sex: "", 
 		school: "", grad_month: "", grad_year: "", major: "",
 		email: "", address: "", city: "", state_province: "", zip_code: ""
-	} */
+	}
 
 	return (
 		<div className="flex-container">
