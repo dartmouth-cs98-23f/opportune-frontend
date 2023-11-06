@@ -23,30 +23,6 @@ export async function action({
 		return null
 	}
 	
-	return redirect(`/dashboard`);
-  }
-import axios from 'axios';
-
-export async function action({
-	request,
-  }: ActionFunctionArgs) {
-	const body = await request.formData();
-
-	var myJson = {};
-	for(const [key, value] of body.entries()) {
-		myJson[key] = value;
-	}
-
-	console.log(JSON.stringify(myJson));
-
-	try {
-		const response = await axios.post('http://opportune_backend:3000/auth/login', myJson);
-
-	} catch(error) {
-		console.log(error)
-		return null
-	}
-	
 	return redirect(`/profile`);
   }
 
