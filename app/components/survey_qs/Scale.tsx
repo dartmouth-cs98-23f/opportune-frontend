@@ -1,11 +1,12 @@
 import styles from '~/styles/home.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
 // import { motion } from "framer-motion";
 import { Link } from '@remix-run/react'
 
 interface Question {
 	question: string;
+	existingSkills: {name: string; score: number}[];
 } 
 
 const marks = [
@@ -17,18 +18,31 @@ const marks = [
 ];
 
 export default function Scale(props:Question) {
-  const [active, setActive] = useState<number>(0)
-  function handleBubbleClick(new_score: number) {
-	setActive(new_score);
+  // get skill score if user submitted before
+  const skill = props.question.trim().split(" ").pop().replace("?", "");
+  const skillIdx = props.existingSkills.findIndex(s => s.name === skill);
+  const savedScore = (skillIdx !== -1 ? props.existingSkills[skillIdx].score: 1);
+
+  // score state
+  const [score, setScore] = useState(savedScore);
+  function handleChange(new_score: any) {
+	setScore(new_score);
   }
+
+  // update saved score when tech stack changes
+  useEffect(() => {
+	setScore(savedScore);
+  }, [skill])
   
+  // component
   return (
-	<div>
+	<div className="scale-container">
 		<p>{props.question}</p>
 		<div className="slider">
-			<Slider size="medium" defaultValue={1} min={1} max={5}
+			<Slider size="medium" value={score} min={1} max={5}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
-			sx={{ width: '60%' }} />
+			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
+			<input type="hidden" name={skill} value={score}></input>
 		</div>
 	</div>
   )

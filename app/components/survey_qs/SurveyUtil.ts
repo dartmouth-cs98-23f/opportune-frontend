@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react';
 
 export default function SurveyUtil(questionList: ReactElement[]) {
-	const [step, setStep] = useState<number>(0); 
+	const [step, setStep] = useState(0); 
 
 	// previous page
 	function previous() {
@@ -11,8 +11,10 @@ export default function SurveyUtil(questionList: ReactElement[]) {
 
 	// next page
 	function next() {
+		console.log(step);
 		if (step < questionList.length) setStep(step + 1);
 		else setStep(step);
+		console.log(step);
 	}
 
 	// update progress bar
@@ -21,7 +23,7 @@ export default function SurveyUtil(questionList: ReactElement[]) {
 	}
 
 	return {
-		step, 
+		step,
 		stepComp: questionList[step],
 		isFirstStep: step !== 0,
 		isLastStep: step !== (questionList.length - 1),
