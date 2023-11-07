@@ -50,8 +50,7 @@ export async function loader({
 			request.headers.get("Cookie")
 		);
 
-		console.log("here");
-		console.log(session);
+		console.log("Auth: ", session.get("auth"));
 
 		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {

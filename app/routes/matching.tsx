@@ -152,10 +152,18 @@ export default function Matching() {
 	const basicInfoFields = basicInfo.data;
 
 	// generate list of teams and slots
+	// const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
+	// basicInfoFields.newHire.team_prefs :
+	// [
+	// 	{name: "Finance", score: 0, _id: "Finance" },
+	// 	{name: "ML/AI", score: 1, _id: "ML/AI"},
+	// 	{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
+	// ]
+
 	const TeamList = [
-		{id: "team-1", name: "Finance"},
-		{id: "team-2", name: "ML/AI"},
-		{id: "team-3", name: "Cybersecurity"}
+		{name: "Finance", score: 0, _id: "Finance" },
+		{name: "ML/AI", score: 1, _id: "ML/AI"},
+		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
 	]
 
 	// list of questions
@@ -164,8 +172,7 @@ export default function Matching() {
 		<Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.newHire.skills}/>,
 		<Scale question="How comfortable are you with Java?" existingSkills={basicInfoFields.newHire.skills}/>,
 		<Scale question="How comfortable are you with C++?" existingSkills={basicInfoFields.newHire.skills}/>,
-		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} 
-		         teamPrefs={basicInfoFields.newHire.team_prefs}/>, 
+		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />, 
 		<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 		/* <Textbox question="What was the rationale behind your first choice team?" />, 
 		<Textbox question="What was the rationale behind your second choice team?" />,
