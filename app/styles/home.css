@@ -25,7 +25,7 @@
 #sidebar {
 	flex: 0.05;
 	flex-basis: 0%;
-	background-color: #22506C;
+	background-color: var(--color-primary-10);
 }
 
 #sidebar a {
@@ -45,6 +45,16 @@
 	height: 50px;
 	float: right;
 	margin-right: 10px;
+}
+
+.logout-button svg { 
+	color: var(--color-primary-30);
+	transition: 0.3s;
+}
+
+.logout-button svg:hover {
+	color: var(--color-secondary-10);
+	transition: 0.3s;
 }
 
 .profile-button {
@@ -98,7 +108,7 @@
   
 .nav-row a:hover,
 .nav-row a.active {
-	color: white;
+	color: var(--color-primary-40);
 	transition: 0.3s;
 }
 
@@ -109,7 +119,7 @@
 
 .nav-row a.active .icon-title {
 	display: inline-block;
-	color: white;
+	color: var(--color-primary-40);
 }
 
 /* nav pointer shape */
@@ -118,7 +128,7 @@
 	width: 180px;
 	height: 40px;
 	position: relative;
-	background: #F5E6C9;
+	background: var(--color-primary-40);
 	transition: 0.3s;
 }
 
@@ -141,7 +151,7 @@
 	bottom: 0;
 	width: 0;
 	height: 0;
-	border-left: 20px solid #F5E6C9;
+	border-left: 20px solid var(--color-primary-40);
 	border-top: 20px solid transparent;
 	border-bottom: 20px solid transparent;
 	transition: border-left 0.3s;
@@ -150,11 +160,11 @@
 
 /* regular styles */
 .nav-row a.active .pointer {
-	background-color: #22506C;
+	background-color: var(--color-primary-10);
 }
 
 .nav-row a.active .pointer:before {
-	border-left: 20px solid #22506C;
+	border-left: 20px solid var(--color-primary-10);
 	transition: border-left 0.3s;
 }
 
@@ -235,7 +245,7 @@
 
 #progress {
 	padding: 5px;
-	background-color: #22506cbf;
+	background-color: var(--color-primary-30);
 	border-radius: 10px;
 	width: 0%;
 	transition: width 0.7s;
@@ -245,7 +255,7 @@
 /* TEAMS */
 .team-box {
 	text-align: left;
-	justify-content:center;
+	justify-content: center;
 	background-color: white;
 	border-radius: 10px;
 	transition: 0.3s;
@@ -279,8 +289,8 @@
   
 .cta a, .cta button {
 	text-decoration: none;
-	background-color: #F5E6C9;
-	color: black;
+	background-color: var(--color-secondary-10);
+	color: var(--color-primary-40);
 	margin: 10px;
 	padding: 0.5rem 2rem;
 	border-radius: 4px;
@@ -292,8 +302,8 @@
 .cta a:hover,
 .scta a:hover,
 .cta button:hover {
-	background-color: #22506C;
-	color: white;
+	background-color: var(--color-primary-20);
+	color: var(--color-primary-40);
 	cursor: pointer;
 	transition: 0.3s;
 }
@@ -318,8 +328,8 @@ button[type="submit"] {
 }
 
 .cta a.prev-button:hover {
-	background-color: #22506c82;
-	color: white;
+	background-color: var(--color-primary-30);
+	color: var(--color-primary-40);
 	transition: 0.3s;
 }
 
@@ -382,8 +392,8 @@ button[type="submit"] {
 
 .custom-file-upload {
 	text-decoration: none;
-	background-color: #F5E6C9;
-	color: black;
+	background-color: var(--color-primary-30);
+	color: var(--color-primary-40);
 	padding: 0.2rem 2rem;
 	border-radius: 4px;
 	font-size: 1.2rem;
@@ -392,8 +402,8 @@ button[type="submit"] {
 }
 
 .custom-file-upload:hover {
-	background-color: #05467C;
-	color: white;
+	background-color: var(--color-primary-20);
+	color: var(--color-primary-40);
 	transition: 0.3s;
 }
 
