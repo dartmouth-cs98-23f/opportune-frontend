@@ -50,8 +50,7 @@ export async function loader({
 			request.headers.get("Cookie")
 		);
 
-		console.log("here");
-		console.log(session);
+		console.log("Auth: ", session.get("auth"));
 
 		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {
@@ -72,15 +71,15 @@ export async function loader({
 };
 
 export default function Profile() {
-	const basicInfo = useLoaderData<typeof loader>();
-	// const basicInfo = {
-	// 	data: {
-	// 		email: "",
-	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
-	// 			      school: "", grad_month: "", grad_year: "", major: "",
-	// 	              email: "", address: "", city: "", state_province: "", zip_code: ""}
-	// 	}
-	// }
+	// const basicInfo = useLoaderData<typeof loader>();
+	const basicInfo = {
+		data: {
+			email: "",
+			newHire: {first_name: "", last_name: "", race: "", sex: "", 
+				      school: "", grad_month: "", grad_year: "", major: "",
+		              email: "", address: "", city: "", state_province: "", zip_code: ""}
+		}
+	}
 
 	const basicInfoFields = basicInfo.data;
 

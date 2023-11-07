@@ -41,7 +41,7 @@ export default function Ranking(props:Ranking) {
 				  <TeamCard name={slot.name} key={slot._id} id={slot._id} class="rank-card" />
 				)}
 				{teams.map((slot, idx) => 
-				  <input type="hidden" name={slot.name} value={idx}/>
+				  <input type="hidden" name={slot.name} value={teams.length - idx}/>
 				)}
 				<p> Worst </p>
 				</SortableContext>

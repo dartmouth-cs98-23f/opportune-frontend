@@ -138,8 +138,8 @@ export async function loader({
 };
 
 export default function Matching() {
-	const basicInfo = useLoaderData<typeof loader>();
-	/*const basicInfo = {
+	// const basicInfo = useLoaderData<typeof loader>();
+	const basicInfo = {
 		data: {
 			email: "",
 			newHire: {first_name: "", last_name: "", race: "", sex: "", 
@@ -147,14 +147,20 @@ export default function Matching() {
 		              email: "", address: "", city: "", state_province: "", zip_code: "",
 					  skills: [], team_prefs: []}
 		}
-	}*/
+	}
 
 	const basicInfoFields = basicInfo.data;
 
 	// generate list of teams and slots
-	const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
-	basicInfoFields.newHire.team_prefs :
-	[
+	// const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
+	// basicInfoFields.newHire.team_prefs :
+	// [
+	// 	{name: "Finance", score: 0, _id: "Finance" },
+	// 	{name: "ML/AI", score: 1, _id: "ML/AI"},
+	// 	{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
+	// ]
+
+	const TeamList = [
 		{name: "Finance", score: 0, _id: "Finance" },
 		{name: "ML/AI", score: 1, _id: "ML/AI"},
 		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
