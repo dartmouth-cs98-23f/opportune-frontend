@@ -57,7 +57,8 @@ export async function action({
 		headers: {
 			"Set-Cookie": await commitSession(session),
 		}
-});
+	})
+}
 
 
 export default function Login() {

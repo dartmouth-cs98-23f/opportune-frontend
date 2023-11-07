@@ -138,8 +138,8 @@ export async function loader({
 };
 
 export default function Matching() {
-	// const basicInfo = useLoaderData<typeof loader>();
-	const basicInfo = {
+	const basicInfo = useLoaderData<typeof loader>();
+	/*const basicInfo = {
 		data: {
 			email: "",
 			newHire: {first_name: "", last_name: "", race: "", sex: "", 
@@ -147,15 +147,17 @@ export default function Matching() {
 		              email: "", address: "", city: "", state_province: "", zip_code: "",
 					  skills: [], team_prefs: []}
 		}
-	}
+	}*/
 
 	const basicInfoFields = basicInfo.data;
 
 	// generate list of teams and slots
-	const TeamList = [
-		{id: "team-1", name: "Finance"},
-		{id: "team-2", name: "ML/AI"},
-		{id: "team-3", name: "Cybersecurity"}
+	const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
+	basicInfoFields.newHire.team_prefs :
+	[
+		{name: "Finance", score: 0, _id: "Finance" },
+		{name: "ML/AI", score: 1, _id: "ML/AI"},
+		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
 	]
 
 	// list of questions
@@ -164,8 +166,7 @@ export default function Matching() {
 		<Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.newHire.skills}/>,
 		<Scale question="How comfortable are you with Java?" existingSkills={basicInfoFields.newHire.skills}/>,
 		<Scale question="How comfortable are you with C++?" existingSkills={basicInfoFields.newHire.skills}/>,
-		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} 
-		         teamPrefs={basicInfoFields.newHire.team_prefs}/>, 
+		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />, 
 		<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 		/* <Textbox question="What was the rationale behind your first choice team?" />, 
 		<Textbox question="What was the rationale behind your second choice team?" />,
@@ -191,7 +192,7 @@ export default function Matching() {
 				</div>
 				<div>
 					<Progress pct={getProgress()}/>
-					{/* <Form action="/matching" method="post" 
+					<Form action="/matching" method="post" 
 					      onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
@@ -201,15 +202,15 @@ export default function Matching() {
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form> */}
-					<Form action="/matching" method="post">
+					</Form>
+					{/* <Form action="/matching" method="post">
 						{stepComp}
 						<p className="cta">
 							{isFirstStep ? <Link to="" className="prev-button" id="prev-q" onClick={previous}>Previous</Link> : null}
 							{isLastStep ? <Link to="" id="next-q" onClick={next}>Next</Link> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form>
+					</Form> */}
 					
 					<p className="cta">
 						<Link to="/teams" className="prev-button">Back to Teams</Link>

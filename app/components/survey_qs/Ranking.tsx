@@ -9,21 +9,22 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 // take the question prompt
 interface Ranking {
 	question: string;
-	teams: {id: string, name: string}[];
-	prefs: {name: string, score: number}[];
+	teams: {name: string, score: number, _id: string}[];
 }
 
 export default function Ranking(props:Ranking) {
   const [teams, setTeams] = useState(props.teams);
-  const teamIds = useMemo(() => teams.map((team) => team.id), [teams]);
+  const teamIds = useMemo(() => teams.map((team) => team._id), [teams]);
+  console.log(teams)
 
   function handleDragEnd(event: any) {
 	const { active, over } = event;
 
 	if (active.id !== over.id) {
+		console.log(active.id, over.id)
 		setTeams((teams) => {
-			const activeIndex = teams.findIndex((team) => team.id === active.id);
-			const overIndex = teams.findIndex((team) => team.id === over.id);
+			const activeIndex = teams.findIndex((team) => team._id === active.id);
+			const overIndex = teams.findIndex((team) => team._id === over.id);
 			return arrayMove(teams, activeIndex, overIndex);
 		});
 	}
@@ -37,10 +38,10 @@ export default function Ranking(props:Ranking) {
 				<SortableContext items={teamIds}>
 				<p> Best </p>
 				{teams.map(slot => 
-				 <TeamCard name={slot.name} key={slot.id} id={slot.id} class="rank-card" />
-				 )}
+				  <TeamCard name={slot.name} key={slot._id} id={slot._id} class="rank-card" />
+				)}
 				{teams.map((slot, idx) => 
-					<input type="hidden" name={slot.name} value={idx}/>
+				  <input type="hidden" name={slot.name} value={idx}/>
 				)}
 				<p> Worst </p>
 				</SortableContext>

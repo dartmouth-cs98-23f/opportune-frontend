@@ -72,15 +72,15 @@ export async function loader({
 };
 
 export default function Profile() {
-	// const basicInfo = useLoaderData<typeof loader>();
-	const basicInfo = {
-		data: {
-			email: "",
-			newHire: {first_name: "", last_name: "", race: "", sex: "", 
-				      school: "", grad_month: "", grad_year: "", major: "",
-		              email: "", address: "", city: "", state_province: "", zip_code: ""}
-		}
-	}
+	const basicInfo = useLoaderData<typeof loader>();
+	// const basicInfo = {
+	// 	data: {
+	// 		email: "",
+	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
+	// 			      school: "", grad_month: "", grad_year: "", major: "",
+	// 	              email: "", address: "", city: "", state_province: "", zip_code: ""}
+	// 	}
+	// }
 
 	const basicInfoFields = basicInfo.data;
 
