@@ -16,7 +16,6 @@ const { getSession, commitSession, destroySession } =
 
                 httpOnly: true,
                 secure: true,
-                maxAge: 60,
                 secrets: ["s3cret1"]
             },
         }

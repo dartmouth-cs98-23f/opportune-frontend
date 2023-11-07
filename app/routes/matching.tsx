@@ -10,17 +10,22 @@ import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import axios from 'axios';
-import { ActionFunctionArgs, LoaderFunction, json, redirect } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { useState } from 'react';
 // import { motion } from 'framer-motion';
+import { getSession } from '../utils/sessions';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
 
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
 	const profile = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 		headers: {
-		  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+		  "Authorization": session.get("auth"),
 		  "Content-Type": "application/json",
 		},
 	})
@@ -52,7 +57,7 @@ export async function action({request}: ActionFunctionArgs) {
 			const response = await axios.patch('http://opportune_backend:3000/users/newhire/skills', 
 				newSkills, {
 				headers: {
-				  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+				  "Authorization": session.get("auth"),
 				  "Content-Type": "application/json",
 				},
 			});
@@ -84,13 +89,12 @@ export async function action({request}: ActionFunctionArgs) {
 			let prefList = profile.data.newHire.team_prefs;
 			if (prefList) prefList = prefJsons
 			else prefList.push(prefJsons);
-			1
 			// send new preferences
 			const newPrefs = JSON.stringify({team_prefs: prefList});
-			const response = await axios.patch('http://opportune_backend:3000/users/newhire/profile', 
+			const response = await axios.patch('http://opportune_backend:3000/users/newhire/teamprefs', 
 				newPrefs, {
 				headers: {
-				  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+				  "Authorization": session.get("auth"),
 				  "Content-Type": "application/json",
 				},
 			});
@@ -107,11 +111,17 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect("/matching");
 }
 
-export let loader: LoaderFunction = async() => {
+export async function loader({
+	request,
+}: LoaderFunctionArgs) {
 	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
 		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {
-			  "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lLjMwQGRhcnRtb3V0aC5lZHUiLCJpYXQiOjE2OTg4NjEzNjl9.Bdy4kf7oiYVKyiTZOTG8Ns7oE9BmAiBXtnQurAo_1jA",
+			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			},
 		});
@@ -128,8 +138,18 @@ export let loader: LoaderFunction = async() => {
 };
 
 export default function Matching() {
-	const basicInfo = useLoaderData<typeof loader>();
-	const basicInfoFields = basicInfo.data.newHire
+	// const basicInfo = useLoaderData<typeof loader>();
+	const basicInfo = {
+		data: {
+			email: "",
+			newHire: {first_name: "", last_name: "", race: "", sex: "", 
+				      school: "", grad_month: "", grad_year: "", major: "",
+		              email: "", address: "", city: "", state_province: "", zip_code: "",
+					  skills: [], team_prefs: []}
+		}
+	}
+
+	const basicInfoFields = basicInfo.data;
 
 	// generate list of teams and slots
 	const TeamList = [
@@ -141,11 +161,11 @@ export default function Matching() {
 	// list of questions
 	const questionList = [
 		<PlainText text="Let's get started!" />,
-		<Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.skills}/>,
-		<Scale question="How comfortable are you with Java?" existingSkills={basicInfoFields.skills}/>,
-		<Scale question="How comfortable are you with C++?" existingSkills={basicInfoFields.skills}/>,
+		<Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.newHire.skills}/>,
+		<Scale question="How comfortable are you with Java?" existingSkills={basicInfoFields.newHire.skills}/>,
+		<Scale question="How comfortable are you with C++?" existingSkills={basicInfoFields.newHire.skills}/>,
 		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} 
-		         teamPrefs={basicInfoFields.team_prefs}/>, 
+		         teamPrefs={basicInfoFields.newHire.team_prefs}/>, 
 		<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
 		/* <Textbox question="What was the rationale behind your first choice team?" />, 
 		<Textbox question="What was the rationale behind your second choice team?" />,
@@ -171,7 +191,7 @@ export default function Matching() {
 				</div>
 				<div>
 					<Progress pct={getProgress()}/>
-					<Form action="/matching" method="post" 
+					{/* <Form action="/matching" method="post" 
 					      onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
@@ -179,6 +199,14 @@ export default function Matching() {
 							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
 							{isLastStep ? <button type="submit" name="_action"
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
+							{!isLastStep ? <button type="submit">Submit</button> : null}
+						</p>
+					</Form> */}
+					<Form action="/matching" method="post">
+						{stepComp}
+						<p className="cta">
+							{isFirstStep ? <Link to="" className="prev-button" id="prev-q" onClick={previous}>Previous</Link> : null}
+							{isLastStep ? <Link to="" id="next-q" onClick={next}>Next</Link> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
 					</Form>

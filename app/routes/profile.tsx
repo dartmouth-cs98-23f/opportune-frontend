@@ -13,7 +13,6 @@ import { getSession } from '../utils/sessions';
 // import { motion } from "framer-motion";
 
 export async function action({request}: ActionFunctionArgs) {
-	
 	const body = await request.formData();
 
 	const session = await getSession(
@@ -25,6 +24,7 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
+	console.log("Basic info JSON");
 	console.log(JSON.stringify(myJson));
 
 	try {
@@ -73,13 +73,16 @@ export async function loader({
 
 export default function Profile() {
 	// const basicInfo = useLoaderData<typeof loader>();
-	// const basicInfoFields = basicInfo.data.newHire
-
-	const basicInfoFields = {
-		first_name: "", last_name: "", race: "", sex: "", 
-		school: "", grad_month: "", grad_year: "", major: "",
-		email: "", address: "", city: "", state_province: "", zip_code: ""
+	const basicInfo = {
+		data: {
+			email: "",
+			newHire: {first_name: "", last_name: "", race: "", sex: "", 
+				      school: "", grad_month: "", grad_year: "", major: "",
+		              email: "", address: "", city: "", state_province: "", zip_code: ""}
+		}
 	}
+
+	const basicInfoFields = basicInfo.data;
 
 	return (
 		<div className="flex-container">
@@ -90,8 +93,8 @@ export default function Profile() {
 				</Link>
 			</div>
 			<div id="content">
-				<h2>Welcome {basicInfoFields.first_name ? 
-				             basicInfoFields.first_name : "Intern"} </h2>
+				<h2>Welcome {basicInfoFields.newHire.first_name ? 
+				             basicInfoFields.newHire.first_name : "Intern"} </h2>
 				<div id="menubar">
 					<MainNavigation />
 				</div>
@@ -99,29 +102,29 @@ export default function Profile() {
 					<div>
 						<Form action="/profile" method="post" className="info-form">
 							<h3>Demographics</h3>
-							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.first_name}/>
-							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.last_name} />
-							<SelectField label="Race" classLabel={basicInfoFields.race}
-							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} value={basicInfoFields.race} />
-							<SelectField label="Sex" classLabel={basicInfoFields.sex}
-							 options={["Male", "Female"]} value={basicInfoFields.sex} />
+							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.newHire.first_name}/>
+							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.newHire.last_name} />
+							<SelectField label="Race" classLabel="race"
+							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} value={basicInfoFields.newHire.race} />
+							<SelectField label="Sex" classLabel="sex"
+							 options={["Male", "Female"]} value={basicInfoFields.newHire.sex} />
 
 							<h3>Education</h3>
-							<TextField label="School" classLabel="school" value={basicInfoFields.school} />
-							<SelectField label="Graduation month" classLabel={basicInfoFields.grad_month}
-							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} value={basicInfoFields.grad_month} />
-							<TextField label="Graduation year" classLabel="grad_year" value={basicInfoFields.grad_year} />
-							<TextField label="Major" classLabel="major" value={basicInfoFields.major} />
+							<TextField label="School" classLabel="school" value={basicInfoFields.newHire.school} />
+							<SelectField label="Graduation month" classLabel="grad_month"
+							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} value={basicInfoFields.newHire.grad_month} />
+							<TextField label="Graduation year" classLabel="grad_year" value={basicInfoFields.newHire.grad_year} />
+							<TextField label="Major" classLabel="major" value={basicInfoFields.newHire.major} />
 
 							<h3>Address and basic info</h3>
 							<TextField label="Email Address" classLabel="email-address" value={basicInfoFields.email}/>
-							<TextField label="Address" classLabel="address" value={basicInfoFields.address}/>
-							<TextField label="City" classLabel="city" value={basicInfoFields.city}/>
-							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.state_province}/>
-							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.zip_code}/>
+							<TextField label="Address" classLabel="address" value={basicInfoFields.newHire.address}/>
+							<TextField label="City" classLabel="city" value={basicInfoFields.newHire.city}/>
+							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.newHire.state_province}/>
+							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.newHire.zip_code}/>
 
 							<h3>Profile Picture</h3>
-							<ImageUpload file={basicInfoFields.image_url}/>
+							<ImageUpload file={basicInfoFields.newHire.image_url}/>
 							<p className="cta">
 								<button type="submit">Next</button>
 							</p>
@@ -132,8 +135,6 @@ export default function Profile() {
 		</div>
 	)
 }
-
-/* <Link to="/teams">Next</Link> */
 
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

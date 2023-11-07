@@ -36,16 +36,10 @@ export default function Ranking(props:Ranking) {
 			<div className="rank-box">
 				<SortableContext items={teamIds}>
 				<p> Best </p>
-				{props.prefs ? 
-					props.prefs.map((slot, idx) => 
-					<TeamCard name={slot.name} id={String(idx)} class="rank-card" />) :
-					teams.map((slot, idx) => 
-					<TeamCard name={slot.name} id={String(idx)} class="rank-card" />
-				)}
-				{props.prefs ?
-					props.prefs.map((slot, idx) =>
-					<input type="hidden" name={slot.name} value={idx}/>) :
-					teams.map((slot, idx) =>
+				{teams.map(slot => 
+				 <TeamCard name={slot.name} key={slot.id} id={slot.id} class="rank-card" />
+				 )}
+				{teams.map((slot, idx) => 
 					<input type="hidden" name={slot.name} value={idx}/>
 				)}
 				<p> Worst </p>
