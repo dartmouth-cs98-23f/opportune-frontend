@@ -138,8 +138,8 @@ export async function loader({
 };
 
 export default function Matching() {
-	// const basicInfo = useLoaderData<typeof loader>();
-	const basicInfo = {
+	const basicInfo = useLoaderData<typeof loader>();
+	/*const basicInfo = {
 		data: {
 			email: "",
 			newHire: {first_name: "", last_name: "", race: "", sex: "", 
@@ -147,7 +147,7 @@ export default function Matching() {
 		              email: "", address: "", city: "", state_province: "", zip_code: "",
 					  skills: [], team_prefs: []}
 		}
-	}
+	}*/
 
 	const basicInfoFields = basicInfo.data;
 
@@ -191,7 +191,7 @@ export default function Matching() {
 				</div>
 				<div>
 					<Progress pct={getProgress()}/>
-					{/* <Form action="/matching" method="post" 
+					<Form action="/matching" method="post" 
 					      onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
@@ -201,15 +201,15 @@ export default function Matching() {
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form> */}
-					<Form action="/matching" method="post">
+					</Form>
+					{/* <Form action="/matching" method="post">
 						{stepComp}
 						<p className="cta">
 							{isFirstStep ? <Link to="" className="prev-button" id="prev-q" onClick={previous}>Previous</Link> : null}
 							{isLastStep ? <Link to="" id="next-q" onClick={next}>Next</Link> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form>
+					</Form> */}
 					
 					<p className="cta">
 						<Link to="/teams" className="prev-button">Back to Teams</Link>

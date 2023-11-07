@@ -57,13 +57,14 @@ export async function action({
 		headers: {
 			"Set-Cookie": await commitSession(session),
 		}
-});
+	})
+};
 
 
 export default function Login() {
 	const { currentUser, error } = useLoaderData<typeof loader>();
 
-  return (
+    return (
     <main className="block-container">
       <h1>Opportune</h1>
 	  <img className="opportune-logo-large" src="opportune_logo.svg"></img>
