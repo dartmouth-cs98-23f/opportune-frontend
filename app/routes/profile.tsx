@@ -42,9 +42,7 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect(`/teams`);
 }
 
-export async function loader({
-	request,
-}: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
