@@ -37,21 +37,25 @@ export default function SignUp() {
 
   return (
     <div className="block-container">
-      	<h1>Opportune</h1>
-		<img className="opportune-logo-large" src="opportune_logo.svg"></img>
-		<p>Tuning the opportunities you will have at your company to the maximum.</p>
-      	<Form method="post" action="/signup" id="login">
-          <p className="login-field">
-            <label id="email">Pick a username: </label>
-            <input type="text" id="email" name="email" required />
-          </p>
-          <p className="login-field">
-            <label id="password">Pick a strong password: </label>
-            <input type="password" name="password" required />
-          </p>
-          <button type="submit">Submit</button>
-	  	  </Form>
-		<p>Already have an account? <Link to="/login">Sign in</Link></p>
+		<div className="landing-box">
+			<img className="opportune-logo-large" src="opportune_logo.svg"></img>
+			<h1>Opportune</h1>
+			<p>Tuning the opportunities you will have at your company to the maximum.</p>
+			<Form method="post" action="/signup" id="login">
+			<p className="login-field">
+				<label id="email">Pick a username: </label>
+				<input type="text" id="email" name="email" required />
+			</p>
+			<p className="login-field">
+				<label id="password">Pick a strong password: </label>
+				<input type="password" name="password" required />
+			</p>
+			<p className="cta">
+				<button type="submit">Submit</button>
+			</p>
+			</Form>
+			<p>Already have an account? <Link to="/login">Sign in</Link></p>
+		</div>
     </div>
   );
 }

@@ -66,24 +66,26 @@ export default function Login() {
 
     return (
     <main className="block-container">
-      <h1>Opportune</h1>
-	  <img className="opportune-logo-large" src="opportune_logo.svg"></img>
-      <p>Tuning the opportunities you will have at your company to the maximum.</p>
-	  <Form method="post" action="/login" id="login">
-	  	<p className="login-field">
-			<label htmlFor="email"><b>Email address</b></label>
-			<input name="email" />
-		</p>
+	  <div className="landing-box">
+		<img className="opportune-logo-large" src="opportune_logo.svg"></img>
+		<h1>Opportune</h1>
+		<p>Tuning the opportunities you will have at your company to the maximum.</p>
+		<Form method="post" action="/login" id="login">
+			<p className="login-field">
+				<label htmlFor="email"><b>Email address</b></label>
+				<input name="email" />
+			</p>
 
-		<p className="login-field">
-			<label htmlFor="password"><b>Password</b></label>
-			<input type="password" name="password" />
-		</p>
-		<div className="form-actions">
-			<button type="submit"> {'Login'} </button>
-		</div>
-	  </Form>
-	  <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+			<p className="login-field">
+				<label htmlFor="password"><b>Password</b></label>
+				<input type="password" name="password" />
+			</p>
+			<div className="form-actions">
+				<button type="submit"> {'Login'} </button>
+			</div>
+		</Form>
+		<p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+	  </div>
     </main>
   );
 }

@@ -1,7 +1,7 @@
 /* containers */
 .block-container {
 	text-align: center;
-	background-color: white;
+	background-image: url(public/landing.svg);
 	color: var(--color-primary-10);
 	height: 100vh;
 	overflow: auto;
@@ -19,6 +19,14 @@
 
 .horiz-flex-container {
 	display: flex;
+}
+
+.landing-box {
+	background-color: var(--color-primary-40);
+	width: 50%;
+	margin: 100px auto;
+	padding: 15px;
+	border-radius: 10px;
 }
 
 /* flex elements */
@@ -287,10 +295,12 @@
 	margin-top: 2rem;
 }
   
-.cta a, .cta button {
+.cta a, 
+.cta button,
+.form-actions button  {
 	text-decoration: none;
-	background-color: var(--color-secondary-10);
-	color: var(--color-primary-40);
+	background-color: var(--color-primary-20);
+	color: white;
 	margin: 10px;
 	padding: 0.5rem 2rem;
 	border-radius: 4px;
@@ -301,9 +311,9 @@
   
 .cta a:hover,
 .scta a:hover,
-.cta button:hover {
-	background-color: var(--color-primary-20);
-	color: var(--color-primary-40);
+.cta button:hover,
+.form-actions button:hover {
+	background-color: var(--color-secondary-10);
 	cursor: pointer;
 	transition: 0.3s;
 }
@@ -374,7 +384,6 @@ button[type="submit"] {
 .info-form input,
 .info-form select,
 .login-field input {
-
 	font-weight: bold;
 	font-size: 14px;
 	color: #6E757A;
@@ -470,6 +479,7 @@ input[type="file"] {
 	font-family: Mulish, Roboto;
 	font-size: 1rem;
 	transition: 0.3s;
+	cursor: pointer;
 }
 
 .read-more-btn {
