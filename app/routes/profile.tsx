@@ -3,14 +3,13 @@ import styles from '~/styles/home.css'
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
-import ImageUpload from '~/components/ImageUpload';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import axios from 'axios';
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect, json, LoaderFunction } from '@remix-run/node';
 import { useState } from 'react';
 import { getSession } from '../utils/sessions';
-// import { motion } from "framer-motion";
+import ImageUpload from '~/components/ImageUpload';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -83,6 +82,19 @@ export default function Profile() {
 
 	const basicInfoFields = basicInfo.data;
 
+	const [url, updateUrl] = useState();
+	const [error, updateError] = useState();
+	const handleOnUpload = (error, result, widget) => {
+		if (error) {
+		updateError(error.statusText);  
+		widget.close({
+			quiet: true,
+		});
+		return;
+		}
+		updateUrl(result?.info?.secure_url);
+	}
+
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
@@ -100,6 +112,25 @@ export default function Profile() {
 				<div className="form-container">
 					<div>
 						<Form action="/profile" method="post" className="info-form">
+								<div className="preview">
+									{url ? (
+										<img src={url} alt="Uploaded"/>
+									) : (
+										<img src="defaultAvatar.png" alt="Placeholder" />  
+									)}
+								
+									<div>
+										<h1>Oppenheimer</h1>
+										<p>Software Engineer Intern</p>
+										<ImageUpload onUpload={handleOnUpload}>
+											{({ open }) => {
+												return <button className="custom-file-upload" onClick={open}>Upload Image</button>;
+											}}
+										</ImageUpload>
+									</div>
+								</div>
+							
+
 							<h3>Demographics</h3>
 							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.newHire.first_name}/>
 							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.newHire.last_name} />
@@ -122,8 +153,6 @@ export default function Profile() {
 							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.newHire.state_province}/>
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.newHire.zip_code}/>
 
-							<h3>Profile Picture</h3>
-							<ImageUpload file={basicInfoFields.newHire.image_url}/>
 							<p className="cta">
 								<button type="submit">Next</button>
 							</p>
