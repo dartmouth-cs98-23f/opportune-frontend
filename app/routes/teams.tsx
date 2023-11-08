@@ -70,7 +70,7 @@ export default function Teams() {
     return (
         <div className="flex-container">
             <div id="sidebar">
-                <img className="opportune-logo" src="opportune_logo.png"></img>
+                <img className="opportune-logo-small" src="opportune_logo.png"></img>
                 <Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
             </div>
             <div id="content">
@@ -116,7 +116,6 @@ export default function Teams() {
 								</div>
 							</div>
 						})}
->>>>>>> 317f63df05171227290cf2fc4856e76935788137
 					</div>
 					<div className="meets-container">
 						{events ? events.map((event) => {
