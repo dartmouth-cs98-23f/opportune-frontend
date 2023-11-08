@@ -84,11 +84,11 @@ export default function Profile() {
 	const [error, updateError] = useState();
 	const handleOnUpload = (error, result, widget) => {
 		if (error) {
-		updateError(error.statusText);  
-		widget.close({
-			quiet: true,
-		});
-		return;
+			updateError(error.statusText);  
+			widget.close({
+				quiet: true,
+			});
+			return;
 		}
 		updateUrl(result?.info?.secure_url);
 	}
