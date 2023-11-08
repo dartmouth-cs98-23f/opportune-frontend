@@ -6,11 +6,20 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { json } from '@remix-run/node';
 
 
 import MainNavigation from '~/components/MainNav'
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from '~/styles/main.css'
+
+export function loader() {
+  const ENV = {
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME ?? "",
+    CLOUDINARY_PRESET_NAME: process.env.CLOUDINARY_PRESET_NAME ?? "",
+  };
+  return json({  ENV });
+}
 
 export default function App() {
   return (
@@ -23,6 +32,7 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript" />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
