@@ -23,7 +23,7 @@ export async function action({request}: ActionFunctionArgs) {
 		request.headers.get("Cookie")
 	);
 
-	const profile = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+	const profile = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
 		  "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export async function action({request}: ActionFunctionArgs) {
 			
 			// send new skills
 			const newSkills = JSON.stringify({skills: skillList});
-			const response = await axios.patch('http://opportune_backend:3000/users/newhire/skills', 
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/skills', 
 				newSkills, {
 				headers: {
 				  "Authorization": session.get("auth"),
@@ -91,7 +91,7 @@ export async function action({request}: ActionFunctionArgs) {
 			else prefList.push(prefJsons);
 			// send new preferences
 			const newPrefs = JSON.stringify({team_prefs: prefList});
-			const response = await axios.patch('http://opportune_backend:3000/users/newhire/teamprefs', 
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/teamprefs', 
 				newPrefs, {
 				headers: {
 				  "Authorization": session.get("auth"),
@@ -119,7 +119,7 @@ export async function loader({
 			request.headers.get("Cookie")
 		);
 
-		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
