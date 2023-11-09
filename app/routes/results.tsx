@@ -17,7 +17,7 @@ export async function action({request}: ActionFunctionArgs) {
 	console.log(JSON.stringify(myJson));
 
 	try {
-		const response = await axios.get('http://opportune_backend:3000/match-algorithm', myJson);
+		const response = await axios.get(process.env.BACKEND_URL + '/match-algorithm', myJson);
 	} catch(error) {
 		console.log(error)
 		return null
