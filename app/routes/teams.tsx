@@ -1,11 +1,11 @@
-import { Link } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { useCalendlyEventListener, InlineWidget, PopupButton } from "react-calendly";
-import { LoaderFunctionArgs, json } from '@remix-run/node';
-import { getSession } from '~/utils/sessions';
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 // import { motion } from 'framer-motion';
 
@@ -26,6 +26,50 @@ const teamInfo = [
         tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
     }
 ]
+
+export async function action({request}: ActionFunctionArgs) {
+	const body = await request.formData();
+	const _action = body.get("_action");
+	console.log(_action);
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
+	if (_action == "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	}
+}
+
+export async function loader({request}: LoaderFunctionArgs) {
+	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("Auth: ", session.get("auth"));
+
+		const response = await axios.get('http://opportune_backend:3000/users/newhire/', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			},
+		});
+
+		if (response.status === 200) {
+			const data = response.data;
+			console.log(data);
+			return json({ data });
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
 
 export default function Teams() {
 	const [events, setEvents] = useState([]);
@@ -71,7 +115,13 @@ export default function Teams() {
         <div className="flex-container">
             <div id="sidebar">
                 <img className="opportune-logo-small" src="opportune_logo.png"></img>
-                <Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+
+				<Form action="/teams" method="post">
+					<button className='logout-button' type="submit" 
+					name="_action" value="LogOut">
+					<ArrowLeftOnRectangleIcon /> 
+					</button>
+				</Form>
             </div>
             <div id="content">
                 <h2>Welcome Oppenheim </h2>

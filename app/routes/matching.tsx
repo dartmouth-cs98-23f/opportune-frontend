@@ -13,7 +13,7 @@ import axios from 'axios';
 import { ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { useState } from 'react';
 // import { motion } from 'framer-motion';
-import { getSession } from '../utils/sessions';
+import { destroySession, getSession } from '../utils/sessions';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -108,6 +108,14 @@ export async function action({request}: ActionFunctionArgs) {
 		console.log("Entered textbox body");
 	}
 
+	if (_action === "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	}
+
 	return redirect("/matching");
 }
 
@@ -138,33 +146,33 @@ export async function loader({
 };
 
 export default function Matching() {
-	// const basicInfo = useLoaderData<typeof loader>();
-	const basicInfo = {
-		data: {
-			email: "",
-			newHire: {first_name: "", last_name: "", race: "", sex: "", 
-				      school: "", grad_month: "", grad_year: "", major: "",
-		              email: "", address: "", city: "", state_province: "", zip_code: "",
-					  skills: [], team_prefs: []}
-		}
-	}
+	const basicInfo = useLoaderData<typeof loader>();
+	// const basicInfo = {
+	// 	data: {
+	// 		email: "",
+	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
+	// 			      school: "", grad_month: "", grad_year: "", major: "",
+	// 	              email: "", address: "", city: "", state_province: "", zip_code: "",
+	// 				  skills: [], team_prefs: []}
+	// 	}
+	// }
 
 	const basicInfoFields = basicInfo.data;
 
 	// generate list of teams and slots
-	// const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
-	// basicInfoFields.newHire.team_prefs :
-	// [
-	// 	{name: "Finance", score: 0, _id: "Finance" },
-	// 	{name: "ML/AI", score: 1, _id: "ML/AI"},
-	// 	{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
-	// ]
-
-	const TeamList = [
+	const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
+	basicInfoFields.newHire.team_prefs :
+	[
 		{name: "Finance", score: 0, _id: "Finance" },
 		{name: "ML/AI", score: 1, _id: "ML/AI"},
 		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
 	]
+
+	// const TeamList = [
+	// 	{name: "Finance", score: 0, _id: "Finance" },
+	// 	{name: "ML/AI", score: 1, _id: "ML/AI"},
+	// 	{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
+	// ]
 
 	// list of questions
 	const questionList = [
@@ -187,9 +195,12 @@ export default function Matching() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_logo.png"></img>
-				<Link className='logout-button' to="/login"> 
-					<ArrowLeftOnRectangleIcon /> 
-				</Link>
+				<Form action="/matching" method="post">
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
+				</Form>
 			</div>
 			<div id="content">
 				<h2>Welcome Oppenheim </h2>
@@ -198,7 +209,7 @@ export default function Matching() {
 				</div>
 				<div>
 					<Progress pct={getProgress()}/>
-					{/* <Form action="/matching" method="post" 
+					<Form action="/matching" method="post" 
 					      onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
@@ -208,15 +219,15 @@ export default function Matching() {
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form> */}
-					<Form action="/matching">
+					</Form>
+					{/* <Form action="/matching">
 						{stepComp}
 						<p className="cta">
 							{isFirstStep ? <Link to="" className="prev-button" id="prev-q" onClick={previous}>Previous</Link> : null}
 							{isLastStep ? <Link to="" id="next-q" onClick={next}>Next</Link> : null}
 							{!isLastStep ? <button type="submit">Submit</button> : null}
 						</p>
-					</Form>
+					</Form> */}
 					
 					<p className="cta">
 						<Link to="/teams" className="prev-button">Back to Teams</Link>

@@ -8,11 +8,12 @@ import SelectField from '~/components/SelectField';
 import axios from 'axios';
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect, json, LoaderFunction } from '@remix-run/node';
 import { useState } from 'react';
-import { getSession } from '../utils/sessions';
+import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
+	const _action = body.get("_action")
 
 	const session = await getSession(
 		request.headers.get("Cookie")
@@ -23,22 +24,31 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
-	console.log("Basic info JSON");
-	console.log(JSON.stringify(myJson));
+	// console.log(JSON.stringify(myJson));
 
-	try {
-		const response = await axios.patch('http://opportune_backend:3000/users/newhire/profile', myJson, {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			},
-		})
-	} catch (error) {
-		console.log(error);
-		return null;
+	if (_action == "updateBasicInfo") {
+		try {
+			const response = await axios.patch('http://opportune_backend:3000/users/newhire/profile', myJson, {
+				headers: {
+				  "Authorization": session.get("auth"),
+				  "Content-Type": "application/json",
+				},
+			})
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	
+		return redirect(`/teams`);
 	}
 
-	return redirect(`/teams`);
+	if (_action == "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	}
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -68,15 +78,15 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
 
 export default function Profile() {
-	// const basicInfo = useLoaderData<typeof loader>();
-	const basicInfo = {
-		data: {
-			email: "",
-			newHire: {first_name: "", last_name: "", race: "", sex: "", 
-				      school: "", grad_month: "", grad_year: "", major: "",
-		              email: "", address: "", city: "", state_province: "", zip_code: ""}
-		}
-	}
+	const basicInfo = useLoaderData<typeof loader>();
+	// const basicInfo = {
+	// 	data: {
+	// 		email: "",
+	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
+	// 			      school: "", grad_month: "", grad_year: "", major: "",
+	// 	              email: "", address: "", city: "", state_province: "", zip_code: ""}
+	// 	}
+	// }
 
 	const basicInfoFields = basicInfo.data;
 
@@ -97,9 +107,12 @@ export default function Profile() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_logo.svg"></img>
-				<Link className='logout-button' to="/login">
-					<ArrowLeftOnRectangleIcon /> 
-				</Link>
+				<Form action="/profile" method="post">
+					<button className="logout-button" type="submit"
+					 name="_action" value="LogOut">
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
+				</Form>
 			</div>
 			<div id="content">
 				<h2>Welcome {basicInfoFields.newHire.first_name ? 
@@ -152,7 +165,7 @@ export default function Profile() {
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.newHire.zip_code}/>
 
 							<p className="cta">
-								<button type="submit">Next</button>
+								<button type="submit" name="_action" value="updateBasicInfo">Next</button>
 							</p>
 						</Form>
 					</div>
