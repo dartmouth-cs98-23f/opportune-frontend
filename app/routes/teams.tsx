@@ -1,33 +1,34 @@
 import { Link } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
-import { useCalendlyEventListener, InlineWidget, PopupButton } from "react-calendly";
+import { ArrowLeftOnRectangleIcon, StarIcon } from '@heroicons/react/24/outline';
+import { useState, useEffect, useRef } from 'react';
+import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from "react-calendly";
 import { LoaderFunctionArgs, json } from '@remix-run/node';
 import { getSession } from '~/utils/sessions';
 import axios from 'axios';
+import { Portal } from '@mui/material';
 // import { motion } from 'framer-motion';
 
-const teamInfo = [
-    {
-        name: "Data Science",
-        description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
-        tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
-    },
-    {
-        name: "Finance",
-        description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
-        tech: "EXCEL MONKEY EVERYDAY"
-    },
-    {
-        name: "Cybersecurity",
-        description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
-        tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
-    }
-]
-
 export default function Teams() {
+	const teamInfo = [
+		{
+			name: "Data Science",
+			description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
+			tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
+		},
+		{
+			name: "Finance",
+			description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
+			tech: "EXCEL MONKEY EVERYDAY"
+		},
+		{
+			name: "Cybersecurity",
+			description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
+			tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
+		}
+	]
+
 	const [events, setEvents] = useState([]);
 
     useCalendlyEventListener({
@@ -67,8 +68,29 @@ export default function Teams() {
 		}
 	}
 
+	const [favorites, setFavorites] = useState([]);
+
+	const toggleFavorite = (teamName) => {
+		setFavorites(prev => {
+			if (prev.includes(teamName)) {
+				return prev.filter(name => name !== teamName); 
+			} else {
+				return [...prev, teamName];
+			}
+		});
+	}
+
+	const [isOpen, setIsOpen] = useState(false);
+
+	const prefill={
+		email: 'test@test.com',
+		firstName: 'Jon',
+		lastName: 'Snow',
+		name: 'Jon Snow',
+	}
+
     return (
-        <div className="flex-container">
+        <div id="portal-root" className="flex-container">
             <div id="sidebar">
                 <img className="opportune-logo-small" src="opportune_logo.png"></img>
                 <Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
@@ -86,7 +108,11 @@ export default function Teams() {
 
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
-									<h3>{team.name}</h3>
+									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+										<h3>{team.name}</h3>
+										<StarIcon style={{width: '30px', height: '30px'}} onClick={() => toggleFavorite(team.name)}/>
+									</div>
+									
 									<p> Tools and Technologies:
 										<li> {team.tech} </li>
 									</p>
@@ -99,18 +125,27 @@ export default function Teams() {
 											<div className="text-content">
 												<p>{team.description}</p>
 											</div>
-											{/* <InlineWidget url="https://calendly.com/ryanl23" /> */}
-											<PopupButton
+
+											<button
 												className='schedule-btn'
-												url="https://calendly.com/ryanl23"
-												key={team.name}
-												/*
-												* react-calendly uses React's Portal feature (https://reactjs.org/docs/portals.html) to render the popup modal. As a result, you'll need to
-												* specify the rootElement property to ensure that the modal is inserted into the correct domNode.
-												*/
-												rootElement={document.body}
-												text="Schedule meeting"
-											/>
+												onClick={() => setIsOpen(true)}
+												>
+												Schedule meeting
+											</button>
+											{isOpen && 
+											<div className='calendly-overlay'>
+												<div className='calendly-close-overlay' onClick={() => setIsOpen(false)}></div>
+												<div className='calendly-popup'>
+													<div className='calendly-popup-content'>
+														<InlineWidget url="https://calendly.com/ryanl23" 
+															pageSettings={pageSettings}
+															prefill={prefill}
+														/>
+													</div>
+												</div>
+											</div>
+											}
+
 										</div>
 									}
 								</div>
@@ -129,6 +164,11 @@ export default function Teams() {
 							</div>
 						}) : <p>No events booked yet!</p>}
 					</div>
+					{/* <div>
+						{favorites.map(name => (
+							<div>{name}</div> 
+						))}
+					</div> */}
                 </div>
 
                 <p className="cta">
