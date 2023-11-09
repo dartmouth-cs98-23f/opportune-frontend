@@ -1,9 +1,9 @@
-import { Form, Link } from '@remix-run/react';
+import { Form, Link, useLoaderData } from '@remix-run/react';
 import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
-import { ActionFunctionArgs, redirect } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
 // import { motion } from 'framer-motion';
 
@@ -22,14 +22,14 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// console.log(JSON.stringify(myJson));
 
-	if (_action == "getMatch") {
+	/*if (_action == "getMatch") {
 		try {
-			const response = await axios.get('http://opportune_backend:3000/match-algorithm', myJson);
+			const response = await axios.get('', myJson);
 		} catch(error) {
 			console.log(error)
 			return null
 		}
-	}
+	} */
 
 	if (_action == "LogOut") {
 		return redirect("/login", {
@@ -40,7 +40,37 @@ export async function action({request}: ActionFunctionArgs) {
 	} 
 }
 
+export async function loader({request}: LoaderFunctionArgs) {
+	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("Auth: ", session.get("auth"));
+
+		const response = await axios.get('http://opportune_backend:3000/users/newhire/team-info', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			},
+		});
+
+		if (response.status === 200) {
+			const data = response.data;
+			console.log(data);
+			return json({ data });
+		} else if (response.status === 404) {
+			return null;
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
+
 export default function Results() {
+	const teamInfo = useLoaderData<typeof loader> ();
+
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
@@ -58,12 +88,20 @@ export default function Results() {
 					<MainNavigation />
 				</div>
 				<div>
-					<p>Matching results will be out on July 2.</p>
+					{matchingResults(teamInfo)}
 					<p className="cta"> <Link to="/matching">Edit Responses </Link></p>
 				</div>
 			</div>
 		</div>
 	)
+}
+
+export function matchingResults(teamInfo: json) {
+	if(teamInfo) {
+		return (<p>Congrats! You were matched to {teamInfo.data.team.name}</p>)
+	} else {
+		return (<p>Matching results will be out on July 2.</p>)
+	}
 }
 
 export function links() {
