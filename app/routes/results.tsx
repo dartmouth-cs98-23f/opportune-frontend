@@ -22,7 +22,7 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// console.log(JSON.stringify(myJson));
 
-	if (_action == "Match") {
+	if (_action == "getMatch") {
 		try {
 			const response = await axios.get('http://opportune_backend:3000/match-algorithm', myJson);
 		} catch(error) {

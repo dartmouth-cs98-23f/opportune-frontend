@@ -1,4 +1,4 @@
-import { Form, Link } from '@remix-run/react';
+import { Form, Link, useLoaderData } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
@@ -9,23 +9,23 @@ import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 // import { motion } from 'framer-motion';
 
-const teamInfo = [
-    {
-        name: "Data Science",
-        description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
-        tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
-    },
-    {
-        name: "Finance",
-        description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
-        tech: "EXCEL MONKEY EVERYDAY"
-    },
-    {
-        name: "Cybersecurity",
-        description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
-        tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
-    }
-]
+// const teamInfo = [
+//     {
+//         name: "Data Science",
+//         description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
+//         tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
+//     },
+//     {
+//         name: "Finance",
+//         description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
+//         tech: "EXCEL MONKEY EVERYDAY"
+//     },
+//     {
+//         name: "Cybersecurity",
+//         description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
+//         tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
+//     }
+// ]
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -53,7 +53,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		console.log("Auth: ", session.get("auth"));
 
-		const response = await axios.get('http://opportune_backend:3000/users/newhire/', {
+		const response = await axios.get('http://opportune_backend:3000/user/list-teams/', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		if (response.status === 200) {
 			const data = response.data;
-			console.log(data);
+			// console.log(data);
 			return json({ data });
 		}
 	} catch (error) {
@@ -111,6 +111,10 @@ export default function Teams() {
 		}
 	}
 
+	const teamInfo = useLoaderData<typeof loader>();
+	const teamInfoList = teamInfo.data.teams;
+	console.log(teamInfoList);
+
     return (
         <div className="flex-container">
             <div id="sidebar">
@@ -131,14 +135,14 @@ export default function Teams() {
 
                 <div className="horiz-flex-container">
 					<div className="teams-container">
-						{teamInfo.map((team) => {
+						{teamInfoList.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
 									<h3>{team.name}</h3>
 									<p> Tools and Technologies:
-										<li> {team.tech} </li>
+										<li> {team.skills.map(skill => skill.name)} </li>
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  
@@ -147,7 +151,7 @@ export default function Teams() {
 									{expanded && 
 										<div className="expanded-content">
 											<div className="text-content">
-												<p>{team.description}</p>
+												<p>Description: {team.description}</p>
 											</div>
 											{/* <InlineWidget url="https://calendly.com/ryanl23" /> */}
 											<PopupButton

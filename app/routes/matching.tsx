@@ -44,7 +44,7 @@ export async function action({request}: ActionFunctionArgs) {
 
 		try {
 			// update/add to skill list
-			const skillList = profile.data.newHire.skills;
+			const skillList = profile.data.new_hire.skills;
 			const skillIdx = skillList.findIndex(skill => skill.name === myJson["name"]);
 			if (skillIdx !== -1) {
 				skillList[skillIdx].score = myJson["score"]
@@ -86,7 +86,7 @@ export async function action({request}: ActionFunctionArgs) {
 		
 		// update team_prefs list
 		try {
-			let prefList = profile.data.newHire.team_prefs;
+			let prefList = profile.data.new_hire.team_prefs;
 			if (prefList) prefList = prefJsons
 			else prefList.push(prefJsons);
 			// send new preferences
@@ -127,12 +127,16 @@ export async function loader({
 			request.headers.get("Cookie")
 		);
 
+		
 		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			},
 		});
+
+		console.log("Matching loader");
+		console.log(response.data);
 
 		if (response.status === 200) {
 			const data = response.data;
@@ -158,10 +162,11 @@ export default function Matching() {
 	// }
 
 	const basicInfoFields = basicInfo.data;
+	const basicInfoPrefs = basicInfoFields.new_hire.team_prefs;
+	const basicInfoSkills = basicInfoFields.new_hire.skills;
 
 	// generate list of teams and slots
-	const TeamList = basicInfoFields.newHire.team_prefs.length !== 0 ? 
-	basicInfoFields.newHire.team_prefs :
+	const TeamList = basicInfoPrefs.length !== 0 ? basicInfoPrefs :
 	[
 		{name: "Finance", score: 0, _id: "Finance" },
 		{name: "ML/AI", score: 1, _id: "ML/AI"},
@@ -175,17 +180,22 @@ export default function Matching() {
 	// ]
 
 	// list of questions
-	const questionList = [
-		<PlainText text="Let's get started!" />,
-		<Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.newHire.skills}/>,
-		<Scale question="How comfortable are you with Java?" existingSkills={basicInfoFields.newHire.skills}/>,
-		<Scale question="How comfortable are you with C++?" existingSkills={basicInfoFields.newHire.skills}/>,
-		<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />, 
-		<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
-		/* <Textbox question="What was the rationale behind your first choice team?" />, 
-		<Textbox question="What was the rationale behind your second choice team?" />,
-		<Textbox question="What was the rationale behind your third choice team?" />, */
-	]
+	const questionList = [<PlainText text="Let's get started!" />]
+
+	// add skill questions
+	for (var skill of basicInfoFields.new_hire.skills) {
+		questionList.push(<Scale question="How comfortable are you with `{skill.name}`?" existingSkills={basicInfoSkills}/>)
+	}
+
+	// add ranking question and submission message
+	questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />)
+	questionList.push(<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />)
+
+	console.log("matching questionList");
+	console.log(questionList);
+
+	// <Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.new_hire.skills}/>,
+	/* <Textbox question="What was the rationale behind your first choice team?" */
 
 	const {step, stepComp, isFirstStep, isLastStep,
 		   previous, next, getProgress} = SurveyUtil(questionList);
