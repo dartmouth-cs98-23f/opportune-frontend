@@ -10,6 +10,7 @@ services:
       - 4000:3000
     environment:
       PORT: 3000
+      BACKEND_URL: "http://opportune_backend:3000"
     networks:
       - frontend
 

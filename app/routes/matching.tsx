@@ -23,7 +23,7 @@ export async function action({request}: ActionFunctionArgs) {
 		request.headers.get("Cookie")
 	);
 
-	const profile = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+	const profile = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
 		  "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export async function action({request}: ActionFunctionArgs) {
 			
 			// send new skills
 			const newSkills = JSON.stringify({skills: skillList});
-			const response = await axios.patch('http://opportune_backend:3000/users/newhire/skills', 
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/skills', 
 				newSkills, {
 				headers: {
 				  "Authorization": session.get("auth"),
@@ -91,7 +91,7 @@ export async function action({request}: ActionFunctionArgs) {
 			else prefList.push(prefJsons);
 			// send new preferences
 			const newPrefs = JSON.stringify({team_prefs: prefList});
-			const response = await axios.patch('http://opportune_backend:3000/users/newhire/teamprefs', 
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/teamprefs', 
 				newPrefs, {
 				headers: {
 				  "Authorization": session.get("auth"),
@@ -128,7 +128,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		console.log("Auth: ", session.get("auth"));
 
 		async function getProfileRes() {
-			const profileRes = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -138,7 +138,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getSkillRes() {
-			const skillRes = await axios.get('http://opportune_backend:3000/user/list-company-skills', {
+			const skillRes = await axios.get(process.env.BACKEND_URL + '/user/list-company-skills', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -148,7 +148,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getTeamsRes() {
-			const teamRes = await axios.get('http://opportune_backend:3000/user/list-teams', {
+			const teamRes = await axios.get(process.env.BACKEND_URL + '/user/list-teams', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -265,8 +265,7 @@ export default function Matching() {
 							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
 							{!isLastStep ? <button type="submit" name="_action"
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{isLastStep ? <button type="submit" name="_action" 
-							value="LogOut">Done</button> : null}
+							{isLastStep ? <Link to="/results">Done</Link> : null}
 						</p>
 					</Form>
 					{/* <Form action="/matching">

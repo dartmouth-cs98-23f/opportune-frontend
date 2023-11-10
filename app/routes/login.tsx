@@ -41,7 +41,7 @@ export async function action({
 	console.log(JSON.stringify(myJson));
 
 	try {
-		const response = await axios.post('http://opportune_backend:3000/auth/login', myJson);
+		const response = await axios.post(process.env.BACKEND_URL + '/auth/login', myJson);
 		session.set("auth", response.data.token);
 
 	} catch(error) {

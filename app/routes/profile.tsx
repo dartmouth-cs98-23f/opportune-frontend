@@ -27,7 +27,7 @@ export async function action({request}: ActionFunctionArgs) {
 	console.log(JSON.stringify(myJson));
 
 	try {
-		const response = await axios.patch('http://opportune_backend:3000/users/newhire/profile', myJson, {
+		const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/profile', myJson, {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		console.log("Auth: ", session.get("auth"));
 
-		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",

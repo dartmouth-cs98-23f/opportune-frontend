@@ -53,7 +53,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		console.log("Auth: ", session.get("auth"));
 
-		const response = await axios.get('http://opportune_backend:3000/user/list-teams/', {
+		const response = await axios.get(process.env.BACKEND_URL + '/user/list-teams/', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
