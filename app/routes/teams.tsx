@@ -1,17 +1,79 @@
-import { Link } from '@remix-run/react';
+import { Form, Link, useLoaderData } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect, useRef } from 'react';
 import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from "react-calendly";
-import { LoaderFunctionArgs, json } from '@remix-run/node';
-import { getSession } from '~/utils/sessions';
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import { getSession, destroySession } from '~/utils/sessions';
 import axios from 'axios';
 import { Portal } from '@mui/material';
 // import { motion } from 'framer-motion';
 
+// const teamInfo = [
+//     {
+//         name: "Data Science",
+//         description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
+//         tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
+//     },
+//     {
+//         name: "Finance",
+//         description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
+//         tech: "EXCEL MONKEY EVERYDAY"
+//     },
+//     {
+//         name: "Cybersecurity",
+//         description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
+//         tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
+//     }
+// ]
+
+export async function action({request}: ActionFunctionArgs) {
+	const body = await request.formData();
+	const _action = body.get("_action");
+	console.log(_action);
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
+	if (_action == "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	}
+}
+
+export async function loader({request}: LoaderFunctionArgs) {
+	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("Auth: ", session.get("auth"));
+
+		const response = await axios.get(process.env.BACKEND_URL + '/user/list-teams/', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			},
+		});
+
+		if (response.status === 200) {
+			const data = response.data;
+			// console.log(data);
+			return json({ data });
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
+        
 export default function Teams() {
-	const teamInfo = [
+	/*const teamInfo = [
 		{
 			name: "Data Science",
 			description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
@@ -27,7 +89,7 @@ export default function Teams() {
 			description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
 			tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
 		}
-	]
+	]*/
 
 	const [events, setEvents] = useState([]);
 
@@ -68,6 +130,9 @@ export default function Teams() {
 		}
 	}
 
+	const teamInfo = useLoaderData<typeof loader>();
+	const teamInfoList = teamInfo.data.teams;
+	console.log(teamInfoList);
 	const [favorites, setFavorites] = useState([]);
 
 	const toggleFavorite = (teamName) => {
@@ -89,11 +154,18 @@ export default function Teams() {
 		name: 'Jon Snow',
 	}
 
+
     return (
         <div id="portal-root" className="flex-container">
             <div id="sidebar">
                 <img className="opportune-logo-small" src="opportune_logo.png"></img>
-                <Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+
+				<Form action="/teams" method="post">
+					<button className='logout-button' type="submit" 
+					name="_action" value="LogOut">
+					<ArrowLeftOnRectangleIcon /> 
+					</button>
+				</Form>
             </div>
             <div id="content">
                 <h2>Welcome Oppenheim </h2>
@@ -103,18 +175,18 @@ export default function Teams() {
 
                 <div className="horiz-flex-container">
 					<div className="teams-container">
-						{teamInfo.map((team) => {
+						{teamInfoList.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
 									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
 										<h3>{team.name}</h3>
-										<StarIcon style={{width: '30px', height: '30px'}} onClick={() => toggleFavorite(team.name)}/>
 									</div>
 									
 									<p> Tools and Technologies:
-										<li> {team.tech} </li>
+										{team.skills.map((skill) => (skill.name + ", "))}
+
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  
@@ -123,7 +195,7 @@ export default function Teams() {
 									{expanded && 
 										<div className="expanded-content">
 											<div className="text-content">
-												<p>{team.description}</p>
+												<p>Description: {team.description}</p>
 											</div>
 
 											<button

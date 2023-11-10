@@ -25,8 +25,8 @@ export default function SurveyUtil(questionList: ReactElement[]) {
 	return {
 		step,
 		stepComp: questionList[step],
-		isFirstStep: step !== 0,
-		isLastStep: step !== (questionList.length - 1),
+		isFirstStep: step === 0,
+		isLastStep: step === (questionList.length - 1),
 		previous, next, getProgress
 	}
 }
