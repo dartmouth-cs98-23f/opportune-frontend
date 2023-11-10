@@ -73,7 +73,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
         
 export default function Teams() {
-	const teamInfo = [
+	/*const teamInfo = [
 		{
 			name: "Data Science",
 			description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
@@ -89,7 +89,7 @@ export default function Teams() {
 			description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
 			tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
 		}
-	]
+	]*/
 
 	const [events, setEvents] = useState([]);
 
@@ -182,7 +182,6 @@ export default function Teams() {
 								<div className="team-text">
 									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
 										<h3>{team.name}</h3>
-										<StarIcon style={{width: '30px', height: '30px'}} onClick={() => toggleFavorite(team.name)}/>
 									</div>
 									
 									<p> Tools and Technologies:
