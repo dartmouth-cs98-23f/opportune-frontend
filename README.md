@@ -21,16 +21,29 @@ Frontend
 * `/results` matching results
 * `/project` (locked) - project management flow for next term
 
-## Setup
-Frontend
+## Setup Local Development
+Frontend Development
 - Clone this repository
 - Install project dependencies with `npm install`
 - Start the development server with `npm run dev`
 - Navigate to http://localhost:3000 to view the application.
 
+## Setup Testing Environment
+Make sure that Docker is installed prior to running the testing environment.
+
+Frontend
+- Run `docker-compose build`
+- Run `docker-compose up`
+
 Backend
+- Run `docker-compose build`
+- Run `docker-compose up`
 
 Matching Engine
+- Run `docker-compose build`
+- Run `docker-compose up`
+
+*Note:* Each time you make a change to the frontend, you must rerun `docker-compose build` and `docker-compose up`
 
 ## Authors
 Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
