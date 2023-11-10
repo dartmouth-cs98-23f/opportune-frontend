@@ -147,12 +147,27 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return skillRes.data
 		}
 
-		const [profileRes, skillRes] = await Promise.all([
+		async function getTeamsRes() {
+			const teamRes = await axios.get('http://opportune_backend:3000/user/list-teams', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+			console.log("Getting teams: ", teamRes.data)
+			return teamRes.data
+		}
+
+		const [profileRes, skillRes, teamsRes] = await Promise.all([
 			getProfileRes(),
-			getSkillRes()
+			getSkillRes(),
+			getTeamsRes()
 		]);
 
-		return json({ profileRes, skillRes });
+		// console.log(JSON.stringify({ profile: profileRes, skills: skillRes }));
+
+		return json({ profile: profileRes, 
+			          skills: skillRes,
+					  teams: teamsRes });
 	
 	} catch (error) {
 		console.log(error);
@@ -163,7 +178,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Matching() {
 	const basicInfo = useLoaderData<typeof loader>();
 	console.log("Reading basic info");
-	console.log(basicInfo);
+	// console.log(basicInfo.profile);
+
 	// const basicInfo = {
 	// 	data: {
 	// 		email: "",
@@ -174,39 +190,47 @@ export default function Matching() {
 	// 	}
 	// }
 
-	const basicInfoFields = basicInfo.data;
-
-	const basicInfoPrefs = basicInfoFields.new_hire.team_prefs;
-	const basicInfoSkills = basicInfoFields.new_hire.skills;
+	const basicInfoPrefs = basicInfo.profile.new_hire.team_prefs;
+	const basicInfoSkills = basicInfo.skills.skills;
+	const allTeams = basicInfo.teams.teams;
+	const newHireSkills = basicInfo.profile.new_hire.skills;
 
 	// generate list of teams and slots
-	const TeamList = basicInfoPrefs.length !== 0 ? basicInfoPrefs :
-	[
-		{name: "Finance", score: 0, _id: "Finance" },
-		{name: "ML/AI", score: 1, _id: "ML/AI"},
-		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
-	]
+	let TeamList: { name: string; score: number; _id: string; }[] = [];
+
+	if (basicInfoPrefs.length === 0) {
+		for (let i = 0; i < allTeams.length; i++) {
+			TeamList.push({name: allTeams[i].name, 
+				           score: allTeams.length - i,
+						   _id: allTeams[i].name})
+		}
+	} else {
+		TeamList = basicInfoPrefs
+	}
+
+	console.log("Team List: ", TeamList);
 
 	// const TeamList = [
-	// 	{name: "Finance", score: 0, _id: "Finance" },
-	// 	{name: "ML/AI", score: 1, _id: "ML/AI"},
-	// 	{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
+	// 	{name: "Finance", score: 3, _id: "Finance" },
+	// 	{name: "ML/AI", score: 2, _id: "ML/AI"},
+	// 	{name: "Cybersecurity", score: 1, _id: "Cybersecurity"}
 	// ]
 
 	// list of questions
 	const questionList = [<PlainText text="Let's get started!" />]
 
 	// add skill questions
-	for (var skill of basicInfoFields.new_hire.skills) {
-		questionList.push(<Scale question={`How comfortable are you with ${skill.name}?`} existingSkills={basicInfoSkills}/>)
+	console.log("Skills log: ", basicInfoSkills)
+	for (var skill of basicInfoSkills) {
+		questionList.push(<Scale question={`How comfortable are you with ${skill}?`} existingSkills={newHireSkills}/>)
 	}
 
 	// add ranking question and submission message
 	questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />)
 	questionList.push(<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />)
 
-	console.log("matching questionList");
-	console.log(questionList);
+	// console.log("matching questionList");
+	// console.log(questionList);
 
 	// <Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.new_hire.skills}/>,
 	/* <Textbox question="What was the rationale behind your first choice team?" */
@@ -237,11 +261,12 @@ export default function Matching() {
 					      onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
-							{isFirstStep ? <button type="submit" name="_action"
+							{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
 							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
-							{isLastStep ? <button type="submit" name="_action"
+							{!isLastStep ? <button type="submit" name="_action"
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{!isLastStep ? <button type="submit">Submit</button> : null}
+							{isLastStep ? <button type="submit" name="_action" 
+							value="LogOut">Done</button> : null}
 						</p>
 					</Form>
 					{/* <Form action="/matching">
@@ -254,7 +279,7 @@ export default function Matching() {
 					</Form> */}
 					
 					<p className="cta">
-						<Link to="/teams" className="prev-button">Back to Teams</Link>
+						{(isFirstStep && !isLastStep) ? <Link to="/teams" className="prev-button">Back to Teams</Link> : null}
 					</p>
 				</div>
 			</div>

@@ -22,15 +22,6 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// console.log(JSON.stringify(myJson));
 
-	/*if (_action == "getMatch") {
-		try {
-			const response = await axios.get('', myJson);
-		} catch(error) {
-			console.log(error)
-			return null
-		}
-	} */
-
 	if (_action == "LogOut") {
 		return redirect("/login", {
 			headers: {
