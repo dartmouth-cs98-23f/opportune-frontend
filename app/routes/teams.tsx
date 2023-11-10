@@ -1,7 +1,8 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, StarIcon} from '@heroicons/react/24/outline';
+import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid';
 import { useState, useEffect, useRef } from 'react';
 import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from "react-calendly";
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
@@ -135,15 +136,16 @@ export default function Teams() {
 	console.log(teamInfoList);
 	const [favorites, setFavorites] = useState([]);
 
-	const toggleFavorite = (teamName) => {
-		setFavorites(prev => {
-			if (prev.includes(teamName)) {
-				return prev.filter(name => name !== teamName); 
-			} else {
-				return [...prev, teamName];
-			}
-		});
-	}
+	// useEffect(() => {
+	// 	const form = document.getElementById('teams-id');
+	// 	const data = new FormData(form);
+	// 	data.append('favorites', JSON.stringify(favorites));
+
+	// 	fetch('/teams', {
+	// 		method: 'GET', 
+	// 	});
+
+	// }, [favorites]); 
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -174,14 +176,38 @@ export default function Teams() {
                 </div>
 
                 <div className="horiz-flex-container">
-					<div className="teams-container">
-						{teamInfoList.map((team) => {
+					<form id="teams-id" className="teams-container">
+						{teamInfo.map((team) => {
 							const [expanded, setExpanded] = useState(false);
+
+							const [filled, setFilled] = useState(false);
+
+							const toggleFavorite = (teamName) => {
+								setFavorites(prev => {
+									if (prev.includes(teamName)) {
+										return prev.filter(name => name !== teamName); 
+									} else {
+										return [...prev, teamName];
+									}
+								});
+								setFilled(prev => !prev);
+							}
 
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
-									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
 										<h3>{team.name}</h3>
+										{filled ? (  
+											<SolidStarIcon 
+												className="favorite-btn"
+												onClick={() => toggleFavorite(team.name)} 
+											/>
+										) : (
+											<StarIcon
+												className="favorite-btn" 
+												onClick={() => toggleFavorite(team.name)}  
+											/>
+										)}
 									</div>
 									
 									<p> Tools and Technologies:
@@ -222,7 +248,7 @@ export default function Teams() {
 								</div>
 							</div>
 						})}
-					</div>
+					</form>
 					<div className="meets-container">
 						{events ? events.map((event) => {
 							return <div className="team-box">
@@ -235,11 +261,6 @@ export default function Teams() {
 							</div>
 						}) : <p>No events booked yet!</p>}
 					</div>
-					{/* <div>
-						{favorites.map(name => (
-							<div>{name}</div> 
-						))}
-					</div> */}
                 </div>
 
                 <p className="cta">
