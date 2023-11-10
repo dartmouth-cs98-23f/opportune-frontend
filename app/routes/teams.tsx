@@ -1,14 +1,40 @@
 import { Link } from '@remix-run/react';
 import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, StarIcon} from '@heroicons/react/24/outline';
+import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid';
 import { useState, useEffect, useRef } from 'react';
 import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from "react-calendly";
-import { LoaderFunctionArgs, json } from '@remix-run/node';
+import { LoaderFunctionArgs, json, redirect, ActionFunctionArgs } from '@remix-run/node';
 import { getSession } from '~/utils/sessions';
 import axios from 'axios';
 import { Portal } from '@mui/material';
 // import { motion } from 'framer-motion';
+import { sessionStorage } from '~/sessions';
+
+// export async function loader({request}: LoaderFunctionArgs) {
+//   const session = await sessionStorage.getSession(request.headers.get("Cookie"));
+//   const favorites = session.get("favorites") || [];
+//   return json({ favorites });
+// } 
+
+// export async function action({request}: ActionFunctionArgs) {
+//   const session = await sessionStorage.getSession(
+//     request.headers.get("Cookie")
+//   );
+
+//   const form = await request.formData();
+//   const favorites = JSON.parse(form.get('favorites'));
+//   session.set("favorites", favorites);
+//   console.log("Favorites:", favorites);
+//   // redirect with favorites
+//   return redirect("/matching", {
+//     headers: {
+//       "Set-Cookie": await sessionStorage.commitSession(session)
+//     }
+//   });
+
+// }
 
 export default function Teams() {
 	const teamInfo = [
@@ -70,15 +96,16 @@ export default function Teams() {
 
 	const [favorites, setFavorites] = useState([]);
 
-	const toggleFavorite = (teamName) => {
-		setFavorites(prev => {
-			if (prev.includes(teamName)) {
-				return prev.filter(name => name !== teamName); 
-			} else {
-				return [...prev, teamName];
-			}
-		});
-	}
+	// useEffect(() => {
+	// 	const form = document.getElementById('teams-id');
+	// 	const data = new FormData(form);
+	// 	data.append('favorites', JSON.stringify(favorites));
+
+	// 	fetch('/teams', {
+	// 		method: 'GET', 
+	// 	});
+
+	// }, [favorites]); 
 
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -102,15 +129,38 @@ export default function Teams() {
                 </div>
 
                 <div className="horiz-flex-container">
-					<div className="teams-container">
+					<form id="teams-id" className="teams-container">
 						{teamInfo.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
+							const [filled, setFilled] = useState(false);
+
+							const toggleFavorite = (teamName) => {
+								setFavorites(prev => {
+									if (prev.includes(teamName)) {
+										return prev.filter(name => name !== teamName); 
+									} else {
+										return [...prev, teamName];
+									}
+								});
+								setFilled(prev => !prev);
+							}
+
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
-									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
 										<h3>{team.name}</h3>
-										<StarIcon style={{width: '30px', height: '30px'}} onClick={() => toggleFavorite(team.name)}/>
+										{filled ? (  
+											<SolidStarIcon 
+												className="favorite-btn"
+												onClick={() => toggleFavorite(team.name)} 
+											/>
+										) : (
+											<StarIcon
+												className="favorite-btn" 
+												onClick={() => toggleFavorite(team.name)}  
+											/>
+										)}
 									</div>
 									
 									<p> Tools and Technologies:
@@ -150,7 +200,7 @@ export default function Teams() {
 								</div>
 							</div>
 						})}
-					</div>
+					</form>
 					<div className="meets-container">
 						{events ? events.map((event) => {
 							return <div className="team-box">
@@ -163,11 +213,6 @@ export default function Teams() {
 							</div>
 						}) : <p>No events booked yet!</p>}
 					</div>
-					{/* <div>
-						{favorites.map(name => (
-							<div>{name}</div> 
-						))}
-					</div> */}
                 </div>
 
                 <p className="cta">

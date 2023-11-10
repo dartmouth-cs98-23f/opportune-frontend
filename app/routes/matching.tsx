@@ -111,6 +111,14 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect("/matching");
 }
 
+
+// async function fetchFavorites(request) {
+//   const session = await sessionStorage.getSession(
+//      request.headers.get("Cookie")
+//   );
+//   return session.get("favorites");
+// }
+
 export async function loader({
 	request,
 }: LoaderFunctionArgs) {
@@ -165,6 +173,10 @@ export default function Matching() {
 		{name: "ML/AI", score: 1, _id: "ML/AI"},
 		{name: "Cybersecurity", score: 2, _id: "Cybersecurity"}
 	]
+
+	// const { favorites } = useLoaderData();
+	// console.log("Favorites:", favorites);
+
 
 	// list of questions
 	const questionList = [

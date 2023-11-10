@@ -594,3 +594,8 @@ input[type="file"] {
 .calendly-popup-content {
     position: relative;
 }
+
+.favorite-btn {
+	width: 30px;
+	height: 30px
+}
