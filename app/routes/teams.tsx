@@ -158,7 +158,7 @@ export default function Teams() {
     return (
         <div id="portal-root" className="flex-container">
             <div id="sidebar">
-                <img className="opportune-logo-small" src="opportune_logo.png"></img>
+                <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
 
 				<Form action="/teams" method="post">
 					<button className='logout-button' type="submit" 

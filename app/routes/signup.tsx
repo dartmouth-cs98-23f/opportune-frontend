@@ -38,7 +38,7 @@ export default function SignUp() {
   return (
     <div className="block-container">
 		<div className="landing-box">
-			<img className="opportune-logo-large" src="opportune_logo.svg"></img>
+			<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			<Form method="post" action="/signup" id="login">
