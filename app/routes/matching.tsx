@@ -133,7 +133,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			return profileRes
+			console.log("Getting profile: ", profileRes.data)
+			return profileRes.data
 		}
 
 		async function getSkillRes() {
@@ -142,7 +143,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			return skillRes
+			console.log("Getting skills: ", skillRes.data)
+			return skillRes.data
 		}
 
 		const [profileRes, skillRes] = await Promise.all([
