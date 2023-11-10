@@ -283,7 +283,7 @@
 
 .team-box:hover {
 	background-color: #22506c13;
-	cursor: pointer;
+	/* cursor: pointer; */
 	transition: 0.3s;
 }
 
@@ -551,4 +551,48 @@ input[type="file"] {
 	width: 100px;
   height: 100px;
   border-radius: 50%;
+}
+
+/* Calendly */
+
+.calendly-overlay {
+	position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 9999;
+    background-color: #a5a5a5;
+    background-color: rgba(31,31,31,0.4);
+}
+
+.calendly-overlay .calendly-close-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.calendly-overlay .calendly-popup {
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    width: 80%;
+    min-width: 900px;
+    max-width: 1000px;
+    height: 90%;
+    max-height: 680px;
+}
+
+.calendly-overlay .calendly-popup .calendly-popup-content {
+    height: 100%;
+}
+
+.calendly-popup-content {
+    position: relative;
 }
