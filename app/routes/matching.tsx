@@ -119,30 +119,39 @@ export async function action({request}: ActionFunctionArgs) {
 	return redirect("/matching");
 }
 
-export async function loader({
-	request,
-}: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		
-		const response = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
+		console.log("Auth: ", session.get("auth"));
+
+		async function getProfileRes() {
+			const profileRes = await axios.get('http://opportune_backend:3000/users/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
-			},
-		});
-
-		console.log("Matching loader");
-		console.log(response.data);
-
-		if (response.status === 200) {
-			const data = response.data;
-			console.log(data);
-			return json({ data });
+			}});
+			return profileRes
 		}
+
+		async function getSkillRes() {
+			const skillRes = await axios.get('http://opportune_backend:3000/user/list-company-skills', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+			return skillRes
+		}
+
+		const [profileRes, skillRes] = await Promise.all([
+			getProfileRes(),
+			getSkillRes()
+		]);
+
+		return json({ profileRes, skillRes });
+	
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -151,6 +160,8 @@ export async function loader({
 
 export default function Matching() {
 	const basicInfo = useLoaderData<typeof loader>();
+	console.log("Reading basic info");
+	console.log(basicInfo);
 	// const basicInfo = {
 	// 	data: {
 	// 		email: "",
@@ -162,6 +173,7 @@ export default function Matching() {
 	// }
 
 	const basicInfoFields = basicInfo.data;
+
 	const basicInfoPrefs = basicInfoFields.new_hire.team_prefs;
 	const basicInfoSkills = basicInfoFields.new_hire.skills;
 
@@ -184,7 +196,7 @@ export default function Matching() {
 
 	// add skill questions
 	for (var skill of basicInfoFields.new_hire.skills) {
-		questionList.push(<Scale question="How comfortable are you with `{skill.name}`?" existingSkills={basicInfoSkills}/>)
+		questionList.push(<Scale question={`How comfortable are you with ${skill.name}?`} existingSkills={basicInfoSkills}/>)
 	}
 
 	// add ranking question and submission message

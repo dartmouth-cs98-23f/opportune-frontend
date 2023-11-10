@@ -266,7 +266,7 @@
 .team-box {
 	text-align: left;
 	justify-content: center;
-	background-color: white;
+	background-color: var(--color-primary-40);
 	border-radius: 10px;
 	transition: 0.3s;
 	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);

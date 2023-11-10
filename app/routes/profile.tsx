@@ -69,6 +69,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
+	console.log("Reading profile info");
+	console.log(basicInfo.data)
 	// const basicInfo = {
 	// 	data: {
 	// 		email: "",

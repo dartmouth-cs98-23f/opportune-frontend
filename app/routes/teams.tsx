@@ -141,8 +141,9 @@ export default function Teams() {
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
 									<h3>{team.name}</h3>
-									<p> Tools and Technologies:
-										<li> {team.skills.map(skill => skill.name)} </li>
+									<p> 
+									<b>Tools and Technologies: </b>
+									{team.skills.map((skill) => (skill.name + ", "))}
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  
