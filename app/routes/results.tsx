@@ -39,23 +39,28 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		console.log("Auth: ", session.get("auth"));
 
-		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			},
-		});
+		var response;
+		try {
+			response = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
+				headers: {
+				  "Authorization": session.get("auth"),
+				  "Content-Type": "application/json",
+				},
+			});
 
-		if (response.status === 200) {
 			const data = response.data;
 			console.log(data);
 			return json({ data });
-		} else if (response.status === 404) {
-			return null;
+		} catch(error) {
+			if(error.response.status == 404) {
+				return null;
+			} else {
+				return redirect('/login')
+			}
 		}
 	} catch (error) {
 		console.log(error);
-		return null;
+		return redirect('/login');
 	}
 };
 

@@ -44,7 +44,6 @@ export async function action({request}: ActionFunctionArgs) {
 			
 		} catch (error) {
 			console.log(error);
-			return null;
 		}
 		
 		if (_action === "updateProfile") {
@@ -77,7 +76,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 	} catch (error) {
 		console.log(error);
-		return null;
+		return redirect('/login');
 	}
 };
 

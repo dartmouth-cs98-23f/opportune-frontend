@@ -127,33 +127,45 @@ export async function loader({request}: LoaderFunctionArgs) {
 		console.log("Auth: ", session.get("auth"));
 
 		async function getProfileRes() {
-			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-			console.log("Getting profile: ", profileRes.data)
-			return profileRes.data
+			try {
+				const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				}});
+				console.log("Getting profile: ", profileRes.data)
+				return profileRes.data
+			} catch(error) {
+				return null;
+			}
 		}
 
 		async function getSkillRes() {
-			const skillRes = await axios.get(process.env.BACKEND_URL + '/user/list-company-skills', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-			console.log("Getting skills: ", skillRes.data)
-			return skillRes.data
+			try {
+				const skillRes = await axios.get(process.env.BACKEND_URL + '/user/list-company-skills', {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				}});
+				console.log("Getting skills: ", skillRes.data)
+				return skillRes.data
+			} catch(error) {
+				return null;
+			}
 		}
 
 		async function getTeamsRes() {
-			const teamRes = await axios.get(process.env.BACKEND_URL + '/user/list-teams', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-			console.log("Getting teams: ", teamRes.data)
-			return teamRes.data
+			try {
+				const teamRes = await axios.get(process.env.BACKEND_URL + '/user/list-teams', {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				}});
+				console.log("Getting teams: ", teamRes.data)
+				return teamRes.data
+			} catch(error) {
+				return null;
+			}
 		}
 
 		const [profileRes, skillRes, teamsRes] = await Promise.all([
@@ -161,6 +173,10 @@ export async function loader({request}: LoaderFunctionArgs) {
 			getSkillRes(),
 			getTeamsRes()
 		]);
+
+		if(!profileRes || !skillRes || !teamsRes) {
+			return redirect('/login');
+		}
 
 		// console.log(JSON.stringify({ profile: profileRes, skills: skillRes }));
 
