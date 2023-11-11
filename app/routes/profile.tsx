@@ -41,16 +41,10 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-			
+			return redirect("/teams");	
 		} catch (error) {
 			console.log(error);
 			return null;
-		}
-		
-		if (_action === "updateProfile") {
-			return redirect("/teams");
-		} else {
-			return redirect("/profile");
 		}
 	}
 }
@@ -62,6 +56,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 		);
 
 		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
 
 		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
 			headers: {
@@ -134,7 +131,8 @@ export default function Profile() {
 										<p>Software Engineer Intern</p>
 										<ImageUpload onUpload={handleOnUpload}>
 											{({ open }) => {
-												return <button className="custom-file-upload" onClick={open}>Upload Image</button>;
+												return <button className="custom-file-upload" onClick={open}
+												        type="button">Upload Image</button>;
 											}}
 										</ImageUpload>
 									</div>

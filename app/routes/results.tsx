@@ -38,6 +38,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 		);
 
 		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
 
 		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
 			headers: {

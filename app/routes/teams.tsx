@@ -36,6 +36,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 		);
 
 		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
 
 		const response = await axios.get(process.env.BACKEND_URL + '/user/list-teams/', {
 			headers: {
@@ -175,7 +178,7 @@ export default function Teams() {
 									
 									<p> 
 										<b>Tools and Technologies: </b>
-										{team.skills.map((skill) => (skill.name + ", "))}
+										{team.skills.map(skills => skills.name).join(", ")}
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  
@@ -190,7 +193,7 @@ export default function Teams() {
 											<button
 												className='schedule-btn'
 												onClick={() => setIsOpen(true)}
-												>
+												type='button'>
 												Schedule meeting
 											</button>
 											{isOpen && 
