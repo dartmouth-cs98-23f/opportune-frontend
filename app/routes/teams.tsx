@@ -178,11 +178,7 @@ export default function Teams() {
 									
 									<p> 
 										<b>Tools and Technologies: </b>
-<<<<<<< HEAD
-										{team.skills.map((skill, index) => (index != team.skills.length - 1 ? skill.name + ", " : skill.name))}
-=======
 										{team.skills.map(skills => skills.name).join(", ")}
->>>>>>> main
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  
