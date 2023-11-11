@@ -403,6 +403,7 @@ button[type="submit"] {
 }
 
 .custom-file-upload {
+	font-family: Mulish, Roboto;
 	text-decoration: none;
 	background-color: var(--color-primary-30);
 	color: var(--color-primary-40);

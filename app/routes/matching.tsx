@@ -178,17 +178,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Matching() {
 	const basicInfo = useLoaderData<typeof loader>();
 	console.log("Reading basic info");
-	// console.log(basicInfo.profile);
-
-	// const basicInfo = {
-	// 	data: {
-	// 		email: "",
-	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
-	// 			      school: "", grad_month: "", grad_year: "", major: "",
-	// 	              email: "", address: "", city: "", state_province: "", zip_code: "",
-	// 				  skills: [], team_prefs: []}
-	// 	}
-	// }
 
 	const basicInfoPrefs = basicInfo.profile.new_hire.team_prefs;
 	const basicInfoSkills = basicInfo.skills.skills;

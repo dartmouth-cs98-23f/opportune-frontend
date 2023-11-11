@@ -21,7 +21,8 @@ export async function action({
 		const response = await axios.post(process.env.BACKEND_URL + '/auth/register', myJson);
 
 		if (response.status == 204) {
-			console.log("Username is already in use.")
+			console.log("Username is already in use.");
+			alert("Username is already in use.");
 			return null
 		}
 

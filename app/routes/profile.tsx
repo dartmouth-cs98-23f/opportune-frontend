@@ -8,11 +8,12 @@ import SelectField from '~/components/SelectField';
 import axios from 'axios';
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect, json, LoaderFunction } from '@remix-run/node';
 import { useState } from 'react';
-import { getSession } from '../utils/sessions';
+import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
+	const _action = body.get("_action");
 
 	const session = await getSession(
 		request.headers.get("Cookie")
@@ -23,22 +24,34 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
-	console.log("Basic info JSON");
+	// console.log("Basic info JSON");
 	console.log(JSON.stringify(myJson));
 
-	try {
-		const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/profile', myJson, {
+	if (_action === 'updateProfile') {
+		try {
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/profile', myJson, {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				},
+			})
+			
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+		return redirect(`/teams`);
+    }
+
+	if (_action === "LogOut") {
+		return redirect("/login", {
 			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
+			  "Set-Cookie": await destroySession(session),
 			},
-		})
-	} catch (error) {
-		console.log(error);
-		return null;
+		});
 	}
 
-	return redirect(`/teams`);
+	
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -70,15 +83,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
 	console.log("Reading profile info");
-	console.log(basicInfo.data)
-	// const basicInfo = {
-	// 	data: {
-	// 		email: "",
-	// 		newHire: {first_name: "", last_name: "", race: "", sex: "", 
-	// 			      school: "", grad_month: "", grad_year: "", major: "",
-	// 	              email: "", address: "", city: "", state_province: "", zip_code: ""}
-	// 	}
-	// }
+	console.log(basicInfo.data);
 
 	const basicInfoFields = basicInfo.data;
 
@@ -99,13 +104,16 @@ export default function Profile() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_logo.svg"></img>
-				<Link className='logout-button' to="/login">
+				<Form action="/profile" method="post">
+				<button className="logout-button" type="submit"
+					    name="_action" value="LogOut"> 
 					<ArrowLeftOnRectangleIcon /> 
-				</Link>
+				</button>
+				</Form>
 			</div>
 			<div id="content">
 				<h2>Welcome {basicInfoFields.new_hire.first_name ? 
-				             basicInfoFields.new_hire.first_name : "Intern"} </h2>
+				             basicInfoFields.new_hire.first_name : "New Hire"} </h2>
 				<div id="menubar">
 					<MainNavigation />
 				</div>
@@ -120,7 +128,8 @@ export default function Profile() {
 									)}
 								
 									<div>
-										<h1>Oppenheimer</h1>
+										<h1>{basicInfoFields.new_hire.first_name ? basicInfoFields.new_hire.first_name + " ": "New Hire "} 
+										{basicInfoFields.new_hire.last_name ? basicInfoFields.new_hire.last_name: "Name"}</h1>
 										<p>Software Engineer Intern</p>
 										<ImageUpload onUpload={handleOnUpload}>
 											{({ open }) => {
@@ -154,7 +163,9 @@ export default function Profile() {
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code}/>
 
 							<p className="cta">
-								<button type="submit">Next</button>
+								<button type="submit" name="_action" value="updateProfile">
+									Next
+								</button>
 							</p>
 						</Form>
 					</div>

@@ -7,7 +7,7 @@ interface Text {
 export default function PlainText(text:Text) {
   return (
 	<div>
-		{text.text}
+		<p> {text.text} </p>
 	</div>
   )
 }
