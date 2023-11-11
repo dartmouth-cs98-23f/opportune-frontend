@@ -1,6 +1,6 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import { useState } from 'react';
-import { ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import axios from 'axios';
 import { destroySession, getSession } from '../utils/sessions';
 import styles from '~/styles/home.css';
@@ -125,6 +125,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 		);
 
 		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
 
 		async function getProfileRes() {
 			try {
@@ -178,8 +181,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return redirect('/login');
 		}
 
-		// console.log(JSON.stringify({ profile: profileRes, skills: skillRes }));
-
 		return json({ profile: profileRes, 
 			          skills: skillRes,
 					  teams: teamsRes });
@@ -213,12 +214,6 @@ export default function Matching() {
 	}
 
 	console.log("Team List: ", TeamList);
-
-	// const TeamList = [
-	// 	{name: "Finance", score: 3, _id: "Finance" },
-	// 	{name: "ML/AI", score: 2, _id: "ML/AI"},
-	// 	{name: "Cybersecurity", score: 1, _id: "Cybersecurity"}
-	// ]
 
 	// list of questions
 	const questionList = [<PlainText text="Let's get started!" />]
@@ -272,15 +267,6 @@ export default function Matching() {
 							{isLastStep ? <Link to="/results">Done</Link> : null}
 						</p>
 					</Form>
-					{/* <Form action="/matching">
-						{stepComp}
-						<p className="cta">
-							{isFirstStep ? <Link to="" className="prev-button" id="prev-q" onClick={previous}>Previous</Link> : null}
-							{isLastStep ? <Link to="" id="next-q" onClick={next}>Next</Link> : null}
-							{!isLastStep ? <button type="submit">Submit</button> : null}
-						</p>
-					</Form> */}
-					
 					<p className="cta">
 						{(isFirstStep && !isLastStep) ? <Link to="/teams" className="prev-button">Back to Teams</Link> : null}
 					</p>
@@ -289,14 +275,6 @@ export default function Matching() {
 		</div>
 	)
 }
-
-/* <Link to="/results">View Results </Link> */
-/* <Form method="post" action="/matching" id="login"> </Form> */
-
-/* motion.div initial={{ opacity: 0 }}
-			     animate={{ opacity: 1 }}
-			     exit={{ opacity: 0 }}
-				 transition={{ duration: 0.5 }} */
 		
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

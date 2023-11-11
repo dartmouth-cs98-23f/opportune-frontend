@@ -39,6 +39,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 		);
 
 		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
 
 		var response;
 		try {

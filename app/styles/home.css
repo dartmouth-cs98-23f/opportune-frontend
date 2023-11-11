@@ -213,6 +213,21 @@
 	display: none;
 }
 
+.css-qzz6v2-MuiSlider-root {
+    border-radius: 12px;
+    box-sizing: content-box;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    touch-action: none;
+    color: #1976d2;
+    -webkit-tap-highlight-color: transparent;
+    height: 4px;
+    padding: 13px 0;
+    margin-bottom: 20px;
+    width: 60%;
+}
+
 /* ranking */
 .rank-card {
 	background-color: rgba(212, 212, 223, 0.55);
