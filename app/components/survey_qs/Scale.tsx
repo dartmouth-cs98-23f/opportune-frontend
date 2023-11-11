@@ -1,14 +1,13 @@
 import styles from '~/styles/home.css';
-import { useEffect, useState } from 'react';
 import { Slider } from '@mui/material';
-// import { motion } from "framer-motion";
-import { Link } from '@remix-run/react'
+import { useEffect, useState } from 'react';
 
 interface Question {
 	question: string;
 	existingSkills: {name: string; score: number}[];
 } 
 
+// define scores
 const marks = [
 	{ value: 1, label: '1' },
 	{ value: 2, label: '2' },
@@ -34,12 +33,11 @@ export default function Scale(props:Question) {
 	setScore(savedScore);
   }, [skill])
   
-  // component
   return (
 	<div className="scale-container">
 		<p>{props.question}</p>
 		<div className="slider">
-			<Slider size="medium" value={score} min={1} max={5}
+			<Slider className="mui-slider" size="medium" value={score} min={1} max={5}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
 			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
 			<input type="hidden" name={skill} value={score}></input>

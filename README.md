@@ -2,14 +2,14 @@
 
 ## About
  
-<img src="team.jpeg" alt="team" width="200"/>
+<img src="public/team.jpeg" alt="team" width="200"/>
 
 A platform to tune an internship opportunity to the fullest. After interns receive an offer at a company, we help them get to know the teams and match them to the team of best fit.
 After the matching, we hope to provide a dedicated hub for the intern so that they can monitor their project / day-to-day tasks effortlessly.
 
 ## Architecture
-Frontend: Remix Run, HTML/CSS
-Backend: Express, MongoDB
+Frontend: HTML/CSS/Javascript, React, Remix Run, Axios
+Backend: Express, MongoDB, 
 
 Frontend
 * `/` landing page

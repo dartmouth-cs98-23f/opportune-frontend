@@ -1,19 +1,18 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
+import { useState } from 'react';
+import { ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import axios from 'axios';
+import { destroySession, getSession } from '../utils/sessions';
 import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { UserCircleIcon } from '@heroicons/react/24/solid';
 import SurveyUtil from '~/components/survey_qs/SurveyUtil';
 import Progress from '~/components/survey_qs/Progress';
 import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
-import axios from 'axios';
-import { ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
-import { useState } from 'react';
-// import { motion } from 'framer-motion';
-import { destroySession, getSession } from '../utils/sessions';
+
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();

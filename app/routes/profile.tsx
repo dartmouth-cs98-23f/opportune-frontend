@@ -2,7 +2,6 @@ import { Link, Form, useLoaderData } from '@remix-run/react';
 import styles from '~/styles/home.css'
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
-import { UserCircleIcon } from '@heroicons/react/24/solid';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import axios from 'axios';
@@ -26,8 +25,15 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// console.log("Basic info JSON");
 	console.log(JSON.stringify(myJson));
+	console.log(_action)
 
-	if (_action === 'updateProfile') {
+	if (_action === "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	} else {
 		try {
 			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/profile', myJson, {
 				headers: {
@@ -40,18 +46,13 @@ export async function action({request}: ActionFunctionArgs) {
 			console.log(error);
 			return null;
 		}
-		return redirect(`/teams`);
-    }
-
-	if (_action === "LogOut") {
-		return redirect("/login", {
-			headers: {
-			  "Set-Cookie": await destroySession(session),
-			},
-		});
+		
+		if (_action === "updateProfile") {
+			return redirect("/teams");
+		} else {
+			return redirect("/profile");
+		}
 	}
-
-	
 }
 
 export async function loader({request}: LoaderFunctionArgs) {

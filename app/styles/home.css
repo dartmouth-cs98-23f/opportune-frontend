@@ -2,6 +2,7 @@
 .block-container {
 	text-align: center;
 	background-image: url(public/landing.svg);
+	background-size: cover;
 	color: var(--color-primary-10);
 	height: 100vh;
 	overflow: auto;

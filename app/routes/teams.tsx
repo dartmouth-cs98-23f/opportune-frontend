@@ -11,24 +11,6 @@ import axios from 'axios';
 import { Portal } from '@mui/material';
 // import { motion } from 'framer-motion';
 
-// const teamInfo = [
-//     {
-//         name: "Data Science",
-//         description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
-//         tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
-//     },
-//     {
-//         name: "Finance",
-//         description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
-//         tech: "EXCEL MONKEY EVERYDAY"
-//     },
-//     {
-//         name: "Cybersecurity",
-//         description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
-//         tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
-//     }
-// ]
-
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -74,23 +56,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
         
 export default function Teams() {
-	/*const teamInfo = [
-		{
-			name: "Data Science",
-			description: "The Data Science Team is committed to leveraging data-driven approaches to support informed decision-making, optimize processes, and drive innovation within the company. We transform raw data into actionable insights, predictive models, and data products that contribute to the overall success of the organization.",
-			tech: "Python, R, scikit-learn, Tensorflow, Pytorch, AWS, Azure, SQL, PowerBI"
-		},
-		{
-			name: "Finance",
-			description: "The Finance Team is dedicated to maintaining financial stability, optimizing resource allocation, and providing accurate financial guidance to support the company's growth and sustainability. We are responsible for managing the company's finances, forecasting, and analyzing financial data, and ensuring regulatory compliance.",
-			tech: "EXCEL MONKEY EVERYDAY"
-		},
-		{
-			name: "Cybersecurity",
-			description: "The Cybersecurity Team is dedicated to protecting the company's digital assets, ensuring the confidentiality, integrity, and availability of data, and mitigating cyber threats. We implement robust security measures, conduct risk assessments, and stay vigilant in defending against evolving cyber threats.",
-			tech: "SIEM, IDPS, Antivirus / anti-malware software, encryption tools, vulnerability scanning, IAM platforms",
-		}
-	]*/
 
 	const [events, setEvents] = useState([]);
 
@@ -156,12 +121,10 @@ export default function Teams() {
 		name: 'Jon Snow',
 	}
 
-
     return (
         <div id="portal-root" className="flex-container">
             <div id="sidebar">
                 <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-
 				<Form action="/teams" method="post">
 					<button className='logout-button' type="submit" 
 					name="_action" value="LogOut">
@@ -177,7 +140,7 @@ export default function Teams() {
 
                 <div className="horiz-flex-container">
 					<form id="teams-id" className="teams-container">
-						{teamInfo.map((team) => {
+						{teamInfoList.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
 							const [filled, setFilled] = useState(false);
@@ -210,9 +173,9 @@ export default function Teams() {
 										)}
 									</div>
 									
-									<p> Tools and Technologies:
+									<p> 
+										<b>Tools and Technologies: </b>
 										{team.skills.map((skill) => (skill.name + ", "))}
-
 									</p>
 									<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
 										{expanded ? 'Read Less' : 'Read More'}  

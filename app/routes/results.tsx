@@ -65,7 +65,7 @@ export default function Results() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_logo.png"></img>
+				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
 				<Form action="/results" method="post">
 					<button className='logout-button' type="submit"
 					name="_action" value="LogOut"> 
