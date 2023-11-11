@@ -3,6 +3,7 @@ import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
+import { useState } from 'react';
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
 // import { motion } from 'framer-motion';
@@ -93,8 +94,39 @@ export default function Results() {
 }
 
 export function matchingResults(teamInfo: json) {
+	console.log("Team Info: " + teamInfo);
 	if(teamInfo) {
-		return (<p>Congrats! You were matched to {teamInfo.data.team.name}</p>)
+		const team = teamInfo.data.team;
+		const [expanded, setExpanded] = useState(false);
+		return (
+			<div>
+				<p>Congrats, we found you a team!</p>
+				<p>We think you'd be an excellent match.</p>
+				<div className="team-box" key={team.name}>
+					<div className="team-text">
+						<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+							<h3>{team.name}</h3>
+						</div>
+						
+						<p> 
+							<b>Tools and Technologies: </b>
+							{team.skills.map((skill, index) => (index != team.skills.length - 1 ? skill.name + ", " : skill.name))}
+						</p>
+						<p className='read-more-btn' onClick={() => setExpanded(!expanded)}>
+							{expanded ? 'Read Less' : 'Read More'}  
+						</p>
+
+						{expanded && 
+							<div className="expanded-content">
+								<div className="text-content">
+									<p>Description: {team.description}</p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		)
 	} else {
 		return (<p>Matching results will be out on July 2.</p>)
 	}
