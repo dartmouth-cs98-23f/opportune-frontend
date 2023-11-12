@@ -185,79 +185,107 @@ export default function Matching() {
 	const newHireSkills = basicInfo.profile.new_hire.skills;
 
 	// generate list of teams and slots
-	let TeamList: { name: string; score: number; _id: string; }[] = [];
+	const questionList = [];
+	if (basicInfo.profile.new_hire.team_id === '') {
+		let TeamList: { name: string; score: number; _id: string; }[] = [];
 
-	if (basicInfoPrefs.length === 0) {
-		for (let i = 0; i < allTeams.length; i++) {
-			TeamList.push({name: allTeams[i].name, 
-				           score: allTeams.length - i,
-						   _id: allTeams[i].name})
+		if (basicInfoPrefs.length === 0) {
+			for (let i = 0; i < allTeams.length; i++) {
+				TeamList.push({name: allTeams[i].name, 
+							score: allTeams.length - i,
+							_id: allTeams[i].name})
+			}
+		} else {
+			TeamList = basicInfoPrefs
 		}
+		console.log("Team List: ", TeamList);
+
+		// list of questions
+		questionList.push(<PlainText text="Let's get started!" />)
+
+		// add skill questions
+		console.log("Skills log: ", basicInfoSkills)
+		for (var skill of basicInfoSkills) {
+			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} existingSkills={newHireSkills}/>)
+		}
+
+		// add ranking question and submission message
+		questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />)
+		questionList.push(<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />)
 	} else {
-		TeamList = basicInfoPrefs
+		// push results message if new hire already has team
+		questionList.push(<PlainText text="Matching results are out already! Click the button below to view your match." />);
 	}
-
-	console.log("Team List: ", TeamList);
-
-	// list of questions
-	const questionList = [<PlainText text="Let's get started!" />]
-
-	// add skill questions
-	console.log("Skills log: ", basicInfoSkills)
-	for (var skill of basicInfoSkills) {
-		questionList.push(<Scale question={`How comfortable are you with ${skill}?`} existingSkills={newHireSkills}/>)
-	}
-
-	// add ranking question and submission message
-	questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />)
-	questionList.push(<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />)
-
-	// console.log("matching questionList");
-	// console.log(questionList);
-
-	// <Scale question="How comfortable are you with Python?" existingSkills={basicInfoFields.new_hire.skills}/>,
-	/* <Textbox question="What was the rationale behind your first choice team?" */
 
 	const {step, stepComp, isFirstStep, isLastStep,
 		   previous, next, getProgress} = SurveyUtil(questionList);
 	const [triggered, setTriggered] = useState("next-q");
 
-	return (
-		<div className="flex-container">
-			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/matching" method="post">
-					<button className="logout-button" type="submit"
-					name="_action" value="LogOut"> 
-						<ArrowLeftOnRectangleIcon /> 
-					</button>
-				</Form>
-			</div>
-			<div id="content">
-				<h2>Welcome Oppenheim </h2>
-				<div id="menubar">
-					<MainNavigation />
+	if (basicInfo.profile.new_hire.team_id === '') {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+					<Form action="/matching" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
 				</div>
-				<div>
-					<Progress pct={getProgress()}/>
-					<Form action="/matching" method="post" 
-					      onSubmit={triggered === "next-q" ? next : previous}>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+					<div>
+						<Progress pct={getProgress()}/>
+						<Form action="/matching" method="post" 
+							onSubmit={triggered === "next-q" ? next : previous}>
+							{stepComp}
+							<p className="cta">
+								{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
+								value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
+								{!isLastStep ? <button type="submit" name="_action"
+								value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
+								{isLastStep ? <Link to="/results">Done</Link> : null}
+							</p>
+						</Form>
+						<p className="cta">
+							{(isFirstStep && !isLastStep) ? <Link to="/teams" className="prev-button">Back to Teams</Link> : null}
+						</p>
+					</div>
+				</div>
+			</div>
+		)
+	} else {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+					<Form action="/matching" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
+				</div>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+					<div>
+						<Progress pct={100}/>
 						{stepComp}
 						<p className="cta">
-							{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
-							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
-							{!isLastStep ? <button type="submit" name="_action"
-							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{isLastStep ? <Link to="/results">Done</Link> : null}
+							<Link to="/results">View Results</Link>
 						</p>
-					</Form>
-					<p className="cta">
-						{(isFirstStep && !isLastStep) ? <Link to="/teams" className="prev-button">Back to Teams</Link> : null}
-					</p>
+					</div>
 				</div>
 			</div>
-		</div>
-	)
+		)
+	}
 }
 		
 export function links() {

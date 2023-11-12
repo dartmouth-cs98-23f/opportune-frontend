@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from "react-calendly";
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
+// import { useWindowSize } from 'react-use';
+import Confetti from 'react-confetti';
 // import { motion } from 'framer-motion';
 
 export async function action({request}: ActionFunctionArgs) {
@@ -83,7 +85,6 @@ export default function Results() {
 				</div>
 				<div>
 					{matchingResults(teamInfo)}
-					<p className="cta"> <Link to="/matching">Edit Responses </Link></p>
 				</div>
 			</div>
 		</div>
@@ -108,8 +109,8 @@ export function matchingResults(teamInfo: json) {
 
 		return (
 			<div>
-				<p>Congrats, we found you a team!</p>
-				<p>We think you'd be an excellent match.</p>
+				<p>Congrats! You were matched to the following team: </p>
+				<h1>{team.name}</h1>
 				<div className="team-box" key={team.name}>
 					<div className="team-text">
 						<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
@@ -151,12 +152,22 @@ export function matchingResults(teamInfo: json) {
 
 							</div>
 						}
+						<Confetti colors={['#1E2578', '#4559B8', '#A9B2DC', '#EAF1FE', '#FF892F']}/>
 					</div>
 				</div>
+				<p className="cta">
+					<Form action="/results" method="post">
+						<button type="submit" name="_action" value="LogOut">Done</button>
+					</Form>
+				</p>
 			</div>
+		
 		)
 	} else {
-		return (<p>Matching results will be out on July 2.</p>)
+		return (<div>
+				  <p>Matching results will be out on July 2.</p>
+				  <p className="cta"> <Link to="/matching">Edit Responses </Link></p>
+			    </div>)
 	}
 }
 
