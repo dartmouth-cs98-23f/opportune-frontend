@@ -209,23 +209,59 @@
 	margin: 10px;
 }
 
-.invisible-input {
-	display: none;
-}
-
-.css-qzz6v2-MuiSlider-root {
+.MuiSlider-root {
     border-radius: 12px;
     box-sizing: content-box;
     display: inline-block;
     position: relative;
     cursor: pointer;
     touch-action: none;
-    color: #1976d2;
+    color: var(--color-primary-20);
     -webkit-tap-highlight-color: transparent;
     height: 4px;
     padding: 13px 0;
     margin-bottom: 20px;
     width: 60%;
+}
+
+.MuiSlider-rail {
+    display: block;
+    position: absolute;
+    border-radius: inherit;
+    background-color: currentColor;
+    opacity: 0.38;
+    width: 100%;
+    height: inherit;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.MuiSlider-thumb {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    outline: 0;
+    background-color: currentColor;
+    display: flex;
+	justify-content: center;
+    transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,left 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,bottom 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.MuiSlider-markLabel {
+    font-family: Mulish, Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.43;
+    letter-spacing: 0.01071em;
+    color: rgba(0, 0, 0, 0.87);
+    position: absolute;
+    white-space: nowrap;
+    top: 30px;
+    transform: translateX(-50%);
 }
 
 /* ranking */
