@@ -44,15 +44,15 @@ export default function SignUp() {
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			<Form method="post" action="/signup" id="login">
 			<p className="login-field">
-				<label id="email">Pick a username: </label>
+				<label id="email">Enter Email: </label>
 				<input type="text" id="email" name="email" required />
 			</p>
 			<p className="login-field">
-				<label id="password">Pick a strong password: </label>
+				<label id="password">Create a password: </label>
 				<input type="password" name="password" required />
 			</p>
 			<p className="cta">
-				<button type="submit">Submit</button>
+				<button type="submit">Sign Up</button>
 			</p>
 			</Form>
 			<p>Already have an account? <Link to="/login">Sign in</Link></p>
