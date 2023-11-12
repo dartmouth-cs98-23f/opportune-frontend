@@ -160,8 +160,6 @@ export default function Profile() {
 							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city}/>
 							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province}/>
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code}/>
-						</Form>
-						<Form action="/profile" method="post">
 							<p className="cta">
 								<button type="submit" name="_action" value="updateProfile">
 									Next
