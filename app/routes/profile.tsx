@@ -24,7 +24,7 @@ export async function action({request}: ActionFunctionArgs) {
 	}
 
 	// console.log("Basic info JSON");
-	console.log(JSON.stringify(myJson));
+	console.log("My json: ", JSON.stringify(myJson));
 	console.log(_action)
 
 	if (_action === "LogOut") {
@@ -69,7 +69,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		if (response.status === 200) {
 			const data = response.data;
-			console.log(data);
+			console.log("Loader data: ", data);
 			return json({ data });
 		}
 	} catch (error) {
@@ -80,8 +80,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
-	console.log("Reading profile info");
-	console.log(basicInfo.data);
+	// console.log("Reading profile info");
+	// console.log(basicInfo.data);
 
 	const basicInfoFields = basicInfo.data;
 
@@ -160,7 +160,7 @@ export default function Profile() {
 							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city}/>
 							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province}/>
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code}/>
-							<p className="cta">
+							<p className="cta" style={{textAlign: 'right'}}>
 								<button type="submit" name="_action" value="updateProfile">
 									Next
 								</button>

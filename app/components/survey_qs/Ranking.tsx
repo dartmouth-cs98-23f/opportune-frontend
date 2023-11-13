@@ -10,12 +10,15 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 interface Ranking {
 	question: string;
 	teams: {name: string, score: number, _id: string}[];
+	favoriteTeams: string[];
 }
 
 export default function Ranking(props:Ranking) {
   const [teams, setTeams] = useState(props.teams);
   const teamIds = useMemo(() => teams.map((team) => team._id), [teams]);
-  console.log(teams)
+  const favoriteTeams = useState(props.favoriteTeams);
+  console.log("Fav teams: ", favoriteTeams);
+  console.log("Teams: ", teams);
 
   function handleDragEnd(event: any) {
 	const { active, over } = event;
@@ -38,7 +41,7 @@ export default function Ranking(props:Ranking) {
 				<SortableContext items={teamIds}>
 				<p> Best </p>
 				{teams.map(slot => 
-				  <TeamCard name={slot.name} key={slot._id} id={slot._id} class="rank-card" />
+				  <TeamCard name={slot.name} key={slot._id} id={slot._id} class="rank-card" favorited={favoriteTeams[0].includes(slot.name)}/>
 				)}
 				{teams.map((slot, idx) => 
 				  <input type="hidden" name={slot.name} value={teams.length - idx}/>
