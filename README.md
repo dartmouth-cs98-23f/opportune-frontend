@@ -45,6 +45,10 @@ Matching Engine
 
 *Note:* Each time you make a change to the frontend, you must rerun `docker-compose build` and `docker-compose up`
 
+## Deployment
+We are using [render](https://render.com/) to host and run our application. It is deployed as a web service run inside a docker container.
+Use this [webhook](https://api.render.com/deploy/srv-cl78shf6e7vc739qgb7g?key=s2AUu7liU0E) to manually redeploy the frontend.
+
 ## Authors
 Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
 
