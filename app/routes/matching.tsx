@@ -184,21 +184,63 @@ export default function Matching() {
 	const allTeams = basicInfo.teams.teams;
 	const newHireSkills = basicInfo.profile.new_hire.skills;
 
+	// new addition
+	const favoriteTeams = basicInfo.profile.new_hire.favorited_teams;
+
+	console.log("Fav teams: ", favoriteTeams);
+
+
+	console.log("Skill: ", newHireSkills);
+	console.log("All teams: ", allTeams);
+	console.log("Team prefs: ", basicInfoPrefs);
 	// generate list of teams and slots
 	const questionList = [];
 	if (basicInfo.profile.new_hire.team_id === '') {
-		let TeamList: { name: string; score: number; _id: string; }[] = [];
+		let teamList: { name: string; score: number; _id: string; }[] = [];
 
-		if (basicInfoPrefs.length === 0) {
-			for (let i = 0; i < allTeams.length; i++) {
-				TeamList.push({name: allTeams[i].name, 
-							score: allTeams.length - i,
-							_id: allTeams[i].name})
+		if (favoriteTeams) {
+			let maxScore = allTeams.length;
+			for (let item of favoriteTeams) {
+				// Find matching team
+				const team = allTeams.find(t => t.name === item);
+				teamList.push({ name: team.name, 
+								score: maxScore--,
+								_id: team.name
+				});
+			}
+			// push remaining teams
+			if (teamList.length != allTeams.length) {
+				if (basicInfoPrefs.length === 0) {
+					for (let team of allTeams) {
+						if (!favoriteTeams.includes(team.name)) {
+							teamList.push({name: team.name, 
+									score: allTeams.length - teamList.length,
+									_id: team.name})
+						}
+						
+					}
+				} else {
+					for (let team of basicInfoPrefs) {
+						if (!favoriteTeams.includes(team.name)) {
+							teamList.push({name: team.name, 
+									score: team.score,
+									_id: team._id})
+						}
+					}
+				}
 			}
 		} else {
-			TeamList = basicInfoPrefs
+			if (basicInfoPrefs.length === 0) {
+				for (let i = 0; i < allTeams.length; i++) {
+					teamList.push({name: allTeams[i].name, 
+								score: allTeams.length - i,
+								_id: allTeams[i].name})
+				}
+			} else {
+				teamList = basicInfoPrefs
+			}
 		}
-		console.log("Team List: ", TeamList);
+		console.log("Team list: ", teamList);
 
 		// list of questions
 		questionList.push(<PlainText text="Let's get started!" />)
@@ -210,7 +252,7 @@ export default function Matching() {
 		}
 
 		// add ranking question and submission message
-		questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={TeamList} />)
+		questionList.push(<Ranking question="Rank the following teams (best to worst)" teams={teamList} favoriteTeams={favoriteTeams}/>)
 		questionList.push(<PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />)
 	} else {
 		// push results message if new hire already has team

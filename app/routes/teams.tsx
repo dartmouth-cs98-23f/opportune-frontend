@@ -13,12 +13,15 @@ import { Portal } from '@mui/material';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
+
 	const _action = body.get("_action");
-	console.log(_action);
+	// console.log("Action: ", _action);
 
 	const session = await getSession(
 		request.headers.get("Cookie")
 	);
+
+	const favoriteJson = body.get("favorites");
 
 	if (_action == "LogOut") {
 		return redirect("/login", {
@@ -26,6 +29,21 @@ export async function action({request}: ActionFunctionArgs) {
 			  "Set-Cookie": await destroySession(session),
 			},
 		});
+	} else {
+		try {
+			const newFavs = {favorited_teams: favoriteJson ? favoriteJson.split(",") : []};
+			console.log("Patch request: ", newFavs);
+			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/favorited-teams', newFavs, {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			})
+			return null;
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
 	}
 }
 
@@ -35,23 +53,36 @@ export async function loader({request}: LoaderFunctionArgs) {
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
 		if (!session.get("auth")) {
 			return redirect("/login")
 		}
 
-		const response = await axios.get(process.env.BACKEND_URL + '/user/list-teams/', {
+		async function getTeamsRes() {
+			const teamRes = await axios.get(process.env.BACKEND_URL + '/user/list-teams', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
-			},
-		});
-
-		if (response.status === 200) {
-			const data = response.data;
-			// console.log(data);
-			return json({ data });
+			}});
+			return teamRes.data
 		}
+
+		async function getProfileRes() {
+			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+			return profileRes.data
+		}
+
+		const [profileRes, teamsRes] = await Promise.all([
+			getProfileRes(),
+			getTeamsRes()
+		]);
+
+		console.log("Get profile ", profileRes.data);
+
+		return json({ profile: profileRes, teams: teamsRes });
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -100,28 +131,21 @@ export default function Teams() {
 	}
 
 	const teamInfo = useLoaderData<typeof loader>();
-	const teamInfoList = teamInfo.data.teams;
-	console.log(teamInfoList);
-	const [favorites, setFavorites] = useState([]);
+	
+	console.log("Teaminfo: ", teamInfo);
+	const teamInfoList = teamInfo.teams.teams;
 
-	// useEffect(() => {
-	// 	const form = document.getElementById('teams-id');
-	// 	const data = new FormData(form);
-	// 	data.append('favorites', JSON.stringify(favorites));
+	const favoritedTeamList = teamInfo.profile.new_hire.favorited_teams;
 
-	// 	fetch('/teams', {
-	// 		method: 'GET', 
-	// 	});
-
-	// }, [favorites]); 
+	const [favoritedTeams, setFavoritedTeams] = useState(favoritedTeamList);
 
 	const [isOpen, setIsOpen] = useState(false);
 
 	const prefill={
-		email: 'test@test.com',
-		firstName: 'Jon',
-		lastName: 'Snow',
-		name: 'Jon Snow',
+		email: teamInfo.profile.email,
+		firstName: teamInfo.profile.new_hire.first_name,
+		lastName: teamInfo.profile.new_hire.last_name,
+		name: teamInfo.profile.new_hire.first_name + teamInfo.profile.new_hire.last_name,
 	}
 
     return (
@@ -136,43 +160,44 @@ export default function Teams() {
 				</Form>
             </div>
             <div id="content">
-                <h2>Welcome Oppenheim </h2>
+                <h2>Welcome {teamInfo.profile.new_hire.first_name ? 
+				             teamInfo.profile.new_hire.first_name : "New Hire"} </h2>
                 <div id="menubar">
                     <MainNavigation />
                 </div>
 
                 <div className="horiz-flex-container">
-					<form id="teams-id" className="teams-container">
+					<Form action="/teams" method="post" className="teams-container">
 						{teamInfoList.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
-							const [filled, setFilled] = useState(false);
+							const handleFavorite = (teamName) => {
+								setFavoritedTeams(prevTeams => {
 
-							const toggleFavorite = (teamName) => {
-								setFavorites(prev => {
-									if (prev.includes(teamName)) {
-										return prev.filter(name => name !== teamName); 
-									} else {
-										return [...prev, teamName];
-									}
-								});
-								setFilled(prev => !prev);
+								// If already favorited, remove it 
+								if (prevTeams.includes(teamName)) {
+									return prevTeams.filter(team => team !== teamName);
+								} else {
+									return [...prevTeams, teamName];
+								}
+							});
+
 							}
 
 							return <div className="team-box" key={team.name}>
 								<div className="team-text">
 									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
 										<h3>{team.name}</h3>
-										{filled ? (  
-											<SolidStarIcon 
-												className="favorite-btn"
-												onClick={() => toggleFavorite(team.name)} 
-											/>
+										<input type="hidden" name="favorites" defaultValue={favoritedTeams} value={favoritedTeams}/>
+										{favoritedTeamList.includes(team.name) ? (  
+											<button type="submit" name="_action" className="favorite-btn" onClick={() => handleFavorite(team.name)} value="updateFavorite">
+												<SolidStarIcon className="star-icon"/>
+											</button>
+											
 										) : (
-											<StarIcon
-												className="favorite-btn" 
-												onClick={() => toggleFavorite(team.name)}  
-											/>
+											<button type="submit" name="_action" className="favorite-btn" onClick={() => handleFavorite(team.name)} value="updateFavorite">
+												<StarIcon className="star-icon"/>
+											</button>
 										)}
 									</div>
 									
@@ -214,7 +239,7 @@ export default function Teams() {
 								</div>
 							</div>
 						})}
-					</form>
+					</Form>
 					<div className="meets-container">
 						{events ? events.map((event) => {
 							return <div className="team-box">

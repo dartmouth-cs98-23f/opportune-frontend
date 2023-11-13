@@ -266,13 +266,23 @@
 
 /* ranking */
 .rank-card {
-	background-color: rgba(212, 212, 223, 0.55);
-	display: block;
-	margin: 20px auto;
-	padding: 1px;
-	width: 20%;
-	border-radius: 10px;
-	transition: 0.3s;
+	background-color: #d4d4df8c;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 20px auto;
+    padding: 1px;
+    width: 20%;
+    border-radius: 10px;
+    transition: .3s;
+}
+
+.favorite-icon {
+	width: 1.5rem;
+    position: absolute;
+    right: 8%;
 }
 
 .rank-card:hover {
@@ -651,6 +661,10 @@ input[type="file"] {
 }
 
 .favorite-btn {
-	width: 30px;
-	height: 30px
+	all: unset;
+}
+
+.favorite-btn .star-icon{
+	width: 2rem;
+	height: 2rem
 }
