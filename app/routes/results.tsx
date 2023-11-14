@@ -112,7 +112,7 @@ export default function Results() {
 export function matchingResults(resultsData: json) {
 	if(resultsData.teamInfo) {
 		
-		const team = resultsData.teamInfo.data.team;
+		const team = resultsData.teamInfo.team;
 		const [expanded, setExpanded] = useState(false);
 		const [isOpen, setIsOpen] = useState(false);
 
