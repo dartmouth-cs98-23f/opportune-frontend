@@ -46,18 +46,34 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return redirect("/login")
 		}
 
-		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			},
-		});
-
-		if (response.status === 200) {
-			const data = response.data;
-			console.log(data);
-			return json({ data });
+		async function getProfileRes() {
+			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				}
+			});
+			console.log("Getting profile: ", profileRes.data)
+			return profileRes.data
 		}
+
+		async function getTeamInfoRes() {
+			const teamInfoRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			});
+			return teamInfoRes.data
+		}
+
+		const [profileRes,teamInfoRes] = await Promise.all([
+			getProfileRes(),
+			getTeamInfoRes()
+		]);
+
+		return json({ profile: profileRes, teamInfo: teamInfoRes });
+		
 	} catch (error) {
 		console.log(error);
 		return null;
@@ -65,7 +81,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
 
 export default function Results() {
-	const teamInfo = useLoaderData<typeof loader> ();
+	const resultsData = useLoaderData<typeof loader> ();
+	console.log("team: ", resultsData); // why is this whole thing null?? resultsData.profile should still be populated with profile data
 
 	return (
 		<div className="flex-container">
@@ -79,32 +96,31 @@ export default function Results() {
 				</Form>
 			</div>
 			<div id="content">
-				<h2>Welcome Oppenheim </h2>
+				<h2>Welcome {resultsData.profile.new_hire.first_name ? 
+				             resultsData.profile.new_hire.first_name : "New Hire"} </h2>
 				<div id="menubar">
 					<MainNavigation />
 				</div>
 				<div>
-					{matchingResults(teamInfo)}
+					{matchingResults(resultsData)}
 				</div>
 			</div>
 		</div>
 	)
 }
 
-export function matchingResults(teamInfo: json) {
-	console.log("Team Info: " + teamInfo);
-
-	if(teamInfo) {
+export function matchingResults(resultsData: json) {
+	if(resultsData.teamInfo) {
 		
-		const team = teamInfo.data.team;
+		const team = resultsData.teamInfo.data.team;
 		const [expanded, setExpanded] = useState(false);
 		const [isOpen, setIsOpen] = useState(false);
 
 		const prefill={
-			email: 'test@test.com',
-			firstName: 'Jon',
-			lastName: 'Snow',
-			name: 'Jon Snow',
+			email: resultsData.profile.email,
+			firstName: resultsData.profile.new_hire.first_name,
+			lastName: resultsData.profile.new_hire.last_name,
+			name: resultsData.profile.new_hire.first_name + " " + resultsData.profile.new_hire.last_name,
 		}
 
 		return (
