@@ -33,7 +33,7 @@ export async function action({request}: ActionFunctionArgs) {
 		try {
 			const newFavs = {favorited_teams: favoriteJson ? favoriteJson.split(",") : []};
 			console.log("Patch request: ", newFavs);
-			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/favorited-teams', newFavs, {
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', newFavs, {
 				headers: {
 					"Authorization": session.get("auth"),
 					"Content-Type": "application/json",
@@ -58,7 +58,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getTeamsRes() {
-			const teamRes = await axios.get(process.env.BACKEND_URL + '/user/list-teams', {
+			const teamRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-teams', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
@@ -67,7 +67,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getProfileRes() {
-			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+			const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
