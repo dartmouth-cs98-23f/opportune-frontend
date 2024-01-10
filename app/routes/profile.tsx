@@ -35,7 +35,7 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	} else {
 		try {
-			const response = await axios.patch(process.env.BACKEND_URL + '/users/newhire/profile', myJson, {
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', myJson, {
 				headers: {
 				"Authorization": session.get("auth"),
 				"Content-Type": "application/json",
@@ -60,7 +60,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return redirect("/login")
 		}
 
-		const response = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+		const response = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",

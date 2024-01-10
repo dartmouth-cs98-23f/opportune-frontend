@@ -47,7 +47,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getProfileRes() {
-			const profileRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/profile', {
+			const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
 				headers: {
 					"Authorization": session.get("auth"),
 					"Content-Type": "application/json",
@@ -58,7 +58,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 		}
 
 		async function getTeamInfoRes() {
-			const teamInfoRes = await axios.get(process.env.BACKEND_URL + '/users/newhire/team-info', {
+			const teamInfoRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/team-info', {
 				headers: {
 					"Authorization": session.get("auth"),
 					"Content-Type": "application/json",
