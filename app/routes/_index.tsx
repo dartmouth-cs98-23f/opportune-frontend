@@ -10,6 +10,7 @@ export default function Index() {
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			<p className="cta">
 				<Link to="/login">Get Started</Link>
+				<Link to="/tprofile">Team Portal</Link>
 			</p>
 		</div>
     </div>
