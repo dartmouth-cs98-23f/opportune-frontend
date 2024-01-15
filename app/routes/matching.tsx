@@ -248,7 +248,9 @@ export default function Matching() {
 		// add skill questions
 		console.log("Skills log: ", basicInfoSkills)
 		for (var skill of basicInfoSkills) {
-			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} existingSkills={newHireSkills}/>)
+			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} 
+			                         existingSkills={newHireSkills}
+									 labels={["1", "2", "3", "4", "5"]}/>)
 		}
 
 		// add ranking question and submission message

@@ -51,7 +51,7 @@
 	margin: 0px;
 	padding: 30px;
 }
-
+ 
 .team-info, .assigned-interns {
 	text-align: left;
 	padding: 15px;
@@ -448,7 +448,6 @@ button.edit {
 	padding: 0.2rem 0.4rem;
 	transition: 0.3s;
 	font-size: 1rem;
-	float: right;
 }
 
 a.edit:hover,

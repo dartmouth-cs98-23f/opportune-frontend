@@ -69,7 +69,7 @@ export default function Tprofile() {
 						</div>
 					</div>
 					<div className="assigned-interns">
-						<h3> Assigned interns </h3>
+						<h3> Team Members </h3>
 						<div className="team-box">
 							{teamInfo.members.length > 0 ? 
 							 teamInfo.members.map((member, i) => {
@@ -85,6 +85,8 @@ export default function Tprofile() {
 		</div>
 	)
 }
+
+/* if matching complete, change the box listing the team members -> assigned interns */
 
 export function links() {
 	return [{ rel: 'stylesheet', href: styles }];

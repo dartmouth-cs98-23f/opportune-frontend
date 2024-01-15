@@ -5,18 +5,17 @@ import { useEffect, useState } from 'react';
 interface Question {
 	question: string;
 	existingSkills: {name: string; score: number}[];
+	labels: string[];
 } 
 
-// define scores
-const marks = [
-	{ value: 1, label: '1' },
-	{ value: 2, label: '2' },
-	{ value: 3, label: '3' },
-	{ value: 4, label: '4' },
-	{ value: 5, label: '5' }
-];
-
 export default function Scale(props:Question) {
+  // define scores
+  console.log(props.labels)
+  const marks = props.labels.map((label, i) => ({
+	"value": i + 1,
+	"label": label
+  }));
+
   // get skill score if user submitted before
   const skill = props.question.trim().split(" ").pop().replace("?", "");
   const skillIdx = props.existingSkills.findIndex(s => s.name === skill);
@@ -37,7 +36,7 @@ export default function Scale(props:Question) {
 	<div className="scale-container">
 		<p>{props.question}</p>
 		<div className="slider">
-			<Slider className="mui-slider" size="medium" value={score} min={1} max={5}
+			<Slider className="mui-slider" size="medium" value={score} min={1} max={marks.length}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
 			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
 			<input type="hidden" name={skill} value={score}></input>
