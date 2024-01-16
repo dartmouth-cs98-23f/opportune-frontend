@@ -352,6 +352,21 @@
 
 /* BUTTONS */
 
+/* skill scores in team prefs */
+.profile-skill-score {
+	display: inline-block;
+	background-color: var(--color-secondary-10);
+	border-radius: 10px;
+	padding: 10px;
+	color: white;
+	text-align: center;
+}
+
+.profile-skill-name {
+	display: inline-block;
+	padding: 10px;
+}
+
 /* previous and next buttons */
 .cta {
 	margin-top: 2rem;
@@ -587,7 +602,7 @@ input[type="file"] {
   flex: 1;
 }
 
-/* calendar */
+/* CALENDAR */
 
 .schedule-btn {
 	align-self: flex-end;
@@ -622,7 +637,7 @@ input[type="file"] {
   text-decoration: underline;
 }
 
-/* image upload */
+/* IMAGE UPLOAD */
 
 .container {
   width: 100%;
@@ -644,11 +659,11 @@ input[type="file"] {
 
 .preview img {
 	display: block;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-right: 2rem; 
-  object-fit: cover;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	margin-right: 2rem; 
+	object-fit: cover;
 }
 
 .preview h1, .preview p{

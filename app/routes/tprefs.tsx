@@ -195,7 +195,6 @@ export default function Tprefs() {
 
 	// TODO: list of questions to incorporate in this order, make sure the survey works with the requests
 	// <PlainText text="Let's get started!" key={1}/>
-	// <Scale question="Set the importance of the following tech stack on your team: React" existingSkills={[{name: "React", score: 5}]} key={2}/>
 	// <Scale question="What is the work arrangement for your team?" existingSkills={[]} 
 	//  labels={["Remote", "Hybrid", "In-Person"]} key={3}/>,
 	// <Scale question="How independent do you expect your interns to be?" existingSkills={[]} 

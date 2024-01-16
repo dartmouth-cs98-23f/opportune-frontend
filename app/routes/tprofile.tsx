@@ -14,7 +14,9 @@ export default function Tprofile() {
 	let teamInfo = {
 		name: "Data Science",
 		description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
-		skills: ["Python 5/5"],
+		skills: [{name: "Python", score: "5"}, 
+	             {name: "Javascript", score: "3"},
+				 {name: "React", score: "4"}],
 		members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
 	};
 
@@ -61,11 +63,14 @@ export default function Tprofile() {
 						</h3>
 						<div className="team-box">
 							{teamInfo.skills.length > 0 ? 
-							 teamInfo.skills.map((skill, i) => {
-								return <p key={i}> {skill} </p>
-							}): <img src="empty.svg"></img>}
+							teamInfo.skills.map((skill, i) => (
+							<div>
+								<p className="profile-skill-score"> {skill.score} </p>
+								<p className="profile-skill-name"> {skill.name} </p>
+							</div>
+							)): <img src="empty.svg"></img>}
 							<p><b> {teamInfo.skills.length > 0 ? null : 
-						    "No team preferences have been input yet."} </b></p>
+							"No team preferences have been input yet."} </b></p>
 						</div>
 					</div>
 					<div className="assigned-interns">
