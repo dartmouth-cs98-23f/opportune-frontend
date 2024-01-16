@@ -59,7 +59,7 @@ export default function Tprofile() {
 					<div className="team-info">
 						<h3> 
 							Team Description
-							{isEditing ? <button className="edit" onClick={handleEditClick}>✎</button> : 
+							{!isEditing ? <button className="edit" onClick={handleEditClick}>✎</button> : 
 							<button className="edit" onClick={handleEditClick}>Confirm</button>}
 						</h3>
 						<div className="team-box">
