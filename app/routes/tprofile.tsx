@@ -31,6 +31,13 @@ export default function Tprofile() {
 		name: "OP Company",
 	}
 
+	// team description editing state
+	const [isEditing, setEditing] = useState(false);
+	const handleEditClick = () => {
+		setEditing(!isEditing);
+	};
+	console.log(isEditing)
+
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
@@ -52,10 +59,14 @@ export default function Tprofile() {
 					<div className="team-info">
 						<h3> 
 							Team Description
-							<button className="edit">✎</button>
+							{isEditing ? <button className="edit" onClick={handleEditClick}>✎</button> : 
+							<button className="edit" onClick={handleEditClick}>Confirm</button>}
 						</h3>
 						<div className="team-box">
-							<p> {teamInfo.description} </p>
+							{isEditing ? <p> {teamInfo.description} </p> :
+							 <textarea id="textInput" rows={10} cols={50}
+							 defaultValue={teamInfo.description}></textarea>}
+							
 						</div>
 						<h3> 
 							Team Preferences 
@@ -65,8 +76,8 @@ export default function Tprofile() {
 							{teamInfo.skills.length > 0 ? 
 							teamInfo.skills.map((skill, i) => (
 							<div>
-								<p className="profile-skill-score"> {skill.score} </p>
-								<p className="profile-skill-name"> {skill.name} </p>
+								<p className="profile-skill-score" key={i + "a"}> {skill.score} </p>
+								<p className="profile-skill-name" key={i + "b"}> {skill.name} </p>
 							</div>
 							)): <img src="empty.svg"></img>}
 							<p><b> {teamInfo.skills.length > 0 ? null : 

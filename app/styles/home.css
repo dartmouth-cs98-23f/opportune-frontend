@@ -367,6 +367,11 @@
 	padding: 10px;
 }
 
+/* team description edit */
+.edit.active {
+	background-color: var(--color-secondary-10);
+}
+
 /* previous and next buttons */
 .cta {
 	margin-top: 2rem;
