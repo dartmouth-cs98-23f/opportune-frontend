@@ -63,7 +63,7 @@ export default function Tprofile() {
 							<button className="edit" onClick={handleEditClick}>Confirm</button>}
 						</h3>
 						<div className="team-box">
-							{isEditing ? <p> {teamInfo.description} </p> :
+							{!isEditing ? <p> {teamInfo.description} </p> :
 							 <textarea id="textInput" rows={10} cols={50}
 							 defaultValue={teamInfo.description}></textarea>}
 							
