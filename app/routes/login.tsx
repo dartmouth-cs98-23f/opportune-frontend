@@ -32,6 +32,7 @@ export async function action({
 	const session = await getSession(
 		request.headers.get("Cookie")
 	);
+	// console.log("USERTYPE: ", session)
 
 	var myJson = {};
 	for (const [key, value] of body.entries()) {
@@ -42,8 +43,27 @@ export async function action({
 
 	try {
 		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
+		// const userType = response.config;
 		session.set("auth", response.data.token);
-
+		// if (userType == 'new_hire') {
+		// 	return redirect(`/profile`, {
+		// 		headers: {
+		// 			"Set-Cookie": await commitSession(session),
+		// 		}
+		// 	})
+		// } else if (userType == 'team') {
+		// 	return redirect(`/tprofile`, {
+		// 		headers: {
+		// 			"Set-Cookie": await commitSession(session),
+		// 		}
+		// 	}) 
+		// } else {
+		return redirect(`/tprofile`, {
+			headers: {
+				"Set-Cookie": await commitSession(session),
+			}
+		})
+		// }
 	} catch(error) {
 		console.log(error)
 		return redirect('/login', {
@@ -52,12 +72,6 @@ export async function action({
 			}
 		})
 	}
-	
-	return redirect(`/profile`, {
-		headers: {
-			"Set-Cookie": await commitSession(session),
-		}
-	})
 };
 
 
@@ -89,8 +103,6 @@ export default function Login() {
     </main>
   );
 }
-
-/* <button type="submit">Login</button> */
 
 export function links() {
 	return [{ rel: 'stylesheet', href: loginStyle }];

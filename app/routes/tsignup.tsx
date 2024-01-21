@@ -13,7 +13,7 @@ export async function action({
 		myJson[key] = value;
 	}
 	
-	myJson["user_type"] = "new_hire";
+	myJson["user_type"] = "team";
 
 	console.log("body of request: ", body)
 	console.log(JSON.stringify(myJson));
@@ -35,7 +35,7 @@ export async function action({
 	return redirect(`/login`);
   }
 
-export default function SignUp() {
+export default function TsignUp() {
 
   return (
     <div className="block-container">
@@ -43,7 +43,7 @@ export default function SignUp() {
 			<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
-			<Form method="post" action="/signup" id="login">
+			<Form method="post" action="/tsignup" id="login">
 			<p className="login-field">
 				<label id="email">Enter Email: </label>
 				<input type="text" id="email" name="email" required />

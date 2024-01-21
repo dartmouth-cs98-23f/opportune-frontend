@@ -10,23 +10,92 @@ import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 
+export async function loader({request}: LoaderFunctionArgs) {
+	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
+
+		const response = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			},
+		});
+
+		const response2 = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-newhires', {
+			headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			});
+
+		if (response.status === 200 && response2.status === 200) {
+			const teamInfo = response.data;
+			const newhires = response2.data;
+			console.log("Loader data: ", teamInfo);
+			return json({ teamInfo, newhires });
+		}
+	} catch (error) {
+		console.log(error);
+		return null;
+	}
+};
+
+export async function action({request}: ActionFunctionArgs) {
+	const body = await request.formData();
+	console.log(body)
+	const _action = body.get("_action");
+
+	console.log("action: " + _action);
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
+	var myJson = {};
+	for (const [key, value] of body.entries()) {
+		myJson[key] = value;
+	}
+
+	// console.log("Basic info JSON");
+	console.log("My json: ", JSON.stringify(myJson));
+	console.log(_action)
+
+	if (_action === "LogOut") {
+		return redirect("/login", {
+			headers: {
+			  "Set-Cookie": await destroySession(session),
+			},
+		});
+	} else if (_action === "updateDescription") {
+		try {
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', myJson, {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				},
+			})
+			return redirect("/tprofile");	
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+	}
+
+	return null;
+}
+
 export default function Tprofile() {
-	let teamInfo = {
-		name: "Data Science",
-		description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
-		skills: [{name: "Python", score: "5"}, 
-	             {name: "Javascript", score: "3"},
-				 {name: "React", score: "4"}],
-		members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
-	};
+	const { teamInfo, newhires } = useLoaderData<typeof loader>();
+	console.log(teamInfo, newhires)
 
-	/* let teamInfo = {
-		name: "Data Science",
-		description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
-		skills: [],
-		members: []
-	}; */
-
+	// const companyInfo = useLoaderData<typeof loader>();
 	let companyInfo = {
 		name: "OP Company",
 	}
@@ -36,7 +105,8 @@ export default function Tprofile() {
 	const handleEditClick = () => {
 		setEditing(!isEditing);
 	};
-	console.log(isEditing)
+	
+	// companyInfo.name is still hardcoded
 
 	return (
 		<div className="flex-container">
@@ -53,45 +123,57 @@ export default function Tprofile() {
 			<div className="content">
 				<div className="company-banner">
 					<h1> {companyInfo.name} </h1>
-					<h3> {teamInfo.name} </h3>
+					<h3> {teamInfo.team.name} </h3>
 				</div>
 				<div className="horiz-flex-container">
 					<div className="team-info">
-						<h3> 
-							Team Description
-							{!isEditing ? <button className="edit" onClick={handleEditClick}>✎</button> : 
-							<button className="edit" onClick={handleEditClick}>Confirm</button>}
-						</h3>
-						<div className="team-box">
-							{!isEditing ? <p> {teamInfo.description} </p> :
-							 <textarea id="textInput" rows={10} cols={50}
-							 defaultValue={teamInfo.description}></textarea>}
-							
-						</div>
+						{!isEditing ? <div> 
+							<h3> Team Description 
+							<button type="button" className="edit" onClick={handleEditClick}>✎</button></h3> 
+						</div> : null}
+						<Form action="/tprofile" method="post" onSubmit={handleEditClick}>
+							{isEditing ? <div>
+								<h3> Team Description 
+								<button type="submit" name="_action" value="updateDescription" className="edit">Confirm</button></h3> 
+							</div> : null}
+							<div className="team-box">
+								{!isEditing ? <p> {teamInfo.team.description} </p> :
+								<textarea name="description" id="textInput" rows={10} cols={50} defaultValue={teamInfo.team.description}/>}
+							</div>
+						</Form>
 						<h3> 
 							Team Preferences 
 							<Link className="edit" to="/tprefs">✎</Link>
 						</h3>
 						<div className="team-box">
-							{teamInfo.skills.length > 0 ? 
-							teamInfo.skills.map((skill, i) => (
+							{teamInfo.team.skills.length > 0 ? 
+							teamInfo.team.skills.map((skill:{score:number, name:string}, i:number) => (
 							<div>
 								<p className="profile-skill-score" key={i + "a"}> {skill.score} </p>
 								<p className="profile-skill-name" key={i + "b"}> {skill.name} </p>
 							</div>
 							)): <img src="empty.svg"></img>}
-							<p><b> {teamInfo.skills.length > 0 ? null : 
+							<p><b> {teamInfo.team.skills.length > 0 ? null : 
 							"No team preferences have been input yet."} </b></p>
 						</div>
 					</div>
 					<div className="assigned-interns">
 						<h3> Team Members </h3>
 						<div className="team-box">
-							{teamInfo.members.length > 0 ? 
-							 teamInfo.members.map((member, i) => {
+							{teamInfo.team.members.length > 0 ? 
+							 teamInfo.team.members.map((member:string, i:number) => {
 								return <p key={i}> {member} </p>
 							}): <img src="empty.svg"></img>}
-							<p><b> {teamInfo.members.length > 0 ? null : 
+							<p><b> {teamInfo.team.members.length > 0 ? null : 
+						    "No team members have been added yet."} </b></p>
+						</div>
+						<h3> Assigned Interns </h3>
+						<div className="team-box">
+							{newhires.new_hires.length > 0 ? 
+							 newhires.new_hires.map((member:{first_name:string, last_name:string}, i) => {
+								return <p key={i}> {member.first_name + " " + member.last_name} </p>
+							}): <img src="empty.svg"></img>}
+							<p><b> {newhires.new_hires.length > 0 ? null : 
 						    "No interns have been assigned yet."} </b></p>
 						</div>
 					</div>

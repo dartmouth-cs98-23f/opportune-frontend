@@ -9,8 +9,8 @@ export default function Index() {
 			<h1>Opportune</h1>
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			<p className="cta">
-				<Link to="/login">Get Started</Link>
-				<Link to="/tprofile">Team Portal</Link>
+				<Link to="/signup">New Hires</Link>
+				<Link to="/tsignup">Teams</Link>
 			</p>
 		</div>
     </div>

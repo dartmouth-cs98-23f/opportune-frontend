@@ -14,7 +14,7 @@ import PlainText from '~/components/survey_qs/PlainText';
 import SelectField from '~/components/SelectField';
 import { Select } from '@mui/material';
 
-/* export async function action({request}: ActionFunctionArgs) {
+export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
 
@@ -22,7 +22,7 @@ import { Select } from '@mui/material';
 		request.headers.get("Cookie")
 	);
 
-	const profile = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
+	const profile = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
 		  "Content-Type": "application/json",
@@ -53,7 +53,7 @@ import { Select } from '@mui/material';
 			
 			// send new skills
 			const newSkills = JSON.stringify({skills: skillList});
-			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', 
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', 
 				newSkills, {
 				headers: {
 				  "Authorization": session.get("auth"),
@@ -67,36 +67,37 @@ import { Select } from '@mui/material';
 		}
 	}
 
-	// team preferences
-	if (_action === "Ranking") {
-		console.log("Entered ranking body");
-		// get the rankings
-		let prefJsons = [];
+	if (_action === "Scales") {
+		// get the tech stack and score
+		var myJson = {};
 		for (const [key, value] of body.entries()) {
 			if (key !== "_action") {
-				let prefJson = {};
 				console.log(key + ', ' + value); 
-				prefJson["name"] = key;
-				prefJson["score"] = parseInt(value, 10);
-				prefJsons.push(prefJson)
+				myJson["name"] = key;
+				myJson["score"] = parseInt(value, 10);
 			}
 		}
-		console.log(prefJsons)
-		
-		// update team_prefs list
+
 		try {
-			let prefList = profile.data.new_hire.team_prefs;
-			if (prefList) prefList = prefJsons
-			else prefList.push(prefJsons);
-			// send new preferences
-			const newPrefs = JSON.stringify({team_prefs: prefList});
-			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', 
-				newPrefs, {
+			// update/add to skill list
+			const skillList = profile.data.new_hire.skills;
+			const skillIdx = skillList.findIndex(skill => skill.name === myJson["name"]);
+			if (skillIdx !== -1) {
+				skillList[skillIdx].score = myJson["score"]
+			} else {
+				skillList.push(myJson);
+			}
+			
+			// send new skills
+			const newSkills = JSON.stringify({skills: skillList});
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', 
+				newSkills, {
 				headers: {
 				  "Authorization": session.get("auth"),
 				  "Content-Type": "application/json",
 				},
 			});
+			// console.log(response.data);
 		} catch (error) {
 			console.log(error);
 			return null;
@@ -115,10 +116,10 @@ import { Select } from '@mui/material';
 		});
 	}
 
-	return redirect("/matching");
-} */
+	return redirect("/tprefs");
+}
 
-/* export async function loader({request}: LoaderFunctionArgs) {
+export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
@@ -179,7 +180,7 @@ import { Select } from '@mui/material';
 		console.log(error);
 		return null;
 	}
-}; */
+};
 
 export default function Tprefs() {
 	let teamInfo = {
@@ -194,26 +195,26 @@ export default function Tprefs() {
 	}
 
 	// TODO: list of questions to incorporate in this order, make sure the survey works with the requests
-	// <PlainText text="Let's get started!" key={1}/>
-	// <Scale question="What is the work arrangement for your team?" existingSkills={[]} 
-	//  labels={["Remote", "Hybrid", "In-Person"]} key={3}/>,
-	// <Scale question="How independent do you expect your interns to be?" existingSkills={[]} 
-	//        labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>
-	// <SelectField classLabel="skills" options={["Python", "Java", "React", "Javascript"]} value={""} />
-
 	// TODO: the Scale react component has been revised to generalize for more dynamic labels on the scale
 	// CHECK that both this team and original matching survey have no broken scales
+	// implement Scales component
 
 	const questionList = [
+		<PlainText text="Let's get started!" key={1}/>, 
 		[<PlainText text="List and rank the importance of tech stacks you require" key={2}/>,
 		 <Scale question="React" existingSkills={[{name: "React", score: 5}]} 
-		        labels={["1", "2", "3", "4", "5"]} key={2}/>,
+		 labels={["1", "2", "3", "4", "5"]} key={2}/>,
 		 <Scale question="Python" existingSkills={[{name: "Python", score: 3}]} 
-		        labels={["1", "2", "3", "4", "5"]} key={2}/>,
+				labels={["1", "2", "3", "4", "5"]} key={2}/>,
 		 <Scale question="Javascript" existingSkills={[{name: "Javascript", score: 4}]} 
-		        labels={["1", "2", "3", "4", "5"]} key={2}/>,
+				labels={["1", "2", "3", "4", "5"]} key={2}/>,
 		 <button className="edit"> + Other Skill </button>
-		]
+		],
+		<Scale question="What is the work arrangement for your team?" existingSkills={[]} 
+		 labels={["Remote", "Hybrid", "In-Person"]} key={3}/>,
+		<Scale question="How independent do you expect your interns to be?" existingSkills={[]} 
+	    labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>,
+		<PlainText text="Thanks for filling out your team preferences!" />
     ];
 
 	const {step, stepComp, isFirstStep, isLastStep,
@@ -242,7 +243,7 @@ export default function Tprefs() {
 				<div className="company-prefs">
 					<h3> Fill Your Preferences </h3>
 					<Progress pct={getProgress()}/>
-					<Form action="/matching" method="post" 
+					<Form action="/tprefs" method="post" 
 						onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
