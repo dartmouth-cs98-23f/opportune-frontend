@@ -42,7 +42,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return json({ teamInfo, newhires });
 		}
 	} catch (error) {
-		console.log(error);
+		console.log("Error in tprofile loader: ", error);
 		return null;
 	}
 };
@@ -65,7 +65,6 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// console.log("Basic info JSON");
 	console.log("My json: ", JSON.stringify(myJson));
-	console.log(_action)
 
 	if (_action === "LogOut") {
 		return redirect("/login", {
@@ -83,7 +82,7 @@ export async function action({request}: ActionFunctionArgs) {
 			})
 			return redirect("/tprofile");	
 		} catch (error) {
-			console.log(error);
+			console.log("Error in tprofile action: ", error);
 			return null;
 		}
 	}
@@ -143,7 +142,7 @@ export default function Tprofile() {
 						</Form>
 						<h3> 
 							Team Preferences 
-							<Link className="edit" to="/tprefs">✎</Link>
+							<Link className="edit" to="/tskills">✎</Link>
 						</h3>
 						<div className="team-box">
 							{teamInfo.team.skills.length > 0 ? 

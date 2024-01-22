@@ -198,7 +198,6 @@
 /* QUESTIONS */
 
 /* scale */
-
 .scale-container {
 	padding: 20px;
 	margin: 10px;
@@ -318,8 +317,31 @@
 	transition: width 0.7s;
 }
 
+/* dropdown - team */
+.full-skills {
+	margin: 10px;
+}
 
-/* TEAMS */
+.filtered-skill {
+	display: inline-block;
+	list-style: none;
+	padding: 8px;
+	margin: 8px;
+	background-color: var(--color-secondary-10);
+	color: white;
+	font-size: 0.75rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.filtered-skill:hover {
+	background-color: var(--color-primary-20);
+	transition: 0.3s;
+}
+
+
+/* TEAMS - new hire */
 .team-box {
 	text-align: left;
 	justify-content: center;

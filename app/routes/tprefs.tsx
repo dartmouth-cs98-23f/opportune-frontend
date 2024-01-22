@@ -11,8 +11,9 @@ import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
-import SelectField from '~/components/SelectField';
+import DropdownMenu from '~/components/survey_qs/DropdownMenu';
 import { Select } from '@mui/material';
+import ScaleT from '~/components/survey_qs/ScaleT';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -21,6 +22,7 @@ export async function action({request}: ActionFunctionArgs) {
 	const session = await getSession(
 		request.headers.get("Cookie")
 	);
+	
 
 	const profile = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 		headers: {
@@ -108,6 +110,10 @@ export async function action({request}: ActionFunctionArgs) {
 		console.log("Entered textbox body");
 	}
 
+	if (_action === "PlainText") {
+		console.log("Entered plain textbox body");
+	}
+
 	if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
@@ -135,46 +141,14 @@ export async function loader({request}: LoaderFunctionArgs) {
 		// (2) remote/hybrid/in-person
 		// (3) intern independence
 
-		async function getProfileRes() {
-			const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
+		const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			console.log("Getting profile: ", profileRes.data)
-			return profileRes.data
-		}
-
-		async function getSkillRes() {
-			const skillRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-company-skills', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-			console.log("Getting skills: ", skillRes.data)
-			return skillRes.data
-		}
-
-		async function getTeamsRes() {
-			const teamRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-teams', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-			console.log("Getting teams: ", teamRes.data)
-			return teamRes.data
-		}
-
-		// TODO: edit promise and json return based on functions defined above
-		const [profileRes, skillRes, teamsRes] = await Promise.all([
-			getProfileRes(),
-			getSkillRes(),
-			getTeamsRes()
-		]);
-
-		return json({ profile: profileRes, 
-			          skills: skillRes,
-					  teams: teamsRes });
+		
+		console.log("Getting profile: ", profileRes.data)
+		return json(profileRes.data)
 	
 	} catch (error) {
 		console.log(error);
@@ -183,12 +157,15 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
 
 export default function Tprefs() {
-	let teamInfo = {
-		name: "Data Science",
-		description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
-		skills: ["Python", "Java"],
-		members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
-	};
+	// let teamInfo = {
+	// 	name: "Data Science",
+	// 	description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
+	// 	skills: ["Python", "Java"],
+	// 	members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
+	// };
+
+	const teamInfo = useLoaderData<typeof loader>();
+	console.log(teamInfo)
 
 	let companyInfo = {
 		name: "OP Company",
@@ -199,23 +176,46 @@ export default function Tprefs() {
 	// CHECK that both this team and original matching survey have no broken scales
 	// implement Scales component
 
-	const questionList = [
-		<PlainText text="Let's get started!" key={1}/>, 
-		[<PlainText text="List and rank the importance of tech stacks you require" key={2}/>,
-		 <Scale question="React" existingSkills={[{name: "React", score: 5}]} 
-		 labels={["1", "2", "3", "4", "5"]} key={2}/>,
-		 <Scale question="Python" existingSkills={[{name: "Python", score: 3}]} 
-				labels={["1", "2", "3", "4", "5"]} key={2}/>,
-		 <Scale question="Javascript" existingSkills={[{name: "Javascript", score: 4}]} 
-				labels={["1", "2", "3", "4", "5"]} key={2}/>,
-		 <button className="edit"> + Other Skill </button>
-		],
-		<Scale question="What is the work arrangement for your team?" existingSkills={[]} 
-		 labels={["Remote", "Hybrid", "In-Person"]} key={3}/>,
-		<Scale question="How independent do you expect your interns to be?" existingSkills={[]} 
-	    labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>,
-		<PlainText text="Thanks for filling out your team preferences!" />
-    ];
+	// const questionList = [
+	// 	
+	// 	[<PlainText text="List and rank the importance of tech stacks you require" key={2}/>,
+	// 	 <Scale question="React" existingSkills={[{name: "React", score: 5}]} 
+	// 	 labels={["1", "2", "3", "4", "5"]} key={2}/>,
+	// 	 <Scale question="Python" existingSkills={[{name: "Python", score: 3}]} 
+	// 			labels={["1", "2", "3", "4", "5"]} key={2}/>,
+	// 	 <Scale question="Javascript" existingSkills={[{name: "Javascript", score: 4}]} 
+	// 			labels={["1", "2", "3", "4", "5"]} key={2}/>,
+	// 	 <button className="edit"> + Other Skill </button>
+	// 	],
+	// 	
+	// 	
+    // ];
+
+	// might make more sense to have the skills selection page as a separate route -> used to construct the first question of the survey on tprefs
+
+	const techStacks = ["Python", "Javascript", "Typescript", "HTML/CSS", "SQL", "Rust", "C#", "Bash", "Go", "Java",
+					 "C++", "Kotlin", "C", "PHP", "Powershell", "Dart", "Swift", "Ruby", "Lua", "Elixir", "Assembly",
+					 "Zig", "Haskell", "R", "Scala", "Julia", "F#", "Delphi", "Clojure", "Lisp", "Solidity", "GDScript", 
+					 "Erlang", "Visual Basic (.Net)", "Groovy", "MATLAB", "Perl", "OCaml", "Objective-C", "VBA", "Nim", "Ada",
+					 "Crystal", "Prolog", "Fortran", "Apex", "APL", "Cobol", "SAS", "Raku", "Flow", "Docker", "npm", "pip", "Homebrew", "Yarn", "Webpack", "Make", "Kubernetes", "NuGet", "Maven", "Gradle", "Vite", 
+					 "Visual Studio Solution", "CMake", "Cargo", "GNU GCC", "Terraform", "MSBuild"]
+
+	// list of questions
+	const questionList = []
+	questionList.push(<PlainText text="Let's get started!" />)
+
+	// add skill questions
+	for (var skill of teamInfo.team.skills) {
+		questionList.push(<Scale question={skill.name}
+								 existingSkills={teamInfo.team.skills}
+								 labels={["1", "2", "3", "4", "5"]}/>)
+	}
+
+	questionList.push(<Scale question="What is the work arrangement for your team?" 
+							 existingSkills={[]} labels={["Remote", "Hybrid", "In-Person"]} />)
+	questionList.push(<Scale question="How independent do you expect your interns to be?" 
+							 existingSkills={[]} labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>)
+	questionList.push(<PlainText text="Thanks for filling out your team preferences!" />)
 
 	const {step, stepComp, isFirstStep, isLastStep,
 		previous, next, getProgress} = SurveyUtil(questionList);
@@ -238,7 +238,7 @@ export default function Tprefs() {
 			<div className="content">
 				<div className="company-banner">
 						<h1> {companyInfo.name} </h1>
-						<h3> {teamInfo.name} </h3>
+						<h3> {teamInfo.team.name} </h3>
 				</div>
 				<div className="company-prefs">
 					<h3> Fill Your Preferences </h3>
