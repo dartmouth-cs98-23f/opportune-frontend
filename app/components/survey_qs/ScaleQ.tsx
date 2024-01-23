@@ -3,23 +3,22 @@ import { Slider } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 interface Question {
-	skill: {name: string; score: number};
-	existing: {name: string; score: number}[];
+	question: string;
+	skill: string;
 	labels: string[];
 } 
 
-export default function ScaleT(props:Question) {
+export default function ScaleQ(props:Question) {
   // define scores
-  console.log(props.labels)
   const marks = props.labels.map((label, i) => ({
 	"value": i + 1,
 	"label": label
   }));
 
   // get skill score if user submitted before
-  const skillName = props.skill
-  const skillIdx = props.existing.findIndex(s => s.name === skill);
-  const savedScore = (skillIdx !== -1 ? props.existing[skillIdx].score: 5);
+  const skill = props.question.trim().split(" ").pop().replace("?", "");
+  const skillIdx = props.existingSkills.findIndex(s => s.name === skill);
+  const savedScore = (skillIdx !== -1 ? props.existingSkills[skillIdx].score: 1);
 
   // score state
   const [score, setScore] = useState(savedScore);
@@ -30,7 +29,7 @@ export default function ScaleT(props:Question) {
   // update saved score when tech stack changes
   useEffect(() => {
 	setScore(savedScore);
-  }, [skillName])
+  }, [skill])
   
   return (
 	<div className="scale-container">
@@ -39,7 +38,7 @@ export default function ScaleT(props:Question) {
 			<Slider className="mui-slider" size="medium" value={score} min={1} max={marks.length}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
 			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
-			<input type="hidden" name={skillName} value={score}></input>
+			<input type="hidden" name={skill} value={score}></input>
 		</div>
 	</div>
   )

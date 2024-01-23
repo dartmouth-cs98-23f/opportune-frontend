@@ -87,12 +87,14 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
 
 export default function Tskills() {
-	// let teamInfo = {
-	// 	name: "Data Science",
-	// 	description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
-	// 	skills: ["Python", "Java"],
-	// 	members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
-	// };
+	/* let teamInfo = {
+		team: {
+			name: "Data Science",
+			description: "Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.Vis modo alienum adversarium ei. Et munere singulis rationibus usu, ius ex case cibo facete.",
+			skills: [{"name": "Python", "score": 5}, {"name": "Java", "score": 5}],
+			members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
+		}
+	}; */
 
 	const teamInfo = useLoaderData<typeof loader>();
 
@@ -104,7 +106,8 @@ export default function Tskills() {
 					 "C++", "Kotlin", "C", "PHP", "Powershell", "Dart", "Swift", "Ruby", "Lua", "Elixir", "Assembly",
 					 "Zig", "Haskell", "R", "Scala", "Julia", "F#", "Delphi", "Clojure", "Lisp", "Solidity", "GDScript", 
 					 "Erlang", "Visual Basic (.Net)", "Groovy", "MATLAB", "Perl", "OCaml", "Objective-C", "VBA", "Nim", "Ada",
-					 "Crystal", "Prolog", "Fortran", "Apex", "APL", "Cobol", "SAS", "Raku", "Flow"].sort();
+					 "Crystal", "Prolog", "Fortran", "Apex", "APL", "Cobol", "SAS", "Raku", "Flow", "Docker", "npm", "pip", "Homebrew", "Yarn", "Webpack", "Make", "Kubernetes", "NuGet", "Maven", "Gradle", "Vite", 
+					 "Visual Studio Solution", "CMake", "Cargo", "GNU GCC", "Terraform", "MSBuild"].sort();
 
 	// tech stack search
 	const [searchTerm, setSearchTerm] = useState<string>('');
@@ -118,10 +121,17 @@ export default function Tskills() {
 
 	// add and remove skills to preferences
 	const addToSelected = (skill:string) =>  {
-		if (!selectedTech.includes(skill)) {
-			setSelectedTech([...selectedTech, skill]);
+		if (filteredOptions.length === 0) {
+			if (skill.length !== 0 && !selectedTech.includes(skill)) {
+				setSelectedTech([...selectedTech, skill]);
+			}
 		}
-		console.log("New selected tech: ", selectedTech)
+		else if (!selectedTech.includes(skill)) {
+			if (skill.length !== 0) {
+				setSelectedTech([...selectedTech, skill]);
+			}
+		}
+		setSearchTerm('');
 	}
 
 	const removeFromSelected = (skill:string) =>  {
@@ -150,35 +160,38 @@ export default function Tskills() {
 				<div className="company-prefs">
 					<h3> Fill Your Preferences </h3>
 					<Form action="/tskills" method="post">
-						<PlainText text="Search and select all the tech stacks your team requires" key={2}/>
-						<input type="hidden" name="skills" value={selectedTech.join(',')} />
-						<div className="full-skills">
-							{selectedTech.map((skill:string, i:number) => (
-								<li key={i} className="filtered-skill" onClick={() => removeFromSelected(skill)}>
-									{skill}
-								</li>
-							))}
-						</div>
-						<div>
-							<input type="text" placeholder="Search..." value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)} />
+						<div className="team-box skills">
+							<PlainText text="Search and select all the tech stacks your team requires" key={2}/>
+							<input type="hidden" name="skills" value={selectedTech.join(',')} />
 							<div className="full-skills">
-								{filteredOptions.map((option, index) => (
-								<li key={index} className="filtered-skill" onClick={() => addToSelected(option)}>
-									{option}
-								</li>
+								{selectedTech.map((skill:string, i:number) => (
+									<li key={i} className="filtered-skill" onClick={() => removeFromSelected(skill)}>
+										{skill + " ✕"}
+									</li>
 								))}
 							</div>
-    					</div>
-						<button className="edit"> + Other Skill </button>
+							<div>
+								<input className="skill-search" type="text" placeholder="Search..." value={searchTerm}
+										onChange={(e) => setSearchTerm(e.target.value)} />
+								<button type="button" className="edit" onClick={() => addToSelected(searchTerm)}> 
+								+ Custom 
+								</button>
+								<div className="full-skills">
+									{filteredOptions.map((option, index) => (
+									<li key={index} className="filtered-skill" onClick={() => addToSelected(option)}>
+										{option}
+									</li>
+									))}
+								</div>
+    						</div>
+						</div>
 						<p className="cta">
-							<button name="_action" value="AddSkills">Submit</button>
+							<Link to="/tprofile" className="prev-button">Cancel</Link>
+						</p>
+						<p className="cta">
+							<button name="_action" value="AddSkills">Next</button>
 						</p>
 					</Form>
-					<p className="cta">
-						<Link to="/tprofile" className="prev-button">Cancel</Link>
-					</p>
-
 				</div>
 			</div>
 		</div>

@@ -13,7 +13,8 @@ import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import DropdownMenu from '~/components/survey_qs/DropdownMenu';
 import { Select } from '@mui/material';
-import ScaleT from '~/components/survey_qs/ScaleT';
+import ScaleT from '~/components/survey_qs/ScaleQ';
+import ScaleQ from '~/components/survey_qs/ScaleQ';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -24,7 +25,7 @@ export async function action({request}: ActionFunctionArgs) {
 	);
 	
 
-	const profile = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
+	const teamInfo = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
 		  "Content-Type": "application/json",
@@ -42,10 +43,11 @@ export async function action({request}: ActionFunctionArgs) {
 				myJson["score"] = parseInt(value, 10);
 			}
 		}
+		console.log("hello: ", myJson["name"], myJson["score"])
 
 		try {
 			// update/add to skill list
-			const skillList = profile.data.new_hire.skills;
+			const skillList = teamInfo.data.team.skills;
 			const skillIdx = skillList.findIndex(skill => skill.name === myJson["name"]);
 			if (skillIdx !== -1) {
 				skillList[skillIdx].score = myJson["score"]
@@ -62,44 +64,6 @@ export async function action({request}: ActionFunctionArgs) {
 				  "Content-Type": "application/json",
 				},
 			});
-			// console.log(response.data);
-		} catch (error) {
-			console.log(error);
-			return null;
-		}
-	}
-
-	if (_action === "Scales") {
-		// get the tech stack and score
-		var myJson = {};
-		for (const [key, value] of body.entries()) {
-			if (key !== "_action") {
-				console.log(key + ', ' + value); 
-				myJson["name"] = key;
-				myJson["score"] = parseInt(value, 10);
-			}
-		}
-
-		try {
-			// update/add to skill list
-			const skillList = profile.data.new_hire.skills;
-			const skillIdx = skillList.findIndex(skill => skill.name === myJson["name"]);
-			if (skillIdx !== -1) {
-				skillList[skillIdx].score = myJson["score"]
-			} else {
-				skillList.push(myJson);
-			}
-			
-			// send new skills
-			const newSkills = JSON.stringify({skills: skillList});
-			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', 
-				newSkills, {
-				headers: {
-				  "Authorization": session.get("auth"),
-				  "Content-Type": "application/json",
-				},
-			});
-			// console.log(response.data);
 		} catch (error) {
 			console.log(error);
 			return null;
@@ -135,11 +99,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 		if (!session.get("auth")) {
 			return redirect("/login")
 		}
-
-		// TO WIRE: function(s) (or multiple if from several routes) to load information about...
-		// (1) existing tech stacks
-		// (2) remote/hybrid/in-person
-		// (3) intern independence
 
 		const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 			headers: {
@@ -191,15 +150,6 @@ export default function Tprefs() {
 	// 	
     // ];
 
-	// might make more sense to have the skills selection page as a separate route -> used to construct the first question of the survey on tprefs
-
-	const techStacks = ["Python", "Javascript", "Typescript", "HTML/CSS", "SQL", "Rust", "C#", "Bash", "Go", "Java",
-					 "C++", "Kotlin", "C", "PHP", "Powershell", "Dart", "Swift", "Ruby", "Lua", "Elixir", "Assembly",
-					 "Zig", "Haskell", "R", "Scala", "Julia", "F#", "Delphi", "Clojure", "Lisp", "Solidity", "GDScript", 
-					 "Erlang", "Visual Basic (.Net)", "Groovy", "MATLAB", "Perl", "OCaml", "Objective-C", "VBA", "Nim", "Ada",
-					 "Crystal", "Prolog", "Fortran", "Apex", "APL", "Cobol", "SAS", "Raku", "Flow", "Docker", "npm", "pip", "Homebrew", "Yarn", "Webpack", "Make", "Kubernetes", "NuGet", "Maven", "Gradle", "Vite", 
-					 "Visual Studio Solution", "CMake", "Cargo", "GNU GCC", "Terraform", "MSBuild"]
-
 	// list of questions
 	const questionList = []
 	questionList.push(<PlainText text="Let's get started!" />)
@@ -211,10 +161,10 @@ export default function Tprefs() {
 								 labels={["1", "2", "3", "4", "5"]}/>)
 	}
 
-	questionList.push(<Scale question="What is the work arrangement for your team?" 
+	/* questionList.push(<ScaleQ question="What is the work arrangement for your team?" 
 							 existingSkills={[]} labels={["Remote", "Hybrid", "In-Person"]} />)
-	questionList.push(<Scale question="How independent do you expect your interns to be?" 
-							 existingSkills={[]} labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>)
+	questionList.push(<ScaleQ question="How independent do you expect your interns to be?" 
+							 existingSkills={[]} labels={["Needs frequent assistance", "", "Needs some assistance", "", "Very independent"]} key={4}/>) */
 	questionList.push(<PlainText text="Thanks for filling out your team preferences!" />)
 
 	const {step, stepComp, isFirstStep, isLastStep,

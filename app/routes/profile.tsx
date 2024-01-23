@@ -82,7 +82,7 @@ export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
 	// console.log("Reading profile info");
 	// console.log(basicInfo.data);
-
+	console.log(basicInfo)
 	const basicInfoFields = basicInfo.data;
 
 	const [url, updateUrl] = useState();
