@@ -13,8 +13,8 @@ import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import DropdownMenu from '~/components/survey_qs/DropdownMenu';
 import { Select } from '@mui/material';
-import ScaleT from '~/components/survey_qs/ScaleQ';
-import ScaleQ from '~/components/survey_qs/ScaleQ';
+import ScaleT from '~/components/survey_qs/ScaleT';
+import ScaleQ from '~/components/survey_qs/ScaleT';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -33,7 +33,7 @@ export async function action({request}: ActionFunctionArgs) {
 	})
 
 	// 1-5 slider
-	if (_action === "Scale") {
+	if (_action === "Scale" || _action === "ScaleT") {
 		// get the tech stack and score
 		var myJson = {};
 		for (const [key, value] of body.entries()) {
@@ -43,7 +43,6 @@ export async function action({request}: ActionFunctionArgs) {
 				myJson["score"] = parseInt(value, 10);
 			}
 		}
-		console.log("hello: ", myJson["name"], myJson["score"])
 
 		try {
 			// update/add to skill list
@@ -156,9 +155,9 @@ export default function Tprefs() {
 
 	// add skill questions
 	for (var skill of teamInfo.team.skills) {
-		questionList.push(<Scale question={skill.name}
-								 existingSkills={teamInfo.team.skills}
-								 labels={["1", "2", "3", "4", "5"]}/>)
+		questionList.push(<ScaleT question={skill.name} skill={skill.name}
+								  existing={teamInfo.team.skills}
+								  labels={["1", "2", "3", "4", "5"]}/>)
 	}
 
 	/* questionList.push(<ScaleQ question="What is the work arrangement for your team?" 

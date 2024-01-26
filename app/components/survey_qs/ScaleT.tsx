@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react';
 interface Question {
 	question: string;
 	skill: string;
+	existing: {name:string, score:number}[];
 	labels: string[];
 } 
 
-export default function ScaleQ(props:Question) {
+export default function ScaleT(props:Question) {
   // define scores
   const marks = props.labels.map((label, i) => ({
 	"value": i + 1,
@@ -16,9 +17,8 @@ export default function ScaleQ(props:Question) {
   }));
 
   // get skill score if user submitted before
-  const skill = props.question.trim().split(" ").pop().replace("?", "");
-  const skillIdx = props.existingSkills.findIndex(s => s.name === skill);
-  const savedScore = (skillIdx !== -1 ? props.existingSkills[skillIdx].score: 1);
+  const skillIdx = props.existing.findIndex(s => s.name === props.skill);
+  const savedScore = (skillIdx !== -1 ? props.existing[skillIdx].score: 1);
 
   // score state
   const [score, setScore] = useState(savedScore);
@@ -29,7 +29,7 @@ export default function ScaleQ(props:Question) {
   // update saved score when tech stack changes
   useEffect(() => {
 	setScore(savedScore);
-  }, [skill])
+  }, [props.skill])
   
   return (
 	<div className="scale-container">
@@ -38,7 +38,7 @@ export default function ScaleQ(props:Question) {
 			<Slider className="mui-slider" size="medium" value={score} min={1} max={marks.length}
 			step={1} marks={marks} aria-label="Small" valueLabelDisplay="off" 
 			sx={{ width: '60%' }} onChange={(e, val) => handleChange(val)}/>
-			<input type="hidden" name={skill} value={score}></input>
+			<input type="hidden" name={props.skill} value={score}></input>
 		</div>
 	</div>
   )

@@ -23,15 +23,27 @@ export async function action({request}: ActionFunctionArgs) {
 	}
 
 	if (_action === "AddSkills") {
+		const skillRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			},
+		});
+
+		let currSkills = skillRes.data.team.skills;
 		var myJson = {};
+
 		for (const [key, value] of body.entries()) {
 			if (key === "skills") {
 				const skillList = value.split(",");
 				console.log("skillList: ", skillList);
 				myJson[key] = skillList.map((skill:string) => {
+					const skillIdx = currSkills.findIndex(entry => entry.name === skill);
+					
 					let obj = {};
-					obj['name'] = skill;
-					obj['score'] = 5;
+					obj['name'] = skill
+					obj['score'] = skillIdx !== -1 ? currSkills[skillIdx].score : 5;
+					
 					return obj;
 				})
 			} else {
