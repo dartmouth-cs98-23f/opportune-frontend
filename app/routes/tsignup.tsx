@@ -1,6 +1,5 @@
 import { Link, Form } from '@remix-run/react';
 import { redirect, ActionFunctionArgs } from '@remix-run/node';
-import loginStyle from '~/styles/home.css';
 import axios from 'axios';
 
 export async function action({
@@ -60,8 +59,4 @@ export default function TsignUp() {
 		</div>
     </div>
   );
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: loginStyle }];
 }

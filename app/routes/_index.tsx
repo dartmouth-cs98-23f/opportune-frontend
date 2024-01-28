@@ -1,5 +1,4 @@
 import { Link } from '@remix-run/react';
-import loginStyle from '~/styles/home.css';
 
 export default function Index() {
   return (
@@ -15,8 +14,4 @@ export default function Index() {
 		</div>
     </div>
   );
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: loginStyle }];
 }

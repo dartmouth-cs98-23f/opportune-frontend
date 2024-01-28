@@ -1,6 +1,5 @@
 import { Link, Form, useLoaderData } from '@remix-run/react';
 import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import loginStyle from '~/styles/home.css'
 import axios from 'axios';
 import { getSession, commitSession } from "../utils/sessions";
 
@@ -102,8 +101,4 @@ export default function Login() {
 	  </div>
     </main>
   );
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: loginStyle }];
 }

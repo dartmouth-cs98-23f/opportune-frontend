@@ -3,18 +3,14 @@ import { useState } from 'react';
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import axios from 'axios';
 import { destroySession, getSession } from '../utils/sessions';
-import styles from '~/styles/home.css';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import SurveyUtil from '~/components/survey_qs/SurveyUtil';
 import Progress from '~/components/survey_qs/Progress';
 import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
-import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
-import DropdownMenu from '~/components/survey_qs/DropdownMenu';
 import { Select } from '@mui/material';
 import ScaleT from '~/components/survey_qs/ScaleT';
-import ScaleQ from '~/components/survey_qs/ScaleT';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -213,8 +209,4 @@ export default function Tprefs() {
 			</div>
 		</div>
 	)
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }

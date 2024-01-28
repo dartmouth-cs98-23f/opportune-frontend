@@ -1,5 +1,4 @@
 import { Link, Form, useLoaderData } from '@remix-run/react';
-import styles from '~/styles/home.css'
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
@@ -184,7 +183,3 @@ export default function Tprofile() {
 }
 
 /* if matching complete, change the box listing the team members -> assigned interns */
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
-}
