@@ -11,6 +11,9 @@ export default function Index() {
 			<p className="cta">
 				<Link to="/login">Get Started</Link>
 			</p>
+			<p className="cta">
+				<Link to="/companyLogin">Company Login</Link>
+			</p>
 		</div>
     </div>
   );
