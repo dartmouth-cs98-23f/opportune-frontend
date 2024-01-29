@@ -47,6 +47,8 @@ export async function action({request}: ActionFunctionArgs) {
 			return null;
 		}
 	} else if (_action === "createTeam") {
+    myJson["team_members"] = []; // TEMPORARY
+
     try {
 			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/company/create-team', myJson, {
 				headers: {
@@ -75,7 +77,7 @@ export async function action({request}: ActionFunctionArgs) {
 			return null;
 		}
   }
-  else {
+  else if(_action === "companySave") {
     try {
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', myJson, {
 				headers: {
@@ -83,6 +85,21 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
+
+      return redirect("/companyProfile");	
+		} catch (error) {
+			console.log(error);
+			return null;
+		}
+    
+  } else {
+    try {
+/*			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', myJson, {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				},
+			}) */
 			return redirect("/companyMatching");	
 		} catch (error) {
 			console.log(error);
@@ -103,12 +120,12 @@ export async function loader({request}: LoaderFunctionArgs) {
       return redirect("/login");
     }
 
-    // const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/company/profile', {
-    //   headers: {
-    //     "Authorization": session.get("auth"),
-    //     "Content-Type": "application/json",
-    //   }
-    // });
+     const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/company/profile', {
+       headers: {
+         "Authorization": session.get("auth"),
+         "Content-Type": "application/json",
+       }
+     });
 
     const newHireRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-newhires', {
       headers: {
@@ -124,11 +141,12 @@ export async function loader({request}: LoaderFunctionArgs) {
       }
     });
 
-    if (newHireRes.status === 200 && teamsRes.status === 200) {
+    if (newHireRes.status === 200 && teamsRes.status === 200 && companyRes.status == 200) {
 			const newHires = newHireRes.data;
 			const teams = teamsRes.data;
+      const data = companyRes.data;
 			console.log("Loader data: ", newHires);
-			return json({ newHires, teams });
+			return json({ data, newHires, teams });
 		}
 
   } catch (error) {
@@ -243,10 +261,10 @@ export default function CompanyProfile() {
                 <h2>Description:</h2>
               </div>
 
-              <TextareaAutosize cols={60} value={basicInfoFields.description} name="company-description" defaultValue={"Your company description..."}></TextareaAutosize>
+              <textarea cols={60} name="description" classLabel="description" defaultValue={info?.data?.company.description}></textarea>
 
               <div style={{display: 'flex', width: '100%', justifyContent: 'end'}}>
-                <button type="submit" className='company-save'>Save</button>
+                <button type="submit" className='company-save' name="_action" value="companySave">Save</button>
               </div>
             </div>
           </Form>
@@ -256,10 +274,10 @@ export default function CompanyProfile() {
               <h2>New Hire</h2>
             </div>
             <div className="teams-list">
-              {info?.newHires?.map(newHire => (  // DISPLAY NEWHIRES HERE
+              {info?.newHires?.new_hires.map(newHire => (  // DISPLAY NEWHIRES HERE
                 <div key={newHire.name} className='company-team'>
-                  <h3>Name</h3> 
-                  <p>minhdungluu2001@gmail.com</p>
+                  <h3>{newHire.first_name} {newHire.last_name}</h3> 
+                  <p>{newHire.email}</p>
                   <button className="newhire-button">
                       Email nudge
                   </button>
@@ -273,13 +291,11 @@ export default function CompanyProfile() {
             </p>
             <Modal open={showHireModal} onClose={closeHireModal}>
               <Form action="/companyProfile" method="post">
-                <TextField label="Team Name" name="name" classLabel="teamName" />
-
+                <TextField label="First Name" name="firstName" classLabel="first_name" />
+                <TextField label="Last Name" name="lastName" classLabel="last_name" />
                 <TextField label="Email" name="email" classLabel="email" />
-
-                <TextField label="Graduation Year" name="graduationYear" classLabel="graduationYear"/>
                 
-                <button type="submit" name="_action" value="createNewhire">Add New Hire</button>
+                <button className="left" type="submit" name="_action" value="createNewhire">Add New Hire</button>
               </Form>
             </Modal>
         </div>
@@ -291,15 +307,15 @@ export default function CompanyProfile() {
             <h2>Teams</h2>
           </div>
           <div className="teams-list">
-            {info?.teams.map(team => (  // DISPLAY TEAMS HERE
+            {info?.teams.teams.map(team => (  // DISPLAY TEAMS HERE
               <div key={team.name} className='company-team'>
                 <div>
-                  <h3>{basicInfoFields.name}</h3> 
-                  <p>Org 1</p>
-                  <div>Mountain View, California</div>
+                  <h3>{team.name}</h3> 
+                  <p>Org 1</p> {/* TO REMOVE AT SOME POINT */}
+                  <div>Mountain View, California</div> {/* TO REMOVE AT SOME POINT */}
                 </div>
-                <ReadMore text={basicInfoFields.description}></ReadMore>
-                <button className={basicInfoFields.formFilled ? 'done-button' : 'in-progress-button'}>{basicInfoFields.formFilled ? 'Done' : 'In Progress'}</button>
+                <ReadMore text={team.description}></ReadMore>
+                <button className={team.survey_complete ? 'done-button' : 'in-progress-button'}>{team.survey_complete ? 'Done' : 'In Progress'}</button>
                 <button className="newhire-button">
                   Email nudge
                 </button>
@@ -313,10 +329,13 @@ export default function CompanyProfile() {
           </p>
           <Modal open={showTeamModal} onClose={closeModal} title={"Add a team"}>
             <Form action="/companyProfile" method="post">
-              <TextField className="add-team" label="Team Name" name="name" classLabel="teamName"/>
-              <TextField className="add-team" label="Description" name="description" classLabel="teamDescription"/>
-              <TextField className="add-team" label="Calendly Link" name="calendlyLink" classLabel="calendlyLink" />
-              <button type="submit" name="_action" value="createTeam">Add Team</button>
+              <TextField className="add-team" label="Team Email" name="email" classLabel="email"/>
+              <TextField className="add-team" label="Team Name" name="name" classLabel="name"/>
+              <TextField className="add-team" label="Description" name="description" classLabel="description"/>
+              <TextField className="add-team" label="Calendly Link" name="calendlyLink" classLabel="calendly_link" />
+              <TextField className="add-team" label="Capacity" name="capacity" classLabel="max_capacity" />
+              <TextField className="add-team" label="Manager" name="manager" classLabel="manager" />
+              <button className="left" type="submit" name="_action" value="createTeam">Add Team</button>
             </Form>
           </Modal>
         </div>

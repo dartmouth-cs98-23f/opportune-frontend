@@ -25,7 +25,7 @@ function Modal({ open, children, onClose, title }) {
       <div className="modal">
         {/* Close icon */}
         <div>{title}</div>
-        <button onClick={onClose}>&times;</button>
+        <button className="right" onClick={onClose}>&times;</button>
 
         {children}
       </div>
