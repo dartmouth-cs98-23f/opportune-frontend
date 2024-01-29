@@ -202,7 +202,7 @@ export default function CompanyProfile() {
     <div>
         <div className="sidebar">
             <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-            <Form action="/profile" method="post">
+            <Form action="/companyProfile" method="post">
               <button className="logout-button" type="submit"
                       name="_action" value="LogOut"> 
                   <ArrowLeftOnRectangleIcon /> 
@@ -237,7 +237,7 @@ export default function CompanyProfile() {
         </div>
 
         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Form action="/profile" method="post" className="company-description">
+          <Form action="/companyProfile" method="post" className="company-description">
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div className='company-teams-title'>
                 <h2>Description:</h2>
@@ -272,7 +272,7 @@ export default function CompanyProfile() {
                 </button>
             </p>
             <Modal open={showHireModal} onClose={closeHireModal}>
-              <Form action="/profile" method="post">
+              <Form action="/companyProfile" method="post">
                 <TextField label="Team Name" name="name" classLabel="teamName" />
 
                 <TextField label="Email" name="email" classLabel="email" />
@@ -312,7 +312,7 @@ export default function CompanyProfile() {
             </button>
           </p>
           <Modal open={showTeamModal} onClose={closeModal} title={"Add a team"}>
-            <Form action="/profile" method="post">
+            <Form action="/companyProfile" method="post">
               <TextField className="add-team" label="Team Name" name="name" classLabel="teamName"/>
               <TextField className="add-team" label="Description" name="description" classLabel="teamDescription"/>
               <TextField className="add-team" label="Calendly Link" name="calendlyLink" classLabel="calendlyLink" />

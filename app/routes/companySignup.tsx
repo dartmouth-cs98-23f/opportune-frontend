@@ -42,7 +42,7 @@ export default function SignUp() {
 			<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
 			<p>Find your new hires a team faster than ever before</p>
-			<Form method="post" action="/signup" id="login">
+			<Form method="post" action="/companySignup" id="login">
       <p className="login-field">
         <label id="name">Company name: </label>
         <input type="text" id="name" name="name" required />
