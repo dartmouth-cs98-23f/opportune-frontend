@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import axios from 'axios';
 import { destroySession, getSession } from '../utils/sessions';
-import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import SurveyUtil from '~/components/survey_qs/SurveyUtil';
@@ -52,6 +51,7 @@ export async function action({request}: ActionFunctionArgs) {
 			}
 			
 			// send new skills
+			console.log("1232390: ", skillList)
 			const newSkills = JSON.stringify({skills: skillList});
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', 
 				newSkills, {
@@ -60,7 +60,6 @@ export async function action({request}: ActionFunctionArgs) {
 				  "Content-Type": "application/json",
 				},
 			});
-			// console.log(response.data);
 		} catch (error) {
 			console.log(error);
 			return null;
@@ -248,7 +247,9 @@ export default function Matching() {
 		// add skill questions
 		console.log("Skills log: ", basicInfoSkills)
 		for (var skill of basicInfoSkills) {
-			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} existingSkills={newHireSkills}/>)
+			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} 
+			                         existingSkills={newHireSkills}
+									 labels={["1", "2", "3", "4", "5"]}/>)
 		}
 
 		// add ranking question and submission message
@@ -328,8 +329,4 @@ export default function Matching() {
 			</div>
 		)
 	}
-}
-		
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }

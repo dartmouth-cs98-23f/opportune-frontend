@@ -1,5 +1,4 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
-import styles from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import axios from 'axios';
@@ -185,8 +184,4 @@ export function matchingResults(resultsData: json) {
 				  <p className="cta"> <Link to="/matching">Edit Responses </Link></p>
 			    </div>)
 	}
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }

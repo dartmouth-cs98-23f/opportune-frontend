@@ -6,12 +6,15 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { json } from '@remix-run/node';
+import { LinksFunction, json } from '@remix-run/node';
+import mainStyles from '~/styles/main.css';
+import homeStyles from '~/styles/home.css';
 
-
-import MainNavigation from '~/components/MainNav'
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import styles from '~/styles/main.css'
+export const links: LinksFunction = () => {
+	return [{ rel: "stylesheet", href: mainStyles },
+			{ rel: "stylesheet", href: homeStyles },
+	];
+};
 
 export function loader() {
   const ENV = {
@@ -40,8 +43,4 @@ export default function App() {
       </body>
     </html>
   );
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }
