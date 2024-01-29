@@ -78,9 +78,27 @@ export async function loader({request}: LoaderFunctionArgs) {
 };
 
 export default function Profile() {
-	const basicInfo = useLoaderData<typeof loader>();
+	// const basicInfo = useLoaderData<typeof loader>();
 	// console.log("Reading profile info");
 	// console.log(basicInfo.data);
+	const basicInfo =  {data:  {
+		email: 'john.doe.30@dartmouth.edu', 
+		new_hire: {
+			_id: 'cbf1964a-439e-4201-8453-cbc7404efdcc',
+			first_name: 'John', last_name: 'Doe', sex: 'Male',
+		 	race: 'White', school: 'Dartmouth College', major: '8888', grad_month: 'June',
+		 	grad_year: 2030, address: 'Some Address', city: 'Some City', state_province: 'Some State',
+			zip_code: 88888, image_url: '', survey_complete: false, company_id: '',
+			team_id: '',
+			skills: [],
+			team_prefs: [],
+			__v: 7,
+			favorited_teams: [],
+			meetings: [],
+			email: 'john.doe.30@dartmouth.edu',
+			matched: false 
+	}}}
+	
 	console.log(basicInfo)
 	const basicInfoFields = basicInfo.data;
 
@@ -161,7 +179,7 @@ export default function Profile() {
 							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code}/>
 							<p className="cta" style={{textAlign: 'right'}}>
 								<button type="submit" name="_action" value="updateProfile">
-									Next
+									{"→"}
 								</button>
 							</p>
 						</Form>

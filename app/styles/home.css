@@ -352,6 +352,15 @@
 	padding: 10px;
 }
 
+.team-box.team-list {
+	margin: 15px;
+}
+
+.team-box.task-list {
+	margin: 20px;
+	width: 30%;
+}
+
 .team-box.skills {
 	text-align: center;
 	margin: 0 auto;
@@ -363,7 +372,6 @@
 }
 
 .meets-container {
-	margin-left: 25px;
 	width: 35%;
 }
 
@@ -536,7 +544,7 @@ button.edit:hover {
 }
 
 .field-container {
-	margin: 15px;
+	margin: 0px;
 }
 
 .info-form {
@@ -605,6 +613,17 @@ input[type="file"] {
 
 .login-field input {
 	margin-top: 5px;
+}
+
+/* PM */
+input[type="checkbox"] {
+	accent-color: var(--color-primary-20);
+	width: 20px;
+  	height: 20px;
+}
+
+.check-field {
+	margin: 10px;
 }
 
 /* LOGO */

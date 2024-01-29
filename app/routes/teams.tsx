@@ -127,9 +127,34 @@ export default function Teams() {
 		}
 	}
 
-	const teamInfo = useLoaderData<typeof loader>();
+	const teamInfo = {
+		teams: {
+			teams: [{name: "Data Science", skills: ["Python", "R"]},
+					{name: "ML/AI", skills: ["Python", "Pytorch", "Tensorflow"]}]
+		},
+		profile: {
+			email: 'john.doe.30@dartmouth.edu', 
+			new_hire: {
+				_id: 'cbf1964a-439e-4201-8453-cbc7404efdcc',
+				first_name: 'John', last_name: 'Doe', sex: 'Male',
+				 race: 'White', school: 'Dartmouth College', major: '8888', grad_month: 'June',
+				 grad_year: 2030, address: 'Some Address', city: 'Some City', state_province: 'Some State',
+				zip_code: 88888, image_url: '', survey_complete: false, company_id: '',
+				team_id: '',
+				skills: [],
+				team_prefs: [],
+				__v: 7,
+				favorited_teams: [],
+				meetings: [],
+				email: 'john.doe.30@dartmouth.edu',
+				matched: false 
+			}
+		}
+	}
+	// const teamInfo = useLoaderData<typeof loader>();
 	const teamInfoList = teamInfo.teams.teams;
 	console.log("Teaminfo: ", teamInfo);
+	console.log(teamInfoList)
 
 	const favoritedTeamList = teamInfo.profile.new_hire.favorited_teams;
 	const [favoritedTeams, setFavoritedTeams] = useState(favoritedTeamList);
@@ -178,7 +203,7 @@ export default function Teams() {
 
 							}
 
-							return <div className="team-box" key={team.name}>
+							return <div className="team-box list" key={team.name}>
 								<div className="team-text">
 									<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
 										<h3>{team.name}</h3>
@@ -236,7 +261,7 @@ export default function Teams() {
 					</Form>
 					<div className="meets-container">
 						{events ? events.map((event) => {
-							return <div className="team-box">
+							return <div className="team-box team-list">
 								<div className="team-text" key={event.resource.name}>
 									<h3> {event.resource.name}</h3>
 									<p>Date: {new Date(event.resource.start_time).toLocaleDateString()}</p>
