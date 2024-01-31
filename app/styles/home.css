@@ -362,6 +362,15 @@
 	width: 65%;
 }
 
+.teams-list img{
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  object-fit: cover;
+}
+
 .meets-container {
 	margin-left: 25px;
 	width: 35%;
@@ -698,9 +707,14 @@ input[type="file"] {
   margin: 2em 0;
 }
 
+.upload-buttons {
+	display: flex;
+	flex-direction: row;
+}
+
 .preview {
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
 }
 
@@ -786,4 +800,316 @@ input[type="file"] {
 .favorite-btn .star-icon{
 	width: 2rem;
 	height: 2rem
+}
+
+/* Company portal */
+
+.upload-buttons {
+	display: flex;
+	flex-direction: row;
+}
+
+.sidebar {
+  display: flex;
+  justify-content: space-between;
+	background-color: var(--color-primary-10);
+}
+
+.company-preview {
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  height: 20%;
+}
+
+.company-teams-title {
+  text-align: left;
+  margin: 2em 0;
+  padding: 0.5em 1em;
+  background-color: aliceblue;
+}
+
+.company-teams-container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 0 2rem;
+}
+
+.company-team {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid #cccccc;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.company-description {
+  margin: 0 2rem;
+  width: 50%;
+}
+
+.company-description textarea {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Modal */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;  
+}
+
+.modal {
+  background: aliceblue; 
+  width: 50%;
+  height: 55%;
+  max-width: 100%;
+  padding: 20px;
+  border-radius: 5px;
+  position: relative;  
+}
+
+.modal button.right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: .3s;
+  border: none;
+}
+
+.modal button.left {
+	position: absolute; 
+	bottom: 10px;
+	left: 10px;
+	text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+}
+
+.modal button .center {
+	position: absolute; 
+	bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+	text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+}
+
+.modal button:hover {
+  color: #06d6a0;
+}
+
+.modal .field-container {
+  text-align: left;
+  display: inline-grid;
+  width: 40%;
+  height: 6rem;
+  padding: 1rem;
+  margin-right: 4rem;
+}
+
+.newhire-button  {
+	text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.8rem;
+  transition: .3s;
+  text-align: center;
+  white-space: nowrap;
+  /* margin: 1rem 1rem 0 1rem; */
+  margin-top: 1rem;
+}
+
+.company-save {
+  text-decoration: none;
+	background-color: var(--color-primary-20);
+	color: white;
+	margin: 1em 0;
+	padding: 0.5rem 1rem;
+	border-radius: 4px;
+	font-size: 1rem;
+	transition: 0.3s;
+}
+
+.new-hire-container {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  margin: 0 2rem;
+}
+
+.company-preview {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2em;
+}
+
+.company-preview img {
+	display: block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-right: 2rem; 
+  object-fit: contain;
+}
+
+.company-preview h1, .company-preview p{
+	margin-top: 0;
+	margin-bottom: 10px;
+}
+
+.add-team {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 50%;
+  font-size: 1.5rem;
+}
+
+.done-button {
+  background-color: #1E90FF;
+  border-radius: 0.8rem;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;  
+  transition: .3s;
+  text-align: center;
+  white-space: nowrap;
+  margin-top: 1rem;
+  margin-right: 4rem;
+}
+
+.in-progress-button {
+  border-radius: 0.8rem;
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;  
+  transition: .3s;
+  text-align: center;
+  white-space: nowrap;
+  margin: 20px;
+}
+
+.teamsDropdown {
+  position: relative;
+}
+
+.teamsDropdown__toggle {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.teamsDropdown__menu { 
+  position: absolute;
+  top: 100%; 
+  left: 0;
+  border: 1px solid #ddd;
+}
+
+/* matching page */
+.matching-title p {
+  color:rgb(101, 101, 101);
+  margin: 0.5rem 0;
+}
+
+.matching-progress-button {
+  width: auto;
+  margin-left: auto;
+}
+
+.matching-info {
+  display: flex;
+}
+
+.teams-list select {
+  border: none;
+  border-radius: 1rem;
+  background-color: var(--color-primary-20);
+  color: white;
+  text-align-last: center;
+  padding: 0.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  width: 7rem;
+}
+
+.lock-button {
+  position: relative;
+  margin-top: 1rem;
+}
+
+.lock-icon {
+  width: 2rem;
+}
+
+.hover-message {
+  visibility: hidden;
+  
+  /* Positioning */
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 8px;
+  
+  /* Other styles */
+  width: 15rem;
+  background-color: black; 
+  text-align: center;
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.lock-button:hover .hover-message {
+  visibility: visible;
+}
+
+.addTeam-button {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: .3s;
+}
+
+.matched {
+  
 }

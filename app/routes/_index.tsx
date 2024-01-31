@@ -11,6 +11,9 @@ export default function Index() {
 				<Link to="/signup">New Hires</Link>
 				<Link to="/tsignup">Teams</Link>
 			</p>
+			<p className="cta">
+				<Link to="/companyLogin">Company Login</Link>
+			</p>
 		</div>
     </div>
   );
