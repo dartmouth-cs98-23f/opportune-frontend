@@ -1,5 +1,4 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
-import loginStyle from '~/styles/home.css';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon, StarIcon} from '@heroicons/react/24/outline';
 import {StarIcon as SolidStarIcon} from '@heroicons/react/24/solid';
@@ -8,8 +7,6 @@ import { useCalendlyEventListener, InlineWidget, PopupButton, PopupModal } from 
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { getSession, destroySession } from '~/utils/sessions';
 import axios from 'axios';
-import { Portal } from '@mui/material';
-// import { motion } from 'framer-motion';
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -80,7 +77,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 			getTeamsRes()
 		]);
 
-		console.log("Get profile ", profileRes.data);
+		console.log("Get profile ", profileRes);
 
 		return json({ profile: profileRes, teams: teamsRes });
 	} catch (error) {
@@ -131,14 +128,11 @@ export default function Teams() {
 	}
 
 	const teamInfo = useLoaderData<typeof loader>();
-	
-	console.log("Teaminfo: ", teamInfo);
 	const teamInfoList = teamInfo.teams.teams;
+	console.log("Teaminfo: ", teamInfo);
 
 	const favoritedTeamList = teamInfo.profile.new_hire.favorited_teams;
-
 	const [favoritedTeams, setFavoritedTeams] = useState(favoritedTeamList);
-
 	const [isOpen, setIsOpen] = useState(false);
 
 	const prefill={
@@ -255,14 +249,10 @@ export default function Teams() {
                 </div>
 
                 <p className="cta">
-                    <Link to="/profile">Previous</Link>
-                    <Link to="/matching">Next</Link>
+                    <Link to="/profile">{"←"}</Link>
+                    <Link to="/matching">{"→"}</Link>
                 </p>
             </div>
         </div>
     )
-}
-
-export function links() {
-    return [{ rel: 'stylesheet', href: loginStyle }];
 }

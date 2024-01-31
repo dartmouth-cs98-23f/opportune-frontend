@@ -20,7 +20,22 @@
 
 .horiz-flex-container {
 	display: flex;
+	flex-direction: row;
+	text-align: center;
+	background-color: white;
+	color: var(--color-primary-10);
+	height: 100vh;
+	overflow: auto;
 }
+
+/* .landing-box {
+	background-color: var(--color-primary-40);
+	height: 100%;
+	width: 45%;
+	padding: 100px 15px;
+	box-shadow: 0 0 10px 5px var(--color-primary-40);
+	border-radius: 10px;
+} */
 
 .landing-box {
 	background-color: var(--color-primary-40);
@@ -28,6 +43,19 @@
 	margin: 100px auto;
 	padding: 15px;
 	border-radius: 10px;
+}
+
+.company-banner {
+	text-align: left;
+	background-image: url(public/landing.svg);
+	margin: 0px;
+	padding: 30px;
+}
+ 
+.team-info, .assigned-interns {
+	text-align: left;
+	padding: 15px;
+	width: 50%;
 }
 
 /* flex elements */
@@ -46,39 +74,6 @@
 #sidebar a.active {
 	color: var(--color-secondary-200);
 	transition: 0.3s;
-}
-
-.logout-button {
-	display: inline;
-	background-color: var(--color-primary-10);
-	width: 50px;
-	height: 50px;
-	float: right;
-	margin-right: 10px;
-	cursor: pointer;
-}
-
-.logout-button svg { 
-	color: var(--color-primary-30);
-	transition: 0.3s;
-}
-
-.logout-button svg:hover {
-	color: var(--color-secondary-10);
-	transition: 0.3s;
-}
-
-.profile-button {
-	display: inline;
-	width: 50px;
-	height: 50px;
-	float: right;
-}
-
-#content {
-	flex: 0.95;
-	flex-basis: 0%;
-	padding: 20px;
 }
  
 /* NAV */
@@ -203,7 +198,6 @@
 /* QUESTIONS */
 
 /* scale */
-
 .scale-container {
 	padding: 20px;
 	margin: 10px;
@@ -323,8 +317,31 @@
 	transition: width 0.7s;
 }
 
+/* dropdown - team */
+.full-skills {
+	margin: 10px;
+}
 
-/* TEAMS */
+.filtered-skill {
+	display: inline-block;
+	list-style: none;
+	padding: 8px;
+	margin: 8px;
+	background-color: var(--color-secondary-10);
+	color: white;
+	font-size: 0.75rem;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.filtered-skill:hover {
+	background-color: var(--color-primary-20);
+	transition: 0.3s;
+}
+
+
+/* TEAMS - new hire */
 .team-box {
 	text-align: left;
 	justify-content: center;
@@ -332,6 +349,13 @@
 	border-radius: 10px;
 	transition: 0.3s;
 	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+	padding: 10px;
+}
+
+.team-box.skills {
+	text-align: center;
+	margin: 0 auto;
+	width: 80%;
 }
 
 .teams-container {
@@ -364,23 +388,60 @@
 }
 
 /* BUTTONS */
+
+/* skill scores in team prefs */
+.profile-skill-score {
+	display: inline-block;
+	background-color: var(--color-secondary-10);
+	border-radius: 10px;
+	padding: 10px;
+	color: white;
+	text-align: center;
+}
+
+.profile-skill-name {
+	display: inline-block;
+	padding: 10px;
+}
+
+.skill-search {
+	font-family: Mulish, Roboto;
+	font-weight: bold;
+	font-size: 14px;
+	color: #6E757A;
+	width: 25%;
+	margin: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border-color: #05467C;
+	border-width: thin;
+	margin-bottom: 15px;
+}
+
+/* team description edit */
+.edit.active {
+	background-color: var(--color-secondary-10);
+}
+
+/* previous and next buttons */
 .cta {
 	margin-top: 2rem;
 }
   
-.cta a, 
+.cta a,
 .cta button,
-.form-actions button  {
+.form-actions button {
 	text-decoration: none;
 	background-color: var(--color-primary-20);
 	color: white;
 	margin: 10px;
-	padding: 0.5rem 2rem;
+	border: none;
 	border-radius: 4px;
-	font-size: 1.5rem;
 	transition: 0.3s;
+	font-family: Mulish, Roboto;
+	font-size: 1.5rem;
+	padding: 0.5rem 2rem;
 }
-
   
 .cta a:hover,
 .scta a:hover,
@@ -416,6 +477,57 @@ button[type="submit"] {
 	transition: 0.3s;
 }
 
+/* logout button */
+
+.logout-button {
+	display: inline;
+	background-color: var(--color-primary-10);
+	width: 50px;
+	height: 50px;
+	float: right;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.logout-button svg { 
+	color: var(--color-primary-30);
+	transition: 0.3s;
+}
+
+.logout-button svg:hover {
+	color: var(--color-secondary-10);
+	transition: 0.3s;
+}
+
+/* profile button */
+.profile-button {
+	display: inline;
+	width: 50px;
+	height: 50px;
+	float: right;
+}
+
+/* edit button */
+a.edit,
+button.edit {
+	border: none;
+	border-radius: 5px;
+	background-color: var(--color-primary-20);
+	cursor: pointer;
+	color: white;
+	text-decoration: none;
+	margin-left: 10px;
+	padding: 0.2rem 0.4rem;
+	transition: 0.3s;
+	font-size: 1rem;
+}
+
+a.edit:hover,
+button.edit:hover {
+	background-color: var(--color-secondary-10);
+	transition: 0.3s;
+}
+
 /* FORMS */
 .form-actions a {
 	text-decoration: none;
@@ -433,9 +545,7 @@ button[type="submit"] {
 }
 
 .field-container {
-	text-align: left;
-	display: inline-block;
-	width: 50%;
+	margin: 15px;
 }
 
 .info-form {
@@ -532,6 +642,13 @@ input[type="file"] {
 	filter: drop-shadow(0px 0px 10px lightgrey);
 }
 
+.text-logo {
+	color: white;
+	margin: 10px 0px 0px 0px;
+	font-size: 1.5rem;
+	display: inline-block;
+}
+
 .expanded-content {
   display: flex;
   flex-direction: column;
@@ -540,6 +657,8 @@ input[type="file"] {
 .text-content {
   flex: 1;
 }
+
+/* CALENDAR */
 
 .schedule-btn {
 	align-self: flex-end;
@@ -574,7 +693,7 @@ input[type="file"] {
   text-decoration: underline;
 }
 
-/* image upload */
+/* IMAGE UPLOAD */
 
 .container {
   width: 100%;
@@ -601,11 +720,11 @@ input[type="file"] {
 
 .preview img {
 	display: block;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-right: 2rem; 
-  object-fit: cover;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	margin-right: 2rem; 
+	object-fit: cover;
 }
 
 .preview h1, .preview p{

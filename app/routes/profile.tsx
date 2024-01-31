@@ -1,5 +1,4 @@
 import { Link, Form, useLoaderData } from '@remix-run/react';
-import styles from '~/styles/home.css'
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
@@ -82,7 +81,7 @@ export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
 	// console.log("Reading profile info");
 	// console.log(basicInfo.data);
-
+	console.log(basicInfo)
 	const basicInfoFields = basicInfo.data;
 
 	const [url, updateUrl] = useState();
@@ -155,7 +154,7 @@ export default function Profile() {
 							<TextField label="Major" classLabel="major" value={basicInfoFields.new_hire.major} />
 
 							<h3>Address and basic info</h3>
-							<TextField label="Email Address" classLabel="email-address" value={basicInfoFields.email}/>
+							<TextField label="Email Address" classLabel="email" value={basicInfoFields.email}/>
 							<TextField label="Address" classLabel="address" value={basicInfoFields.new_hire.address}/>
 							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city}/>
 							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province}/>
@@ -171,8 +170,4 @@ export default function Profile() {
 			</div>
 		</div>
 	)
-}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }
