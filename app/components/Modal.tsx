@@ -24,7 +24,7 @@ function Modal({ open, children, onClose, title }) {
     <div className="modal-overlay">
       <div className="modal">
         {/* Close icon */}
-        <div>{title}</div>
+        <h1 style={{textAlign: 'center'}}>{title}</h1>
         <button className="right" onClick={onClose}>&times;</button>
 
         {children}
