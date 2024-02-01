@@ -690,7 +690,7 @@ input[type="file"] {
   width: 100%;
   max-width: 1024px;
   padding: 0 1em;
-  margin: 10em auto;
+  /* margin: 10em auto; */
 }
 
 .title {
