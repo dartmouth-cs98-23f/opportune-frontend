@@ -28,6 +28,19 @@
 	overflow: auto;
 }
 
+.div-line {
+	border-left: 1px solid var(--color-primary-30);
+	height: 100%;
+	position: absolute;
+	left: 35%;
+	margin-top: 160px;
+	top: 0;
+}
+
+#checkbox-content {
+	width: 50%;
+}
+
 /* .landing-box {
 	background-color: var(--color-primary-40);
 	height: 100%;
@@ -193,6 +206,42 @@
 
 .nav-row a.active .pointer.icon-locked:before {
 	border-left: 20px solid darkgrey;
+}
+
+/* PM second side bar */
+#sidebar-2 {
+	display: inline;
+	text-align: left;
+	margin-left: 20px;
+}
+
+#date-bar {
+	display: inline;
+	margin-left: 20px;
+}
+
+#date-bar button {
+	margin: 10px;
+	font-family: Mulish, Roboto, Arial;
+	font-weight: bold;
+	background-color: transparent;
+    background-repeat: no-repeat;
+  	border-radius: 15px;
+	padding: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+	
+}
+
+#time-scale {
+	border: 1px solid var(--color-primary-20);
+	color: var(--color-primary-20);
+}
+
+#curr-date {
+	border: 1px solid lightgray;
+	color: grey;
 }
 
 /* QUESTIONS */
@@ -805,4 +854,12 @@ input[type="checkbox"] {
 .favorite-btn .star-icon{
 	width: 2rem;
 	height: 2rem
+}
+
+/* misc */
+.disable-select {
+	-webkit-user-select: none;  
+	-moz-user-select: none;    
+	-ms-user-select: none;      
+	user-select: none;
 }

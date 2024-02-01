@@ -27,10 +27,13 @@ export async function action({request}: ActionFunctionArgs) {
 			},
 		});
 
+		console.log("SKILRES ", skillRes);
+
 		let currSkills = skillRes.data.team.skills;
 		var myJson = {};
 
 		for (const [key, value] of body.entries()) {
+			console.log("KEYEY ", key);
 			if (key === "skills") {
 				const skillList = value.split(",");
 				console.log("skillList: ", skillList);
