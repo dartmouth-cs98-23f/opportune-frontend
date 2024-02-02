@@ -6,12 +6,13 @@ import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
 
 const matched = true;
-const taskList = [{id: 1, name: "Create User Profile", complete: false, start: 1, end: 2.5}, 
-			      {id: 2, name: "Create Shop Profile", complete: false, start: 2, end: 4},
-			      {id: 3, name: "Link Account Password Flag", complete: false, start: 3, end: 5},
-			      {id: 4, name: "Gather User Names", complete: true, start: 1, end: 2},
-			      {id: 5, name: "Create a Back Endpoint", complete: true, start: 2, end: 5}]
 
+const projList = [{name: "Authorization", start: 1, end: 4},
+				  {name: "UI/UX", start: 4, end: 5}]
+const taskList = [{id: 1, name: "Create User Profile", complete: false, project: "Authorization"}, 
+			      {id: 2, name: "Create Shop Profile", complete: false, project: "Authorization"},
+			      {id: 3, name: "Link Account Password Flag", complete: false, project: "Authorization"},
+				  {id: 4, name: "Pick Logo Colors", complete: false, project: "UI/UX"}]
 
 export default function Project() {
 	const [isEditing, setEditing] = useState(false);
@@ -22,27 +23,31 @@ export default function Project() {
 		setEditing(!isEditing);
 	}
 
-	function handleTaskAdd(task: {id: number, name:string, 
-		    					 complete:boolean, start: number, end: number}) {
-		setTasks([...tasks, task]);
+	function handleTaskAdd(task: {id: number, name:string, complete:boolean, project:string}) {
+		if (task.name) {
+			setTasks([...tasks, task]);
 		setTask('');
 		setEditing(!isEditing);
-	}
+	}}
 
 	function updateTask(task:string) {
 		setTask(task);
 	}
 
 	function handleToggle(taskId: number) {
+		console.log(tasks);
 		const modTasks = tasks.map((task) => 
 			task.id === taskId ? { ...task, complete: !task.complete } : task
 		)
 		setTasks(modTasks);
+		console.log(tasks);
 	};
 
 	function handleRemove(taskId: number) {
+		console.log(tasks);
 		const modTasks = tasks.filter((task) => task.id !== taskId)
 		setTasks(modTasks);
+		console.log(tasks);
 	}
 
 	if (!matched) {
@@ -68,7 +73,8 @@ export default function Project() {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
-					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+					<img className="opportune-logo-small disable-select" 
+					     src="opportune_newlogo.svg" draggable={false}></img>
 					<p className="text-logo disable-select">Opportune</p>
 					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 				</div>
@@ -96,7 +102,7 @@ export default function Project() {
 							</div>}
 							{isEditing ? <div>
 								<button className="edit" onClick={() => handleTaskAdd(
-								  {id: tasks.length + 1, name: task, complete: false, start: 1, end: 2})}>
+								  {id: tasks.length + 1, name: task, complete: false, project: "Authorization"})}>
 								  Confirm
 								</button>
 								<button className="edit" onClick={() => handleEditClick()}>
@@ -105,7 +111,7 @@ export default function Project() {
 							{tasks.filter((task) => !task.complete).map((task, i) => {
 								return <Checkbox task={task.name} classLabel="check-field"
 								                 checked={task.complete} onToggle={handleToggle} onRemove={handleRemove}
-												 id={task.id} key={task.id} />
+												 id={task.id} />
 							})}
 						</div>
 						<div className="team-box task-list">
@@ -127,15 +133,22 @@ export default function Project() {
 							<div className="time-markers"> 5 </div>
 						</div>
 						<div className="flex-container time">
-							{tasks.map((task, i) => {
-								return <TaskBubble classLabel={!task.complete ? 'team-box task-list' : 'team-box task-list done'}
-								                   start={task.start} end={task.end} task={task.name} />
-							})}
+							{projList.map((proj, i) => {
+								return <div>
+									<TaskBubble classLabel={'team-box task-list proj'}
+									start={proj.start} end={proj.end} task={proj.name} />
+									{tasks.filter((task) => task.project === proj.name).map((task, i) => {
+										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'}
+												start={proj.start} end={proj.end} task={task.name} />
+									})}
+								</div>
+							})} 
 						</div>
 					</div>
 				</div>
 			</div>
 		)
 	}
-	
 }
+
+/* Under TaskBubble, add the individual subtasks bubbles underneath */

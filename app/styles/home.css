@@ -413,9 +413,10 @@
 	margin: 20px;
 }
 
-.team-box.task-list.done {
-	background-color: rgb(206, 248, 240);
-	transition: 0.3s;
+.team-box.task-list.proj {
+	background-color: var(--color-primary-20);
+	color: white;
+	margin: 10px;
 }
 
 .team-box.skills {
@@ -432,9 +433,9 @@
 	width: 35%;
 }
 
-.team-box:hover {
+.team-box:hover,
+.task-box:hover {
 	background-color: #22506c13;
-	/* cursor: pointer; */
 	transition: 0.3s;
 }
 
@@ -713,6 +714,23 @@ input[type="checkbox"] {
 	margin: 10px;
 }
 
+.task-box {
+	text-align: left;
+	justify-content: center;
+	background-color: var(--color-primary-40);
+	border-radius: 10px;
+	transition: 0.3s;
+	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+	padding: 10px;
+	cursor: default;
+	margin-bottom: 10px;
+}
+
+.task-box.done {
+	background-color: rgb(206, 248, 240);
+	transition: 0.3s;
+}
+
 /* LOGO */
 .opportune-logo-small {
 	display: inline;
@@ -721,11 +739,6 @@ input[type="checkbox"] {
 	float: left;
 	margin-left: 10px;
 	margin-top: 5px;
-	transition: 0.3s;
-}
-
-.opportune-logo-small:hover {
-	opacity: 0.85;
 	transition: 0.3s;
 }
 
