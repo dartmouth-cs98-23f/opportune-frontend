@@ -52,8 +52,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 			request.headers.get("Cookie")
 		);
 
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "new_hire")) {
+			return redirect("/login");
 		}
 
 		const response = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
