@@ -29,7 +29,7 @@
 }
 
 .div-line {
-	border-left: 1px solid var(--color-primary-30);
+	border-left: 2px solid var(--color-primary-30);
 	height: 100%;
 	position: absolute;
 	left: 35%;
@@ -37,8 +37,8 @@
 	top: 0;
 }
 
-#checkbox-content {
-	width: 50%;
+#pm-content {
+	width: 35%;
 }
 
 /* .landing-box {
@@ -244,6 +244,10 @@
 	color: grey;
 }
 
+#timeline {
+	width: 60%;
+}
+
 /* QUESTIONS */
 
 /* scale */
@@ -407,7 +411,11 @@
 
 .team-box.task-list {
 	margin: 20px;
-	width: 30%;
+}
+
+.team-box.task-list.done {
+	background-color: rgb(206, 248, 240);
+	transition: 0.3s;
 }
 
 .team-box.skills {
@@ -570,9 +578,22 @@ button.edit {
 	font-size: 1rem;
 }
 
+button.edit-clear {
+	background: none;
+	opacity: 0.5;
+	border: none;
+	transition: 0.3s;
+}
+
 a.edit:hover,
 button.edit:hover {
 	background-color: var(--color-secondary-10);
+	transition: 0.3s;
+}
+
+button.edit-clear:hover {
+	cursor: pointer;
+	opacity: 1;
 	transition: 0.3s;
 }
 
@@ -664,6 +685,23 @@ input[type="file"] {
 	margin-top: 5px;
 }
 
+textarea {
+	resize: vertical;
+	width: 90%;
+}
+
+#task-input {
+	background: transparent;
+	font-family: Mulish, Roboto, Arial;
+	color: var(--color-primary-20);
+    border: none;
+	outline: none;
+	resize: none;
+	margin: 10px;
+	height: 20px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
 /* PM */
 input[type="checkbox"] {
 	accent-color: var(--color-primary-20);
@@ -715,6 +753,22 @@ input[type="checkbox"] {
 
 .text-content {
   flex: 1;
+}
+
+/* PM timeline */
+.horiz-flex-container.time {
+	height: 20px;
+	margin: 10px;
+	position: sticky;
+}
+
+.flex-container.time {
+	background-size: 40px 40px;
+	background-image: radial-gradient(circle, var(--color-primary-30) 1.2px, rgba(0, 0, 0, 0) 1px);
+}
+
+.time-markers {
+	margin-right: 20%;
 }
 
 /* CALENDAR */

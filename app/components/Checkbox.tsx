@@ -1,26 +1,20 @@
-import { useState } from "react";
-
 interface Fields {
 	task: string;
 	classLabel: string;
 	checked: boolean;
+	id: number;
 	key: number;
+	onToggle: Function;
+	onRemove: Function;
 }
 
 export default function Checkbox(props:Fields) {
-  const [checked, setChecked] = useState(props.checked);
-
-  const handleCheck = () => {
-	setChecked(!checked)
-
-	
-  }
-
   return (
-	<div className={`check-field ${checked ? 'checked': ''}`} key={props.key}>
-		<input type="checkbox" id={`checkbox_u${props.key + 1}`} name="checkboxGroup" 
-		       onClick={() => handleCheck()} />
-		<label htmlFor={`checkbox${props.key + 1}`}>{props.task}</label>
+	<div className={`check-field ${props.checked ? 'checked': ''}`} key={props.key}>
+		<input type="checkbox" id={String(props.id)} name="checkboxGroup" 
+		     onClick={() => props.onToggle(props.id)} defaultChecked={props.checked} />
+		<label htmlFor={String(props.key)}>{props.task}</label>
+		<button className="edit-clear" onClick={() => props.onRemove(props.id)}> ❌ </button>
 	</div>
   )
 }

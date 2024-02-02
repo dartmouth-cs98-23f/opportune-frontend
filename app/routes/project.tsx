@@ -3,38 +3,47 @@ import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
 import Checkbox from '~/components/Checkbox';
+import TaskBubble from '~/components/TaskBubble';
 
 const matched = true;
-const upcomingTasks = ["Create User Profile", "Create Shop Profile", "Link Account Password Flag"]
-const completedTasks = ["Gather User Names", "Create a Back Endpoint"]
-// new format : [{name: "Task 1", complete: false}]
+const taskList = [{id: 1, name: "Create User Profile", complete: false, start: 1, end: 2.5}, 
+			      {id: 2, name: "Create Shop Profile", complete: false, start: 2, end: 4},
+			      {id: 3, name: "Link Account Password Flag", complete: false, start: 3, end: 5},
+			      {id: 4, name: "Gather User Names", complete: true, start: 1, end: 2},
+			      {id: 5, name: "Create a Back Endpoint", complete: true, start: 2, end: 5}]
+
 
 export default function Project() {
 	const [isEditing, setEditing] = useState(false);
-	const [upcoming, setUpcoming] = useState(upcomingTasks);
-	const [completed, setCompleted] = useState(completedTasks);
+	const [tasks, setTasks] = useState(taskList);
 	const [task, setTask] = useState('');
 
 	function handleEditClick() {
 		setEditing(!isEditing);
 	}
 
-	function handleTaskAdd(task:string) {
-		setUpcoming([...upcoming, task]);
+	function handleTaskAdd(task: {id: number, name:string, 
+		    					 complete:boolean, start: number, end: number}) {
+		setTasks([...tasks, task]);
 		setTask('');
 		setEditing(!isEditing);
 	}
 
 	function updateTask(task:string) {
-		console.log(task);
 		setTask(task);
 	}
 
-	function handleTaskComplete(task:string) {
-		setCompleted([...completed, task]);
-	}
+	function handleToggle(taskId: number) {
+		const modTasks = tasks.map((task) => 
+			task.id === taskId ? { ...task, complete: !task.complete } : task
+		)
+		setTasks(modTasks);
+	};
 
-	console.log(upcoming.length)
+	function handleRemove(taskId: number) {
+		const modTasks = tasks.filter((task) => task.id !== taskId)
+		setTasks(modTasks);
+	}
 
 	if (!matched) {
 		return (
@@ -66,48 +75,67 @@ export default function Project() {
 				<div id="sidebar-2">
 					<h3> Timeline: Stephen 
 						<div id="date-bar">
-							<button id="time-scale"> Today </button>
-							<button id="curr-date"> Jan 30, 2024 </button>
+							<button id="time-scale"> Today ↓</button>
+							<button id="curr-date"> Feb 1, 2024 </button>
 						</div>
 					</h3>
 				</div>
-				<div id="content">
-					<div className="team-box task-list">
-						Stephen
-					</div>
-					<div className="team-box task-list">
-						<h3> Upcoming Tasks ({upcoming.length}) 
-							{!isEditing ? <button type="button" className="edit" 
-								onClick={handleEditClick}> + </button> : null}
-						</h3>
-						{!isEditing ? null :<div className="team-box">  
-							<input name="description" id="textInput" 
-							onChange={(e) => updateTask(e.target.value)}/>
+				<div className="horiz-flex-container">
+					<div id="pm-content">
+						<div className="team-box task-list">
+							Stephen
+						</div>
+						<div className="team-box task-list">
+							<h3> Upcoming Tasks ({tasks.filter((task) => !task.complete).length}) 
+								{!isEditing ? <button type="button" className="edit" 
+									onClick={handleEditClick}> + </button> : null}
+							</h3>
+							{!isEditing ? null :<div>  
+								<textarea name="description" id="task-input" 
+								onChange={(e) => updateTask(e.target.value)}/>
 							</div>}
-						{isEditing ?
-							<button className="edit" onClick={() => handleTaskAdd(task)}>
-								Confirm
-							</button> : null}
-						{upcoming.map((task, i) => {
-							return <Checkbox task={task} classLabel="check-field" checked={false} key={i} />
-						})}
+							{isEditing ? <div>
+								<button className="edit" onClick={() => handleTaskAdd(
+								  {id: tasks.length + 1, name: task, complete: false, start: 1, end: 2})}>
+								  Confirm
+								</button>
+								<button className="edit" onClick={() => handleEditClick()}>
+									Cancel
+								</button> </div>: null}
+							{tasks.filter((task) => !task.complete).map((task, i) => {
+								return <Checkbox task={task.name} classLabel="check-field"
+								                 checked={task.complete} onToggle={handleToggle} onRemove={handleRemove}
+												 id={task.id} key={task.id} />
+							})}
+						</div>
+						<div className="team-box task-list">
+							<h3> Completed Tasks ({tasks.filter((task) => task.complete).length}) </h3>
+							{tasks.filter((task) => task.complete).map((task, i) => {
+								return <Checkbox task={task.name} classLabel="check-field"
+									             checked={task.complete} onToggle={handleToggle} onRemove={handleRemove}
+												 id={task.id} key={task.id}/>
+							})}
+						</div>
+						<div className="div-line"></div>
 					</div>
-					<div className="team-box task-list">
-						<h3> Completed Tasks ({completed.length}) </h3>
-						{completed.map((task, i) => {
-							return <Checkbox task={task} classLabel="check-field" checked={true} key={i} />
-						})}
+					<div id="timeline">
+						<div className="horiz-flex-container time">
+							<div className="time-markers"> 1 </div>
+							<div className="time-markers"> 2 </div>
+							<div className="time-markers"> 3 </div>
+							<div className="time-markers"> 4 </div>
+							<div className="time-markers"> 5 </div>
+						</div>
+						<div className="flex-container time">
+							{tasks.map((task, i) => {
+								return <TaskBubble classLabel={!task.complete ? 'team-box task-list' : 'team-box task-list done'}
+								                   start={task.start} end={task.end} task={task.name} />
+							})}
+						</div>
 					</div>
-					<div className="div-line"></div>
 				</div>
-				
 			</div>
 		)
 	}
 	
 }
-
-/* setCheckboxStates((prevCheckboxStates) => ({
-      ...prevCheckboxStates,
-      [checkboxName]: !prevCheckboxStates[checkboxName],
-    })); */
