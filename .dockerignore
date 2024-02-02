@@ -1,7 +1,0 @@
-./node_modules
-./.github
-./.cache
-Dockerfile
-.dockerignore
-docker-compose.yml
-.gitignore
