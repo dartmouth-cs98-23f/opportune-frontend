@@ -2,10 +2,16 @@ import { Link, Form } from '@remix-run/react';
 import { redirect, ActionFunctionArgs } from '@remix-run/node';
 import loginStyle from '~/styles/home.css';
 import axios from 'axios';
+import { getSession, commitSession, destroySession } from "../utils/sessions";
 
 export async function action({
 	request,
   }: ActionFunctionArgs) {
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
 	const body = await request.formData();
 
 	var myJson = {};
@@ -16,19 +22,28 @@ export async function action({
 	myJson["user_type"] = "company";
 
 	try {
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/register', myJson);
+		var response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/register', myJson);
 
 		if (response.status == 204) {
 			alert("Username is already in use.");
 			return null
 		}
 
+		response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
+		const userType = response.data.user_type;
+		session.set("auth", response.data.token);
+		session.set("user_type", response.data.user_type);
+
+		return redirect(`/login`, {
+			headers: {
+				"Set-Cookie": await commitSession(session),
+			}
+		});
+
 	} catch(error) {
 		console.log(error)
 		return redirect('/company/signup')
 	}
-	
-	return redirect(`/login`);
   }
 
 export default function SignUp() {
