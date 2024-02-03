@@ -16,7 +16,7 @@ export async function action({
 	myJson["user_type"] = "new_hire";
 
 	try {
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/register', myJson);
+		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/register-link', myJson);
 
 		if (response.status == 204) {
 			alert("Username is already in use.");
