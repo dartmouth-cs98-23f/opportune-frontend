@@ -9,10 +9,10 @@ const matched = true;
 
 const projList = [{name: "Authorization", start: 1, end: 4},
 				  {name: "UI/UX", start: 4, end: 5}]
-const taskList = [{id: 1, name: "Create User Profile", complete: false, project: "Authorization"}, 
-			      {id: 2, name: "Create Shop Profile", complete: false, project: "Authorization"},
-			      {id: 3, name: "Link Account Password Flag", complete: false, project: "Authorization"},
-				  {id: 4, name: "Pick Logo Colors", complete: false, project: "UI/UX"}]
+const taskList = [{id: 1, name: "Create User Profile", description: "This is task 1.", complete: false, project: "Authorization"}, 
+			      {id: 2, name: "Create Shop Profile", description: "This is task 2.", complete: false, project: "Authorization"},
+			      {id: 3, name: "Link Account Password Flag", description: "This is task 3.", complete: false, project: "Authorization"},
+				  {id: 4, name: "Pick Logo Colors", description: "This is task 4", complete: false, project: "UI/UX"}]
 
 export default function Project() {
 	const [isEditing, setEditing] = useState(false);
@@ -136,10 +136,14 @@ export default function Project() {
 							{projList.map((proj, i) => {
 								return <div>
 									<TaskBubble classLabel={'team-box task-list proj'}
-									start={proj.start} end={proj.end} task={proj.name} />
+									start={proj.start} end={proj.end} task={proj.name} descrip={""}
+									progress={(tasks.filter((task) => 
+									          (task.project === proj.name) && task.complete).length) / 
+											  (tasks.filter((task) => (task.project === proj.name)).length)} />
 									{tasks.filter((task) => task.project === proj.name).map((task, i) => {
-										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'}
-												start={proj.start} end={proj.end} task={task.name} />
+										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
+										        descrip={task.description} start={proj.start} end={proj.end} task={task.name} 
+												progress={-1} />
 									})}
 								</div>
 							})} 
@@ -151,4 +155,3 @@ export default function Project() {
 	}
 }
 
-/* Under TaskBubble, add the individual subtasks bubbles underneath */

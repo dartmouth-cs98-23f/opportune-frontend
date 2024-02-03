@@ -444,6 +444,11 @@
 	padding: 5px;
 }
 
+.task-desc-toggle {
+	cursor: pointer;
+	float: right;
+}
+
 /* BUTTONS */
 
 /* skill scores in team prefs */
@@ -772,7 +777,6 @@ input[type="checkbox"] {
 .horiz-flex-container.time {
 	height: 20px;
 	margin: 10px;
-	position: sticky;
 }
 
 .flex-container.time {
