@@ -221,7 +221,7 @@ export default function CompanyProfile() {
             )}
         
             <div>
-                <h1>Company name</h1>
+                <h1>{info?.data.company.name}</h1>
                 <p>Location: SF</p>
                 <div className='upload-buttons'>
                     <ImageUpload onUpload={handleOnUpload}>

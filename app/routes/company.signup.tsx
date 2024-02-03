@@ -29,10 +29,22 @@ export async function action({
 			return null
 		}
 
-		response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
+		response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson, {
+			headers: {
+			"Authorization": session.get("auth"),
+			"Content-Type": "application/json",
+			},
+		});
 		const userType = response.data.user_type;
 		session.set("auth", response.data.token);
 		session.set("user_type", response.data.user_type);
+
+		await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', {"name": myJson["name"]}, {
+			headers: {
+			"Authorization": response.data.token,
+			"Content-Type": "application/json",
+			},
+		});
 
 		return redirect(`/login`, {
 			headers: {
