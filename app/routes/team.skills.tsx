@@ -6,6 +6,7 @@ import { destroySession, getSession } from '../utils/sessions';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import PlainText from '~/components/survey_qs/PlainText';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -14,11 +15,11 @@ export async function action({request}: ActionFunctionArgs) {
 		request.headers.get("Cookie")
 	);
 
-	console.log("Auth: ", session.get("auth"));
 	if (!session.get("auth")) {
 		return redirect("/login")
 	}
 
+	// Actions
 	if (_action === "AddSkills") {
 		const skillRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 			headers: {
@@ -33,7 +34,6 @@ export async function action({request}: ActionFunctionArgs) {
 		for (const [key, value] of body.entries()) {
 			if (key === "skills") {
 				const skillList = value.split(",");
-				console.log("skillList: ", skillList);
 				myJson[key] = skillList.map((skill:string) => {
 					const skillIdx = currSkills.findIndex(entry => entry.name === skill);
 					
@@ -47,8 +47,6 @@ export async function action({request}: ActionFunctionArgs) {
 				myJson[key] = value;
 			}
 		}
-		
-		console.log("My tskills json: ", JSON.stringify(myJson));
 
 		const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', myJson, {
 			headers: {
@@ -58,7 +56,7 @@ export async function action({request}: ActionFunctionArgs) {
 		})
 	}
 
-	if (_action === "LogOut") {
+	else if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
@@ -66,18 +64,18 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/tprefs");
+	return redirect("/team/survey");
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "team")) {
+			return redirect("/login");
 		}
 
 		const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
@@ -85,12 +83,10 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 		}});
-
-		console.log(profileRes.data)
 		return json(profileRes.data);
 	
 	} catch (error) {
-		console.log("Error in tskills loader: ", error);
+		console.log(error);
 		return null;
 	}
 };
@@ -152,7 +148,7 @@ export default function Tskills() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/tprofile" method="post">
+				<Form action="/team/skills" method="post">
 				<p className="text-logo">Opportune</p>
 				<button className="logout-button" type="submit"
 				name="_action" value="LogOut"> 
@@ -168,7 +164,7 @@ export default function Tskills() {
 				</div>
 				<div className="company-prefs">
 					<h3> Fill Your Preferences </h3>
-					<Form action="/tskills" method="post">
+					<Form action="/team/skills" method="post">
 						<div className="team-box skills">
 							<PlainText text="Search and select all the tech stacks your team requires" key={2}/>
 							<input type="hidden" name="skills" value={selectedTech.join(',')} />
@@ -195,7 +191,7 @@ export default function Tskills() {
     						</div>
 						</div>
 						<p className="cta">
-							<Link to="/tprofile" className="prev-button">Cancel</Link>
+							<Link to="/team/profile" className="prev-button">Cancel</Link>
 						</p>
 						<p className="cta">
 							<button name="_action" value="AddSkills">Next</button>

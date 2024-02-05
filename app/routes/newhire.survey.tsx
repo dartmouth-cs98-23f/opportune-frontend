@@ -33,8 +33,7 @@ export async function action({request}: ActionFunctionArgs) {
 		// get the tech stack and score
 		var myJson = {};
 		for (const [key, value] of body.entries()) {
-			if (key !== "_action") {
-				console.log(key + ', ' + value); 
+			if (key !== "_action") { 
 				myJson["name"] = key;
 				myJson["score"] = parseInt(value, 10);
 			}
@@ -51,7 +50,6 @@ export async function action({request}: ActionFunctionArgs) {
 			}
 			
 			// send new skills
-			console.log("1232390: ", skillList)
 			const newSkills = JSON.stringify({skills: skillList});
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', 
 				newSkills, {
@@ -68,19 +66,16 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// team preferences
 	if (_action === "Ranking") {
-		console.log("Entered ranking body");
 		// get the rankings
 		let prefJsons = [];
 		for (const [key, value] of body.entries()) {
 			if (key !== "_action") {
 				let prefJson = {};
-				console.log(key + ', ' + value); 
 				prefJson["name"] = key;
 				prefJson["score"] = parseInt(value, 10);
 				prefJsons.push(prefJson)
 			}
 		}
-		console.log(prefJsons)
 		
 		// update team_prefs list
 		try {
@@ -102,10 +97,6 @@ export async function action({request}: ActionFunctionArgs) {
 		}
 	}
 
-	if (_action === "Textbox") {
-		console.log("Entered textbox body");
-	}
-
 	if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
@@ -114,7 +105,7 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/matching");
+	return redirect("/newhire/survey");
 }
 
 export async function loader({request}: LoaderFunctionArgs) {
@@ -123,9 +114,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "new_hire")) {
+			return redirect("/login");
 		}
 
 		async function getProfileRes() {
@@ -134,7 +124,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			console.log("Getting profile: ", profileRes.data)
 			return profileRes.data
 		}
 
@@ -144,7 +133,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			console.log("Getting skills: ", skillRes.data)
 			return skillRes.data
 		}
 
@@ -154,7 +142,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
-			console.log("Getting teams: ", teamRes.data)
 			return teamRes.data
 		}
 
@@ -176,7 +163,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Matching() {
 	const basicInfo = useLoaderData<typeof loader>();
-	console.log("Reading basic info");
 
 	const basicInfoPrefs = basicInfo.profile.new_hire.team_prefs;
 	const basicInfoSkills = basicInfo.skills.skills;
@@ -186,12 +172,6 @@ export default function Matching() {
 	// new addition
 	const favoriteTeams = basicInfo.profile.new_hire.favorited_teams;
 
-	console.log("Fav teams: ", favoriteTeams);
-
-
-	console.log("Skill: ", newHireSkills);
-	console.log("All teams: ", allTeams);
-	console.log("Team prefs: ", basicInfoPrefs);
 	// generate list of teams and slots
 	const questionList = [];
 	if (basicInfo.profile.new_hire.team_id === '') {
@@ -239,13 +219,11 @@ export default function Matching() {
 				teamList = basicInfoPrefs
 			}
 		}
-		console.log("Team list: ", teamList);
 
 		// list of questions
 		questionList.push(<PlainText text="Let's get started!" />)
 
 		// add skill questions
-		console.log("Skills log: ", basicInfoSkills)
 		for (var skill of basicInfoSkills) {
 			questionList.push(<Scale question={`How comfortable are you with ${skill}?`} 
 			                         existingSkills={newHireSkills}
@@ -269,7 +247,7 @@ export default function Matching() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-					<Form action="/matching" method="post">
+					<Form action="/newhire/survey" method="post">
 						<button className="logout-button" type="submit"
 						name="_action" value="LogOut"> 
 							<ArrowLeftOnRectangleIcon /> 
@@ -283,7 +261,7 @@ export default function Matching() {
 					</div>
 					<div>
 						<Progress pct={getProgress()}/>
-						<Form action="/matching" method="post" 
+						<Form action="/newhire/survey" method="post" 
 							onSubmit={triggered === "next-q" ? next : previous}>
 							{stepComp}
 							<p className="cta">
@@ -291,11 +269,11 @@ export default function Matching() {
 								value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
 								{!isLastStep ? <button type="submit" name="_action"
 								value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-								{isLastStep ? <Link to="/results">Done</Link> : null}
+								{isLastStep ? <Link to="/newhire/results">Done</Link> : null}
 							</p>
 						</Form>
 						<p className="cta">
-							{(isFirstStep && !isLastStep) ? <Link to="/teams" className="prev-button">Back to Teams</Link> : null}
+							{(isFirstStep && !isLastStep) ? <Link to="/newhire/teams" className="prev-button">Back to Teams</Link> : null}
 						</p>
 					</div>
 				</div>
@@ -306,7 +284,7 @@ export default function Matching() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-					<Form action="/matching" method="post">
+					<Form action="/newhire/survey" method="post">
 						<button className="logout-button" type="submit"
 						name="_action" value="LogOut"> 
 							<ArrowLeftOnRectangleIcon /> 
@@ -322,7 +300,7 @@ export default function Matching() {
 						<Progress pct={100}/>
 						{stepComp}
 						<p className="cta">
-							<Link to="/results">View Results</Link>
+							<Link to="/newhire/results">View Results</Link>
 						</p>
 					</div>
 				</div>

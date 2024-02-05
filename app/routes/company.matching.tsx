@@ -8,6 +8,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs, redirect, json } from '@remix-r
 import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -21,17 +22,16 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
-	console.log("My json: ", JSON.stringify(myJson));
-
-	if (_action === "LogOut") {
+  // Actions
+	if (_action === "LogOut") { 
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
 			},
 		});
+
 	} else if (_action === "matchingSurvey") {
 		try {
-      console.log("Auth: " + session.get("auth"));
 
 			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/company/match', myJson, {
 				headers: {
@@ -39,25 +39,25 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-			return redirect("/companyMatching");
+			return redirect("/company/matching");
 		} catch (error) {
 			console.log(error);
 			return null;
 		}
+
 	} else {
   		return null;
   }
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
   try {
     const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-    console.log("Auth: ", session.get("auth"));
-
-    if(!session.get("auth")) {
+    if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "company")) {
       return redirect("/login");
     }
 
@@ -86,7 +86,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			const newHires = newHireRes.data;
 			const teams = teamsRes.data;
       const data = companyRes.data;
-			console.log("Loader data: ", newHires);
 			return json({ data, newHires, teams });
 		}
 
@@ -192,7 +191,7 @@ export default function CompanyMatching() {
     <div>
       <div className="sidebar">
           <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-          <Form action="/profile" method="post">
+          <Form action="/company/matching" method="post">
             <button className="logout-button" type="submit"
                     name="_action" value="LogOut"> 
                 <ArrowLeftOnRectangleIcon /> 
@@ -278,7 +277,7 @@ export default function CompanyMatching() {
       <p className="cta" style={{textAlign: 'right'}}>
         
         {allSurveysCompleted ? 
-        <Form action="/companyMatching" method="post">
+        <Form action="/company/matching" method="post">
           <button type="submit" name="_action" value="matchingSurvey">
             Run matching survey
           </button> 

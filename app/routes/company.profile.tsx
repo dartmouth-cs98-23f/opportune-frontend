@@ -11,6 +11,7 @@ import Modal from '~/components/Modal';
 import { TextareaAutosize } from '@mui/material';
 import ReadMore from '~/components/ReadMore';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -24,15 +25,14 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
-	console.log("My json: ", JSON.stringify(myJson));
-	console.log(_action)
-
+  // Actions
 	if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
 			},
 		});
+
 	} else if (_action === "updateProfile") {
 		try {
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', myJson, {
@@ -41,11 +41,12 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-			return redirect("/companyProfile");	
+			return redirect("/company/profile");	
 		} catch (error) {
 			console.log(error);
 			return null;
 		}
+
 	} else if (_action === "createTeam") {
     myJson["team_members"] = []; // TEMPORARY
 
@@ -56,12 +57,12 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-      console.log('New team info: ', response.data);
-			return redirect("/companyProfile");	
+			return redirect("/company/profile");	
 		} catch (error) {
 			console.log(error);
 			return null;
 		}
+
   } else if (_action === "createNewhire") {
     try {
 			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/company/create-newhire', myJson, {
@@ -70,13 +71,13 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-      console.log('New hire info: ', response.data);
-			return redirect("/companyProfile");	
+			return redirect("/company/profile");	
 		} catch (error) {
 			console.log(error);
 			return null;
 		}
   }
+
   else if(_action === "companySave") {
     try {
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', myJson, {
@@ -86,37 +87,25 @@ export async function action({request}: ActionFunctionArgs) {
 				},
 			})
 
-      return redirect("/companyProfile");	
+      return redirect("/company/profile");	
 		} catch (error) {
 			console.log(error);
 			return null;
 		}
     
   } else {
-    try {
-/*			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/company/profile', myJson, {
-				headers: {
-				"Authorization": session.get("auth"),
-				"Content-Type": "application/json",
-				},
-			}) */
-			return redirect("/companyMatching");	
-		} catch (error) {
-			console.log(error);
-			return null;
-		}
+		return redirect("/company/matching");	
   }
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
   try {
     const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-    console.log("Auth: ", session.get("auth"));
-
-    if(!session.get("auth")) {
+    if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "company")) {
       return redirect("/login");
     }
 
@@ -145,7 +134,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			const newHires = newHireRes.data;
 			const teams = teamsRes.data;
       const data = companyRes.data;
-			console.log("Loader data: ", newHires);
 			return json({ data, newHires, teams });
 		}
 
@@ -158,10 +146,7 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function CompanyProfile() {
 
-  // THIS IS NOT PRINTING
   const info = useLoaderData<typeof loader>();
-
-  console.log('New hires: ', info);
   
   const basicInfoFields = {
     name: 'Opportune',
@@ -220,7 +205,7 @@ export default function CompanyProfile() {
     <div>
         <div className="sidebar">
             <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-            <Form action="/companyProfile" method="post">
+            <Form action="/company/profile" method="post">
               <button className="logout-button" type="submit"
                       name="_action" value="LogOut"> 
                   <ArrowLeftOnRectangleIcon /> 
@@ -236,7 +221,7 @@ export default function CompanyProfile() {
             )}
         
             <div>
-                <h1>Company name</h1>
+                <h1>{info?.data.company.name}</h1>
                 <p>Location: SF</p>
                 <div className='upload-buttons'>
                     <ImageUpload onUpload={handleOnUpload}>
@@ -255,7 +240,7 @@ export default function CompanyProfile() {
         </div>
 
         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Form action="/companyProfile" method="post" className="company-description">
+          <Form action="/company/profile" method="post" className="company-description">
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div className='company-teams-title'>
                 <h2>Description:</h2>
@@ -290,7 +275,7 @@ export default function CompanyProfile() {
                 </button>
             </p>
             <Modal open={showHireModal} onClose={closeHireModal}>
-              <Form action="/companyProfile" method="post">
+              <Form action="/company/profile" method="post">
                 <TextField label="First Name" name="firstName" classLabel="first_name" />
                 <TextField label="Last Name" name="lastName" classLabel="last_name" />
                 <TextField label="Email" name="email" classLabel="email" />
@@ -328,7 +313,7 @@ export default function CompanyProfile() {
             </button>
           </p>
           <Modal open={showTeamModal} onClose={closeModal} title={"Add a team"}>
-            <Form action="/companyProfile" method="post">
+            <Form action="/company/profile" method="post">
               <TextField className="add-team" label="Team Email" name="email" classLabel="email"/>
               <TextField className="add-team" label="Team Name" name="name" classLabel="name"/>
               <TextField className="add-team" label="Description" name="description" classLabel="description"/>
@@ -339,7 +324,7 @@ export default function CompanyProfile() {
             </Form>
           </Modal>
         </div>
-        <p className="cta" style={{textAlign: 'right'}}> <Link to="/companyMatching">Next</Link></p>
+        <p className="cta" style={{textAlign: 'right'}}> <Link to="/company/matching">Next</Link></p>
     </div>
   );
 }

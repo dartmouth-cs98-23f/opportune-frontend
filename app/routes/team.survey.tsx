@@ -12,6 +12,7 @@ import PlainText from '~/components/survey_qs/PlainText';
 import { Select } from '@mui/material';
 import ScaleT from '~/components/survey_qs/ScaleT';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -20,7 +21,6 @@ export async function action({request}: ActionFunctionArgs) {
 		request.headers.get("Cookie")
 	);
 	
-
 	const teamInfo = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
@@ -28,13 +28,12 @@ export async function action({request}: ActionFunctionArgs) {
 		},
 	})
 
-	// 1-5 slider
+	// Actions
 	if (_action === "Scale" || _action === "ScaleT") {
 		// get the tech stack and score
 		var myJson = {};
 		for (const [key, value] of body.entries()) {
 			if (key !== "_action") {
-				console.log(key + ', ' + value); 
 				myJson["name"] = key;
 				myJson["score"] = parseInt(value, 10);
 			}
@@ -65,15 +64,7 @@ export async function action({request}: ActionFunctionArgs) {
 		}
 	}
 
-	if (_action === "Textbox") {
-		console.log("Entered textbox body");
-	}
-
-	if (_action === "PlainText") {
-		console.log("Entered plain textbox body");
-	}
-
-	if (_action === "LogOut") {
+	else if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
@@ -81,18 +72,18 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/tprefs");
+	return redirect("/team/survey");
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "team")) {
+			return redirect("/login");
 		}
 
 		const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
@@ -101,7 +92,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json",
 			}});
 		
-		console.log("Getting profile: ", profileRes.data)
 		return json(profileRes.data)
 	
 	} catch (error) {
@@ -119,7 +109,6 @@ export default function Tprefs() {
 	// };
 
 	const teamInfo = useLoaderData<typeof loader>();
-	console.log(teamInfo)
 
 	let companyInfo = {
 		name: "OP Company",
@@ -171,7 +160,7 @@ export default function Tprefs() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/profile" method="post">
+				<Form action="/team/profile" method="post">
 				<p className="text-logo">Opportune</p>
 				<button className="logout-button" type="submit"
 				name="_action" value="LogOut"> 
@@ -188,7 +177,7 @@ export default function Tprefs() {
 				<div className="company-prefs">
 					<h3> Fill Your Preferences </h3>
 					<Progress pct={getProgress()}/>
-					<Form action="/tprefs" method="post" 
+					<Form action="/team/survey" method="post" 
 						onSubmit={triggered === "next-q" ? next : previous}>
 						{stepComp}
 						<p className="cta">
@@ -196,13 +185,13 @@ export default function Tprefs() {
 							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
 							{!isLastStep ? <button type="submit" name="_action"
 							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{isLastStep ? <Link to="/tprofile">Done</Link> : null}
+							{isLastStep ? <Link to="/team/profile">Done</Link> : null}
 						</p>	
 					</Form>
 					
 					<p className="cta">
 						{/*(isFirstStep && !isLastStep) ? <Link to="/tprofile" className="prev-button">Cancel</Link> : null*/}
-						<Link to="/tprofile" className="prev-button">Cancel</Link>
+						<Link to="/team/profile" className="prev-button">Cancel</Link>
 					</p>
 
 				</div>

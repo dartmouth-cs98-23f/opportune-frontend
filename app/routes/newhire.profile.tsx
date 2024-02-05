@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -21,10 +22,6 @@ export async function action({request}: ActionFunctionArgs) {
 	for (const [key, value] of body.entries()) {
 		myJson[key] = value;
 	}
-
-	// console.log("Basic info JSON");
-	console.log("My json: ", JSON.stringify(myJson));
-	console.log(_action)
 
 	if (_action === "LogOut") {
 		return redirect("/login", {
@@ -40,7 +37,7 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 				},
 			})
-			return redirect("/teams");	
+			return redirect("/newhire/teams");	
 		} catch (error) {
 			console.log(error);
 			return null;
@@ -48,15 +45,15 @@ export async function action({request}: ActionFunctionArgs) {
 	}
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "new_hire")) {
+			return redirect("/login");
 		}
 
 		const response = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
@@ -68,7 +65,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 		if (response.status === 200) {
 			const data = response.data;
-			console.log("Loader data: ", data);
 			return json({ data });
 		}
 	} catch (error) {
@@ -79,9 +75,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Profile() {
 	const basicInfo = useLoaderData<typeof loader>();
-	// console.log("Reading profile info");
-	// console.log(basicInfo.data);
-	console.log(basicInfo)
 	const basicInfoFields = basicInfo.data;
 
 	const [url, updateUrl] = useState();
@@ -101,7 +94,7 @@ export default function Profile() {
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/profile" method="post">
+				<Form action="/newhire/profile" method="post">
 				<button className="logout-button" type="submit"
 					    name="_action" value="LogOut"> 
 					<ArrowLeftOnRectangleIcon /> 
@@ -116,7 +109,7 @@ export default function Profile() {
 				</div>
 				<div className="form-container">
 					<div>
-						<Form action="/profile" method="post" className="info-form">
+						<Form action="/newhire/profile" method="post" className="info-form">
 								<div className="preview">
 									{url ? (
 										<img src={url} alt="Uploaded"/>

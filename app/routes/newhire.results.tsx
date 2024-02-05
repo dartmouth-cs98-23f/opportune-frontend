@@ -10,6 +10,7 @@ import { destroySession, getSession } from '~/utils/sessions';
 import Confetti from 'react-confetti';
 // import { motion } from 'framer-motion';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -23,8 +24,7 @@ export async function action({request}: ActionFunctionArgs) {
 		myJson[key] = value;
 	}
 
-	// console.log(JSON.stringify(myJson));
-
+	// Actions
 	if (_action == "LogOut") {
 		return redirect("/login", {
 			headers: {
@@ -34,15 +34,15 @@ export async function action({request}: ActionFunctionArgs) {
 	} 
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "new_hire")) {
+			return redirect("/login");
 		}
 
 		async function getProfileRes() {
@@ -52,7 +52,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 					"Content-Type": "application/json",
 				}
 			});
-			console.log("Getting profile: ", profileRes.data)
 			return profileRes.data
 		}
 
@@ -81,13 +80,12 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Results() {
 	const resultsData = useLoaderData<typeof loader> ();
-	console.log("team: ", resultsData); // why is this whole thing null?? resultsData.profile should still be populated with profile data
 
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
 				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/results" method="post">
+				<Form action="/newhire/results" method="post">
 					<button className='logout-button' type="submit"
 					name="_action" value="LogOut"> 
 						<ArrowLeftOnRectangleIcon /> 
@@ -171,7 +169,7 @@ export function matchingResults(resultsData: json) {
 					</div>
 				</div>
 				<p className="cta">
-					<Form action="/results" method="post">
+					<Form action="/newhire/results" method="post">
 						<button type="submit" name="_action" value="LogOut">Done</button>
 					</Form>
 				</p>
@@ -181,7 +179,7 @@ export function matchingResults(resultsData: json) {
 	} else {
 		return (<div>
 				  <p>Matching results will be out on July 2.</p>
-				  <p className="cta"> <Link to="/matching">Edit Responses </Link></p>
+				  <p className="cta"> <Link to="/newhire/survey">Edit Responses </Link></p>
 			    </div>)
 	}
 }
