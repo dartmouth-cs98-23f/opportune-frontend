@@ -100,7 +100,7 @@ export default function Tprofile() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+				<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 				<Form action="/team/profile" method="post">
 				<p className="text-logo">Opportune</p>
 				<button className="logout-button" type="submit"
@@ -141,7 +141,7 @@ export default function Tprofile() {
 								<p className="profile-skill-score" key={i + "a"}> {skill.score} </p>
 								<p className="profile-skill-name" key={i + "b"}> {skill.name} </p>
 							</div>
-							)): <img src="empty.svg"></img>}
+							)): <img src="../empty.svg"></img>}
 							<p><b> {teamInfo.team.skills.length > 0 ? null : 
 							"No team preferences have been input yet."} </b></p>
 						</div>
@@ -152,7 +152,7 @@ export default function Tprofile() {
 							{teamInfo.team.members.length > 0 ? 
 							 teamInfo.team.members.map((member:string, i:number) => {
 								return <p key={i}> {member} </p>
-							}): <img src="empty.svg"></img>}
+							}): <img src="../empty.svg"></img>}
 							<p><b> {teamInfo.team.members.length > 0 ? null : 
 						    "No team members have been added yet."} </b></p>
 						</div>
@@ -161,7 +161,7 @@ export default function Tprofile() {
 							{newhires.new_hires.length > 0 ? 
 							 newhires.new_hires.map((member:{first_name:string, last_name:string}, i) => {
 								return <p key={i}> {member.first_name + " " + member.last_name} </p>
-							}): <img src="empty.svg"></img>}
+							}): <img src="../empty.svg"></img>}
 							<p><b> {newhires.new_hires.length > 0 ? null : 
 						    "No interns have been assigned yet."} </b></p>
 						</div>

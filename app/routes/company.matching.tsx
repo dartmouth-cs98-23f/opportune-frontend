@@ -190,8 +190,9 @@ export default function CompanyMatching() {
   return (
     <div>
       <div className="sidebar">
-          <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <Form action="/company/matching" method="post">
+          <p className="text-logo">Opportune</p>
             <button className="logout-button" type="submit"
                     name="_action" value="LogOut"> 
                 <ArrowLeftOnRectangleIcon /> 
@@ -203,12 +204,12 @@ export default function CompanyMatching() {
           {url ? (
               <img src={url} alt="Uploaded"/>
           ) : (
-              <img src="defaultAvatar.png" alt="Placeholder" />  
+              <img src="../defaultAvatar.png" alt="Placeholder" />  
           )}
       
           <div>
-              <h1>Company name</h1>
-              <p>Location: SF</p>
+              <h1>{info?.data.company.name}</h1>
+              <p>Location: SF</p> { /* TO REMOVE */}
               <div className='upload-buttons'>
                   <ImageUpload onUpload={handleOnUpload}>
                   {({ open }) => {
