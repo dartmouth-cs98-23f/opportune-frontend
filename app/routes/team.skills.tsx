@@ -147,7 +147,7 @@ export default function Tskills() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+				<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 				<Form action="/team/skills" method="post">
 				<p className="text-logo">Opportune</p>
 				<button className="logout-button" type="submit"

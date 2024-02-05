@@ -93,8 +93,9 @@ export default function Profile() {
 	return (
 		<div className="flex-container">
 			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+				<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 				<Form action="/newhire/profile" method="post">
+				<p className="text-logo">Opportune</p>
 				<button className="logout-button" type="submit"
 					    name="_action" value="LogOut"> 
 					<ArrowLeftOnRectangleIcon /> 
@@ -114,7 +115,7 @@ export default function Profile() {
 									{url ? (
 										<img src={url} alt="Uploaded"/>
 									) : (
-										<img src="defaultAvatar.png" alt="Placeholder" />  
+										<img src="../defaultAvatar.png" alt="Placeholder" />  
 									)}
 								
 									<div>
