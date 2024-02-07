@@ -1,4 +1,4 @@
-import { Link, Form, useLoaderData } from '@remix-run/react';
+import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import {
   ArrowLeftOnRectangleIcon,
   LockClosedIcon,
@@ -17,6 +17,7 @@ import {
 import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
 import Collapsible from 'react-collapsible';
+import { Checkbox } from '@mui/material';
 // import Collapsible from '~/components/Collapsible';
 
 // ACTION FUNCTION
@@ -32,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
     myJson[key] = value;
   }
 
-  console.log(myJson);
+  console.log(JSON.stringify(myJson));
 
   // Actions
   if (_action === 'LogOut') {
@@ -42,9 +43,35 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     });
   } else if (_action === 'matchingSurvey') {
+
+    const diversifyOn = (myJson["diversify"] == "on");
+
     try {
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/match',
+        {},
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+          params: {
+            diversify: diversifyOn
+          }
+        },
+      );
+      return redirect('/company/matching');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'newHireLock') {
+
+    myJson["locked"] = (myJson["locked"] == "true");
+
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/newhire-lock',
         myJson,
         {
           headers: {
@@ -58,10 +85,10 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
-  } else if (_action === 'newHireLock') {
+  } else if (_action === 'selectTeam') {
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/newhire-lock',
+        process.env.BACKEND_URL + '/api/v1/company/match-manual',
         myJson,
         {
           headers: {
@@ -140,6 +167,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function CompanyMatching() {
   const info = useLoaderData<typeof loader>();
+  const fetcher = useFetcher();
 
   var allSurveysCompleted = true;
   var teamIdMap = {};
@@ -153,25 +181,19 @@ export default function CompanyMatching() {
   }
   for (var nh of info.newHires.new_hires) {
     nhIdMap[nh._id] = nh;
-    if (!allSurveysCompleted) break;
-    if (nh.survey_complete == false) {
-      allSurveysCompleted = false;
-    }
-  }
-
-  for (var nh of info.newHires.new_hires) {
-    nhIdMap[nh._id] = nh;
-    if (!allSurveysCompleted) break;
-    if (nh.survey_complete == false) {
-      allSurveysCompleted = false;
-    }
 
     var teamId = nh.team_id;
-
     if (!teamNewHires[teamId]) {
       teamNewHires[teamId] = [];
     }
     teamNewHires[teamId].push(nh);
+  }
+
+  for (var nh of info.newHires.new_hires) {
+    if (!allSurveysCompleted) break;
+    if (nh.survey_complete == false) {
+      allSurveysCompleted = false;
+    }
   }
 
   const [url, updateUrl] = useState();
@@ -199,6 +221,15 @@ export default function CompanyMatching() {
     }
     setCoverUrl(result?.info?.secure_url);
   };
+
+  const handleSelectChange = (event) => {
+    const value = event.target.value.split(" ");
+    const nhEmail = value[0];
+    const teamEmail = value[1] ?? "";
+
+    // programmatically submit a useFetcher form in Remix
+    fetcher.submit({ newhire_email: nhEmail, team_email: teamEmail, _action: "selectTeam" }, { method: "post", action: "/company/matching"});
+  }
 
   console.log('Main obj: ', info);
 
@@ -275,11 +306,11 @@ export default function CompanyMatching() {
                 </div>
                 <div style={{ flexDirection: 'row' }}>
                   <p>Matched hires: </p>
-                  {teamNewHires[team._id]?.map((matchedHire) => {
+                  {teamNewHires[team._id]?.map((matchedHire) => (
                     <p>
-                      {matchedHire.first_name} {matchedHire.last_name},
-                    </p>;
-                  })}
+                      {matchedHire.first_name} {matchedHire.last_name}
+                    </p>
+                  ))}
                 </div>
               </div>
 
@@ -326,29 +357,25 @@ export default function CompanyMatching() {
                 </div>
                 <div style={{ display: 'flex' }}>
 
-                  <Form action="/company/matching" method="post">
-                    <select
-                      className={
-                        !newHire.matched ? 'select-active' : 'select-inactive'
-                      }>
-                      <option key={team.name} value="None">
-                        None
+                <select
+                  className={
+                    !newHire.matched ? 'select-active' : 'select-inactive'
+                  } onChange={handleSelectChange}>
+                  <option key={"None"} value={newHire.email}>
+                    None
+                  </option>
+                  {info.teams.teams // first filter out the matched team from the first option
+                    .map((team) => (
+                      (team._id === newHire.team_id) ?
+                      <option key={team.name} value={newHire.email + ' ' + team.email} selected>
+                        {team.name}
                       </option>
-                      {info.teams.teams // first filter out the matched team from the first option
-                        .filter(
-                          (t) =>
-                            t.name !==
-                            (newHire.team_id
-                              ? teamIdMap[newHire.team_id].name
-                              : null),
-                        )
-                        .map((team) => (
-                          <option key={team.name} value={team.name}>
-                            {team.name}
-                          </option>
-                        ))}
-                    </select>
-                  </Form>
+                      :
+                      <option key={team.name} value={newHire.email + ' ' + team.email}>
+                        {team.name}
+                      </option>
+                    ))}
+                  </select>
 
                   <Form action="/company/matching" method="post">
                     <input
@@ -395,6 +422,9 @@ export default function CompanyMatching() {
           <button type="submit" name="_action" value="matchingSurvey">
             Run matching survey
           </button>
+
+          Enable Diversity Matching?
+          <input type="checkbox" name="diversity"/>
         </Form>
       </p>
     </div>
