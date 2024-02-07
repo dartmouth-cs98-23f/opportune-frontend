@@ -102,6 +102,23 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
+  } else if(_action === "completeMatching") {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/confirm-matches',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   } else {
     return null;
   }
@@ -304,6 +321,7 @@ export default function CompanyMatching() {
                   </div>
                   <ReadMore text={team.description}></ReadMore>
                 </div>
+                <p>{team.email}</p>
                 <div style={{ flexDirection: 'row' }}>
                   <p>Matched hires: </p>
                   {teamNewHires[team._id]?.map((matchedHire) => (
@@ -427,6 +445,13 @@ export default function CompanyMatching() {
           <input type="checkbox" name="diversity"/>
         </Form>
       </p>
+
+      <Form action="/company/matching" method="post">
+        <button type="submit" name="_action" value="completeMatching">
+          Complete Team-Matching
+        </button>
+      </Form>
+
     </div>
   );
 }
