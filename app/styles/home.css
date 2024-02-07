@@ -581,6 +581,7 @@ button.edit {
 	margin-left: 10px;
 	padding: 0.2rem 0.4rem;
 	transition: 0.3s;
+	font-family: Mulish, Roboto, Arial;
 	font-size: 1rem;
 }
 

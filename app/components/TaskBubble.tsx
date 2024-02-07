@@ -7,13 +7,30 @@ interface Fields {
 	task: string;
 	descrip: string;
 	progress: number;
+	date: string;
+	updates: {date:string, name:string}[];
 }
 
 export default function TaskBubble(props:Fields) {
 	const [expand, setExpand] = useState(false);
-
+	const [isEditing, setEditing] = useState(false);
+	const [update, setUpdate] = useState('');
 	const handleExpand = () => {
 		setExpand(!expand)
+	}
+
+	const handleEditClick = () => {
+		setEditing(!isEditing);
+	}
+
+	const handleUpdate = (text:string) => {
+		setUpdate(text)
+	}
+
+	function handleUpdateAdd(update: {date: string, name:string}) {
+		if (update.name) props.updates.push(update);
+		setUpdate('');
+		setEditing(!isEditing);
 	}
 	
 	if (props.progress < 0) {
@@ -33,8 +50,20 @@ export default function TaskBubble(props:Fields) {
 				  <span className="task-desc-toggle" onClick={() => handleExpand()}>⬆</span>
 				  <p> <b> Assigned To: </b> Stephen </p>
 				  <p> <b> Description: </b> {props.descrip} </p>
-				  <p> <b> Last Updates: </b> </p>
-				  <button type="button" className="edit"> + Update </button>
+				  <p> <b> Last Updates: { props.updates.map(update  => {
+					return <li> {update.date}: {update.name} </li>
+				  })} </b> </p>
+				  {!isEditing ? <button type="button" className="edit" 
+									onClick={handleEditClick}> + Update </button> : null}
+				  {!isEditing ? null :<div> 
+					 <textarea name="description" id="task-input"
+					 onChange={(e) => handleUpdate(e.target.value)} /> 
+					</div>}
+				  {isEditing ? <div>
+								<button className="edit" 
+								onClick={() => handleUpdateAdd({date: props.date, name: update})}> Confirm </button>
+								<button className="edit" onClick={() => handleEditClick()}> Cancel </button> 
+							   </div> : null}
 				</div>
 			)
 		}

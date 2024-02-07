@@ -19,6 +19,10 @@ export default function Project() {
 	const [tasks, setTasks] = useState(taskList);
 	const [task, setTask] = useState('');
 
+	const date = new Date();
+	const options = { month: 'long', day: 'numeric', year: 'numeric' };
+	const formattedDate = date.toLocaleDateString('en-US', options);
+
 	function handleEditClick() {
 		setEditing(!isEditing);
 	}
@@ -82,7 +86,7 @@ export default function Project() {
 					<h3> Timeline: Stephen 
 						<div id="date-bar">
 							<button id="time-scale"> Today ↓</button>
-							<button id="curr-date"> Feb 1, 2024 </button>
+							<button id="curr-date"> {formattedDate} </button>
 						</div>
 					</h3>
 				</div>
@@ -139,14 +143,15 @@ export default function Project() {
 									start={proj.start} end={proj.end} task={proj.name} descrip={""}
 									progress={(tasks.filter((task) => 
 									          (task.project === proj.name) && task.complete).length) / 
-											  (tasks.filter((task) => (task.project === proj.name)).length)} />
+											  (tasks.filter((task) => (task.project === proj.name)).length)} date={formattedDate} 
+											  updates={[]} />
 									{tasks.filter((task) => task.project === proj.name).map((task, i) => {
 										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
 										        descrip={task.description} start={proj.start} end={proj.end} task={task.name} 
-												progress={-1} />
+												progress={-1} date={formattedDate} updates={[]}/>
 									})}
 								</div>
-							})} 
+							})}
 						</div>
 					</div>
 				</div>
