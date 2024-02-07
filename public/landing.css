@@ -10841,7 +10841,7 @@ textarea.form-control-lg {
 header.masthead {
   position: relative;
   background-color: #343a40;
-  background: url("/landingbg2.png") no-repeat center center;
+  background: url("/diamondbanner.png") no-repeat center center;
   background-size: cover;
   padding-top: 8rem;
   padding-bottom: 8rem;
@@ -10861,8 +10861,8 @@ header.masthead h1, header.masthead .h1 {
 }
 @media (min-width: 768px) {
   header.masthead {
-    padding-top: 12rem;
-    padding-bottom: 12rem;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
   }
   header.masthead h1, header.masthead .h1 {
     font-size: 3rem;
@@ -10897,7 +10897,7 @@ header.masthead h1, header.masthead .h1 {
 .call-to-action {
   position: relative;
   background-color: #343a40;
-  /* background: url("/landingbg2.png") no-repeat center center; */
+  background: url("/diamondbanner.png") no-repeat center center;
   background-size: cover;
   padding-top: 7rem;
   padding-bottom: 7rem;
@@ -10938,7 +10938,7 @@ footer.footer {
 header.masthead {
     position: relative;
     background-color: #343a40;
-    background: url('/landingbg2.png') no-repeat center center;
+    background: url('/diamondbanner.png') no-repeat center center;
     background-size: cover;
     padding-top: 8rem;
     padding-bottom: 8rem;
@@ -11032,4 +11032,34 @@ footer.footer {
   font-weight: 700;
   line-height: 1.2;
   color: #FF892F;
+}
+
+.animated-section {
+  opacity: 0; /* Initially hide the element */
+  transform: translateX(-50px); /* Move the element 50px to the left */
+  transition: opacity 1s cubic-bezier(0.1, 0.05, 0.1, .5), transform 1s cubic-bezier(0.25, 0.1, 0.25, 1); /* Add transition for smooth fade-in and sliding */
+}
+
+.animated-section.in-view {
+  opacity: 1; /* Show the element when it comes into view */
+  transform: translateX(0); /* Move the element back to its original position */
+}
+
+.subhead1 {
+  color: #4559B8;
+}
+
+.productivity{
+  color: #FF892F;
+}
+
+.container1{
+  padding-top: 10%;
+  padding-bottom: 10%;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.my-new-section{
+  text-align: center;
 }
