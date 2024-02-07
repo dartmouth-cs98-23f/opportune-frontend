@@ -23,6 +23,7 @@ import Collapsible from 'react-collapsible';
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
   const _action = body.get('_action');
+  console.log(_action);
 
   const session = await getSession(request.headers.get('Cookie'));
 
@@ -30,6 +31,8 @@ export async function action({ request }: ActionFunctionArgs) {
   for (const [key, value] of body.entries()) {
     myJson[key] = value;
   }
+
+  console.log(myJson);
 
   // Actions
   if (_action === 'LogOut') {
@@ -315,36 +318,38 @@ export default function CompanyMatching() {
                     {newHire.first_name} {newHire.last_name}
                   </h3>
                   <p>{newHire.email}</p>
-                  <p>
+                  {/*<p>
                     {newHire.team_id
                       ? teamIdMap[newHire.team_id].name
                       : 'Unmatched'}
-                  </p>
+                    </p> */}
                 </div>
                 <div style={{ display: 'flex' }}>
-                  <select
-                    className={
-                      newHire.matched ? 'select-active' : 'select-inactive'
-                    }>
-                    <option key={team.name} value={team.name}>
-                      {newHire.team_id
-                        ? teamIdMap[newHire.team_id].name
-                        : 'None'}
-                    </option>
-                    {info.teams.teams // first filter out the matched team from the first option
-                      .filter(
-                        (t) =>
-                          t.name !==
-                          (newHire.team_id
-                            ? teamIdMap[newHire.team_id].name
-                            : null),
-                      )
-                      .map((team) => (
-                        <option key={team.name} value={team.name}>
-                          {team.name}
-                        </option>
-                      ))}
-                  </select>
+
+                  <Form action="/company/matching" method="post">
+                    <select
+                      className={
+                        !newHire.matched ? 'select-active' : 'select-inactive'
+                      }>
+                      <option key={team.name} value="None">
+                        None
+                      </option>
+                      {info.teams.teams // first filter out the matched team from the first option
+                        .filter(
+                          (t) =>
+                            t.name !==
+                            (newHire.team_id
+                              ? teamIdMap[newHire.team_id].name
+                              : null),
+                        )
+                        .map((team) => (
+                          <option key={team.name} value={team.name}>
+                            {team.name}
+                          </option>
+                        ))}
+                    </select>
+                  </Form>
+
                   <Form action="/company/matching" method="post">
                     <input
                       name="email"
@@ -359,7 +364,7 @@ export default function CompanyMatching() {
                       type="submit"
                       name="_action"
                       value="newHireLock">
-                      {newHire.matched ? (
+                      {!newHire.matched ? (
                         <LockOpenIcon className="lock-icon" />
                       ) : (
                         <LockClosedIcon className="lock-icon" />
