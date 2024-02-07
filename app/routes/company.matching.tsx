@@ -85,7 +85,8 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
-  } else if (_action === 'selectTeam') {
+    
+  } else if (_action === 'matchManual') {
     try {
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/match-manual',
@@ -245,7 +246,7 @@ export default function CompanyMatching() {
     const teamEmail = value[1] ?? "";
 
     // programmatically submit a useFetcher form in Remix
-    fetcher.submit({ newhire_email: nhEmail, team_email: teamEmail, _action: "selectTeam" }, { method: "post", action: "/company/matching"});
+    fetcher.submit({ newhire_email: nhEmail, team_email: teamEmail, _action: "matchManual" }, { method: "post", action: "/company/matching"});
   }
 
   console.log('Main obj: ', info);
