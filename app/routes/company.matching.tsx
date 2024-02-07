@@ -72,6 +72,24 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
+  } else if (_action === 'matchManual') {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/match-manual',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      console.log('Manual match result: ', response);
+      return redirect('/company/matching');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   } else {
     return null;
   }
@@ -196,6 +214,8 @@ export default function CompanyMatching() {
     }
     setCoverUrl(result?.info?.secure_url);
   };
+
+  const [selectedTeam, setSelectedTeam] = useState();
 
   console.log('Main obj: ', info);
 
@@ -322,29 +342,47 @@ export default function CompanyMatching() {
                   </p>
                 </div>
                 <div style={{ display: 'flex' }}>
-                  <select
-                    className={
-                      newHire.matched ? 'select-active' : 'select-inactive'
-                    }>
-                    <option key={team.name} value={team.name}>
-                      {newHire.team_id
-                        ? teamIdMap[newHire.team_id].name
-                        : 'None'}
-                    </option>
-                    {info.teams.teams // first filter out the matched team from the first option
-                      .filter(
-                        (t) =>
-                          t.name !==
-                          (newHire.team_id
-                            ? teamIdMap[newHire.team_id].name
-                            : null),
-                      )
-                      .map((team) => (
-                        <option key={team.name} value={team.name}>
-                          {team.name}
-                        </option>
-                      ))}
-                  </select>
+                  <Form action="/company/matching" method="post">
+                    <select
+                      className={
+                        newHire.matched ? 'select-active' : 'select-inactive'
+                      }
+                      name="_action"
+                      onChange={(e) => {
+                        const teamName = e.target.value;
+                        const team = info?.teams.teams.find(
+                          (t) => t.name === teamName,
+                        );
+                        setSelectedTeam(team);
+                      }}>
+                      <option key={newHire}>
+                        {newHire.team_id
+                          ? teamIdMap[newHire.team_id].name
+                          : 'None'}
+                      </option>
+                      {info.teams.teams // first filter out the matched team from the first option
+                        .filter(
+                          (t) =>
+                            t.name !==
+                            (newHire.team_id
+                              ? teamIdMap[newHire.team_id].name
+                              : null),
+                        )
+                        .map((team) => (
+                          <option key={team.name} value="matchManual">
+                            {team.name}
+                          </option>
+                        ))}
+                    </select>
+                    <input
+                      type="hidden"
+                      name="newhire_email"
+                      value={newHire.email}></input>
+                    <input
+                      type="hidden"
+                      name="team_email"
+                      value={selectedTeam ? selectedTeam.email : ''}></input>
+                  </Form>
                   <Form action="/company/matching" method="post">
                     <input
                       name="email"
