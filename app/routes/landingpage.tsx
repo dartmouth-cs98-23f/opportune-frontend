@@ -1,4 +1,5 @@
 import React, { ReactNode, useRef } from 'react';
+import { Link } from '@remix-run/react';
 import { useInView } from 'react-intersection-observer';
 
 interface AnimatedSectionProps {
@@ -49,8 +50,8 @@ function LandingPage() {
                         <img src="opportune_newlogo.svg"></img>
                         <a className="navbar-brand" href="#!">OPPORTUNE</a>
                         <div className="d-flex justify-content-start">
-                            <a className="btn btn-primary me-2" href="#signup">Sign Up</a>
-                            <a className="btn btn-primary" href="#login">Login</a>
+                            <Link className="btn btn-primary me-2" to="/company/signup">Enroll a Company</Link>
+                            <Link className="btn btn-primary" to="/login">Login</Link>
                         </div>
 
                     </div>
