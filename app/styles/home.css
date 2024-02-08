@@ -877,7 +877,7 @@ input[type='file'] {
 .modal {
   background: aliceblue;
   width: 50%;
-  height: 55%;
+  height: 60%;
   max-width: 100%;
   padding: 20px;
   border-radius: 5px;
@@ -910,7 +910,7 @@ input[type='file'] {
   transition: 0.3s;
 }
 
-.modal button .center {
+.modal button.center {
   position: absolute;
   bottom: 10px;
   left: 50%;
@@ -1124,4 +1124,22 @@ input[type='file'] {
   font-weight: bold;
   margin-top: 1rem;
   width: 7rem;
+}
+
+.collapsible {
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.collapsible.open {
+  height: auto;
+}
+
+.edit-input {
+  margin-top: 0.8em;
+  font-size: 1.17em;
+  font-weight: 600;
+  border: none;
+  background: none;
+  width: 30%;
 }

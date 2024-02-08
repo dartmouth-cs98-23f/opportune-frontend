@@ -1,4 +1,4 @@
-import { Link, Form, useLoaderData } from '@remix-run/react';
+import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import styles from '~/styles/home.css';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
@@ -13,7 +13,6 @@ import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 import Modal from '~/components/Modal';
-import { TextareaAutosize } from '@mui/material';
 import ReadMore from '~/components/ReadMore';
 
 // ACTION FUNCTION
@@ -126,6 +125,23 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
+  } else if (_action === 'editNewHire') {
+    try {
+      const response = await axios.patch(
+        process.env.BACKEND_URL + '/api/v1/newhire/profile',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   } else {
     return redirect('/company/matching');
   }
@@ -191,14 +207,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function CompanyProfile() {
   const info = useLoaderData<typeof loader>();
-
-  const basicInfoFields = {
-    name: 'Opportune',
-    email: 'opportune@gmail.com',
-    formFilled: 'True',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-  };
+  const fetcher = useFetcher();
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
@@ -213,7 +222,7 @@ export default function CompanyProfile() {
     updateUrl(result?.info?.secure_url);
   };
 
-  const [coverUrl, setCoverUrl] = useState('defaultCover.png');
+  const [coverUrl, setCoverUrl] = useState('../defaultCover.png');
 
   const handleCoverUpload = (error: any, result: any, widget: any) => {
     if (error) {
@@ -244,6 +253,27 @@ export default function CompanyProfile() {
 
   const closeHireModal = () => {
     setShowHireModal(false);
+  };
+
+  const [isEditingName, setIsEditingName] = useState(null);
+
+  const handleSave = (e, email) => {
+    const value = e.target.value.split(' ');
+    const first_name = value[0];
+    const last_name = value[1];
+    fetcher.submit(
+      {
+        first_name,
+        last_name,
+        email,
+        _action: 'editNewHire',
+      },
+      {
+        method: 'patch',
+        action: 'newhire/profile',
+      },
+    );
+    setIsEditingName(null);
   };
 
   return (
@@ -309,57 +339,121 @@ export default function CompanyProfile() {
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Form
-          action="/company/profile"
-          method="post"
-          className="company-description">
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div className="company-teams-title">
-              <h2>Description:</h2>
-            </div>
-
-            <textarea
-              cols={60}
-              name="description"
-              classLabel="description"
-              defaultValue={info?.data?.company.description}></textarea>
-
-            <div
-              style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
-              <button
-                type="submit"
-                className="company-save"
-                name="_action"
-                value="companySave">
-                Save
-              </button>
-            </div>
-          </div>
-        </Form>
-
-        <div className="new-hire-container">
+        <div className="company-teams-container">
           <div className="company-teams-title">
-            <h2>New Hire</h2>
+            <h2>Teams</h2>
           </div>
           <div className="teams-list">
-            {info?.newHires?.new_hires.map(
+            {info?.teams.teams.map(
               (
-                newHire, // DISPLAY NEWHIRES HERE
+                team, // DISPLAY TEAMS HERE
               ) => (
-                <div key={newHire.name} className="company-team">
-                  <h3>
-                    {newHire.first_name} {newHire.last_name}
-                  </h3>
-                  <p>{newHire.email}</p>
+                <div key={team.name} className="company-team">
+                  <div>
+                    <h3>{team.name}</h3>
+                    <p>Org 1</p> {/* TO REMOVE AT SOME POINT */}
+                    <div>Mountain View, California</div>{' '}
+                    {/* TO REMOVE AT SOME POINT */}
+                  </div>
+                  <ReadMore text={team.description}></ReadMore>
+                  <button
+                    className={
+                      team.survey_complete
+                        ? 'done-button'
+                        : 'in-progress-button'
+                    }>
+                    {team.survey_complete ? 'Done' : 'In Progress'}
+                  </button>
                   <button className="newhire-button">Email nudge</button>
                 </div>
               ),
             )}
           </div>
           <p className="cta" style={{ textAlign: 'center' }}>
+            <button onClick={openTeamModal}>Add team</button>
+          </p>
+          <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
+            <Form action="/company/profile" method="post">
+              <TextField
+                className="add-team"
+                label="Team Email"
+                name="email"
+                classLabel="email"
+              />
+              <TextField
+                className="add-team"
+                label="Team Name"
+                name="name"
+                classLabel="name"
+              />
+              <TextField
+                className="add-team"
+                label="Description"
+                name="description"
+                classLabel="description"
+              />
+              <TextField
+                className="add-team"
+                label="Calendly Link"
+                name="calendlyLink"
+                classLabel="calendly_link"
+              />
+              <TextField
+                className="add-team"
+                label="Capacity"
+                name="capacity"
+                classLabel="max_capacity"
+              />
+              <TextField
+                className="add-team"
+                label="Manager"
+                name="manager"
+                classLabel="manager"
+              />
+              <button
+                className="center"
+                type="submit"
+                name="_action"
+                value="createTeam"
+                onClick={closeModal}>
+                Add Team
+              </button>
+            </Form>
+          </Modal>
+        </div>
+
+        <div className="new-hire-container">
+          <div className="company-teams-title">
+            <h2>New Hire</h2>
+          </div>
+          <div className="teams-list">
+            {info?.newHires?.new_hires.map((newHire) => (
+              <div key={newHire._id} className="company-team">
+                {isEditingName === newHire._id ? (
+                  <input
+                    className="edit-input"
+                    defaultValue={newHire.first_name + ' ' + newHire.last_name}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && handleSave(e, newHire.email)
+                    }
+                  />
+                ) : (
+                  <h3 onClick={() => setIsEditingName(newHire._id)}>
+                    {newHire.first_name} {newHire.last_name}
+                  </h3>
+                )}
+                <p>{newHire.email}</p>
+                <button className="newhire-button">Email nudge</button>
+              </div>
+            ))}
+          </div>
+          <p className="cta" style={{ textAlign: 'center' }}>
             <button onClick={openHireModal}>Add new hire</button>
           </p>
-          <Modal open={showHireModal} onClose={closeHireModal}>
+          <Modal
+            open={showHireModal}
+            onClose={closeHireModal}
+            title={'Add new hire'}>
             <Form action="/company/profile" method="post">
               <TextField
                 label="First Name"
@@ -374,96 +468,43 @@ export default function CompanyProfile() {
               <TextField label="Email" name="email" classLabel="email" />
 
               <button
-                className="left"
+                className="center"
                 type="submit"
                 name="_action"
-                value="createNewhire">
+                value="createNewhire"
+                onClick={closeHireModal}>
                 Add New Hire
               </button>
             </Form>
           </Modal>
         </div>
       </div>
+      <Form
+        action="/company/profile"
+        method="post"
+        className="company-description">
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="company-teams-title">
+            <h2>Description:</h2>
+          </div>
 
-      <div className="company-teams-container">
-        <div className="company-teams-title">
-          <h2>Teams</h2>
-        </div>
-        <div className="teams-list">
-          {info?.teams.teams.map(
-            (
-              team, // DISPLAY TEAMS HERE
-            ) => (
-              <div key={team.name} className="company-team">
-                <div>
-                  <h3>{team.name}</h3>
-                  <p>Org 1</p> {/* TO REMOVE AT SOME POINT */}
-                  <div>Mountain View, California</div>{' '}
-                  {/* TO REMOVE AT SOME POINT */}
-                </div>
-                <ReadMore text={team.description}></ReadMore>
-                <button
-                  className={
-                    team.survey_complete ? 'done-button' : 'in-progress-button'
-                  }>
-                  {team.survey_complete ? 'Done' : 'In Progress'}
-                </button>
-                <button className="newhire-button">Email nudge</button>
-              </div>
-            ),
-          )}
-        </div>
-        <p className="cta" style={{ textAlign: 'center' }}>
-          <button onClick={openTeamModal}>Add team</button>
-        </p>
-        <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
-          <Form action="/company/profile" method="post">
-            <TextField
-              className="add-team"
-              label="Team Email"
-              name="email"
-              classLabel="email"
-            />
-            <TextField
-              className="add-team"
-              label="Team Name"
-              name="name"
-              classLabel="name"
-            />
-            <TextField
-              className="add-team"
-              label="Description"
-              name="description"
-              classLabel="description"
-            />
-            <TextField
-              className="add-team"
-              label="Calendly Link"
-              name="calendlyLink"
-              classLabel="calendly_link"
-            />
-            <TextField
-              className="add-team"
-              label="Capacity"
-              name="capacity"
-              classLabel="max_capacity"
-            />
-            <TextField
-              className="add-team"
-              label="Manager"
-              name="manager"
-              classLabel="manager"
-            />
+          <textarea
+            cols={60}
+            name="description"
+            defaultValue={info?.data?.company.description}></textarea>
+
+          <div
+            style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
             <button
-              className="left"
               type="submit"
+              className="company-save"
               name="_action"
-              value="createTeam">
-              Add Team
+              value="companySave">
+              Save
             </button>
-          </Form>
-        </Modal>
-      </div>
+          </div>
+        </div>
+      </Form>
       <p className="cta" style={{ textAlign: 'right' }}>
         {' '}
         <Link to="/company/matching">Next</Link>
