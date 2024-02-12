@@ -174,9 +174,9 @@ function LandingPage() {
                         <div className="container">
                             <h2 className="mb-5">What people are saying...</h2>
                             <AnimatedSection>
-                            <div className="row">
+                            <div className="row justify-content-center">
                                 <AnimatedSection>
-                                    <div className="col-lg-4">
+                                    <div className="col-lg-4 ">
                                         <div className="testimonial-item mx-auto mb-5 mb-lg-0">
                                             <img className="img-fluid rounded-circle mb-3" src="/testimonials-1.jpg" alt="..." />
                                             <h5>Margaret E.</h5>
