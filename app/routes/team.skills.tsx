@@ -5,6 +5,7 @@ import axios from 'axios';
 import { destroySession, getSession } from '../utils/sessions';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import PlainText from '~/components/survey_qs/PlainText';
+import { parseDatePlus1 } from '~/lib/date';
 
 // ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
@@ -157,8 +158,7 @@ export default function Tskills() {
 
 	// check if survey is open yet
 	const currentDate = new Date();
-	var parseCloseDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
-	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
+	const surveyClosed = parseDatePlus1(companyInfo.team_survey_deadline);
 
 	if(currentDate.getTime() > surveyClosed.getTime()) {
 		return (

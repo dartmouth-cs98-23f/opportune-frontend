@@ -11,6 +11,7 @@ import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
+import { parseDatePlus1 } from '~/lib/date';
 
 
 export async function action({request}: ActionFunctionArgs) {
@@ -256,10 +257,8 @@ export default function Matching() {
 
 	// check if survey is open yet
 	const currentDate = new Date();
-	var parseOpenDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
-	var parseCloseDate = companyInfo.newhire_survey_deadline.substr(0, 10).split('-');
-	const surveyOpen = new Date(parseInt(parseOpenDate[0]), parseInt(parseOpenDate[1]) - 1, parseInt(parseOpenDate[2]) + 1);
-	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
+	const surveyOpen = parseDatePlus1(companyInfo.team_survey_deadline);
+	const surveyClosed = parseDatePlus1(companyInfo.newhire_survey_deadline);
 
 	if (currentDate.getTime() < surveyOpen.getTime()) {
 		return (

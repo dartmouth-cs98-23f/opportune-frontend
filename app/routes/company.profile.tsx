@@ -20,6 +20,7 @@ import Modal from '~/components/Modal';
 import ReadMore from '~/components/ReadMore';
 import ReactDatePicker from 'react-datepicker';
 import datepicker from 'react-datepicker/dist/react-datepicker.css';
+import { parseDate, convertDateToAPIFormat } from '~/lib/date';
 
 // @ts-expect-error
 const DatePicker = ReactDatePicker.default;
@@ -35,6 +36,8 @@ export async function action({ request }: ActionFunctionArgs) {
   for (const [key, value] of body.entries()) {
     myJson[key] = value;
   }
+
+  console.log(myJson);
 
   // Actions
   if (_action === 'LogOut') {
@@ -218,6 +221,27 @@ export default function CompanyProfile() {
   const info = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
+  // check that all surveys are complete in order to enable the next button
+  const newhires = info.newHires.new_hires;
+  const teams = info?.teams.teams;
+  var allSurveysComplete = true;
+
+  for(var team of teams) {
+    if(team.survey_complete == false) {
+      allSurveysComplete = false;
+      break;
+    }
+  }
+
+  if(allSurveysComplete) {
+    for(var nh of newhires) {
+      if(nh.survey_complete == false) {
+        allSurveysComplete = false;
+        break;
+      }
+    }
+  }
+
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
@@ -250,7 +274,7 @@ export default function CompanyProfile() {
     setShowTeamModal(true);
   };
 
-  const closeModal = () => {
+  const closeTeamModal = () => {
     setShowTeamModal(false);
   };
 
@@ -288,7 +312,7 @@ export default function CompanyProfile() {
     );
   };
 
-  const [date, setDate] = useState(new Date('02/12/2024'));
+  const [date, setDate] = useState(parseDate(info?.data.company.newhire_survey_deadline));
 
   return (
     <div>
@@ -386,7 +410,7 @@ export default function CompanyProfile() {
           <p className="cta" style={{ textAlign: 'center' }}>
             <button onClick={openTeamModal}>Add team</button>
           </p>
-          <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
+          <Modal open={showTeamModal} onClose={closeTeamModal} title={'Add a team'}>
             <Form action="/company/profile" method="post">
               <TextField
                 className="add-team"
@@ -428,8 +452,7 @@ export default function CompanyProfile() {
                 className="center"
                 type="submit"
                 name="_action"
-                value="createTeam"
-                onClick={closeModal}>
+                value="createTeam">
                 Add Team
               </button>
             </Form>
@@ -533,8 +556,7 @@ export default function CompanyProfile() {
                 className="center"
                 type="submit"
                 name="_action"
-                value="createNewhire"
-                onClick={closeHireModal}>
+                value="createNewhire">
                 Add New Hire
               </button>
             </Form>
@@ -594,7 +616,11 @@ export default function CompanyProfile() {
 
       <p className="cta" style={{ textAlign: 'right' }}>
         {' '}
-        <Link to="/company/matching">Next</Link>
+        {
+          allSurveysComplete ? <Link to="/company/matching">Next</Link> :
+          <div>Team Matching will be available when all surveys are complete or the deadline is reached.</div>
+        }
+        
       </p>
     </div>
   );

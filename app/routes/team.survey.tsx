@@ -11,6 +11,7 @@ import Ranking from '~/components/survey_qs/Ranking';
 import PlainText from '~/components/survey_qs/PlainText';
 import { Select } from '@mui/material';
 import ScaleT from '~/components/survey_qs/ScaleT';
+import { parseDatePlus1 } from '~/lib/date';
 
 // ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
@@ -163,8 +164,7 @@ export default function Tprefs() {
 
 	// check if survey is open yet
 	const currentDate = new Date();
-	var parseCloseDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
-	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
+	const surveyClosed = parseDatePlus1(companyInfo.team_survey_deadline);
 
 	if(currentDate.getTime() > surveyClosed.getTime()) {
 		return (
