@@ -347,7 +347,7 @@ export default function CompanyProfile() {
 
   const [nhDate, setNHDate] = useState(parseDate(info?.data.company.newhire_survey_deadline));
   const [teamDate, setTeamDate] = useState(parseDate(info?.data.company.team_survey_deadline));
-  const [dateButtonDisabled, setDateButtonDisabled] = useState(validateDates(nhDate, teamDate));
+  const [dateButtonDisabled, setDateButtonDisabled] = useState(!validateDates(nhDate, teamDate));
 
   const handleNHDateChange = (date) => {
 
