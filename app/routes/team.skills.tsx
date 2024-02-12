@@ -163,7 +163,7 @@ export default function Tskills() {
 	if(currentDate.getTime() > surveyClosed.getTime()) {
 		return (
 			<div>
-				The skills survey is closed.
+				The skills survey is closed. {/* TODO CSS */}
 			</div>
 		)
 

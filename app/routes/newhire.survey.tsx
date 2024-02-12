@@ -264,7 +264,7 @@ export default function Matching() {
 	if (currentDate.getTime() < surveyOpen.getTime()) {
 		return (
 			<div>
-				The survey will be released soon!
+				The survey will be released soon! {/* TODO CSS */}
 			</div>
 		)
 	} else if(currentDate.getTime() >= surveyClosed.getTime()) {
