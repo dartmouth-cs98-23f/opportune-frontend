@@ -91,8 +91,14 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
+
+		const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/company-info', {
+				headers: {
+				  "Authorization": session.get("auth"),
+				  "Content-Type": "application/json",
+			}});
 		
-		return json(profileRes.data)
+		return json({profile: profileRes.data, company: companyRes.data})
 	
 	} catch (error) {
 		console.log(error);
@@ -108,11 +114,10 @@ export default function Tprefs() {
 	// 	members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
 	// };
 
-	const teamInfo = useLoaderData<typeof loader>();
+	const info = useLoaderData<typeof loader>();
+	const teamInfo = info?.profile;
 
-	let companyInfo = {
-		name: "OP Company",
-	}
+	const companyInfo = info?.company.company;
 
 	// TODO: list of questions to incorporate in this order, make sure the survey works with the requests
 	// TODO: the Scale react component has been revised to generalize for more dynamic labels on the scale
@@ -156,46 +161,60 @@ export default function Tprefs() {
 	
  	const [triggered, setTriggered] = useState("next-q");
 
-	return (
-		<div className="flex-container">
-			<div id="sidebar">
-				<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-				<Form action="/team/profile" method="post">
-				<p className="text-logo">Opportune</p>
-				<button className="logout-button" type="submit"
-				name="_action" value="LogOut"> 
-					<ArrowLeftOnRectangleIcon /> 
-				</button>
-				</Form>
+	// check if survey is open yet
+	const currentDate = new Date();
+	var parseCloseDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
+	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
 
+	if(currentDate.getTime() > surveyClosed.getTime()) {
+		return (
+			<div>
+				The skills survey is closed.
 			</div>
-			<div className="content">
-				<div className="company-banner">
-						<h1> {companyInfo.name} </h1>
-						<h3> {teamInfo.team.name} </h3>
-				</div>
-				<div className="company-prefs">
-					<h3> Fill Your Preferences </h3>
-					<Progress pct={getProgress()}/>
-					<Form action="/team/survey" method="post" 
-						onSubmit={triggered === "next-q" ? next : previous}>
-						{stepComp}
-						<p className="cta">
-							{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
-							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
-							{!isLastStep ? <button type="submit" name="_action"
-							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{isLastStep ? <Link to="/team/profile">Done</Link> : null}
-						</p>	
+		)
+
+	} else {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/team/profile" method="post">
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
 					</Form>
-					
-					<p className="cta">
-						{/*(isFirstStep && !isLastStep) ? <Link to="/tprofile" className="prev-button">Cancel</Link> : null*/}
-						<Link to="/team/profile" className="prev-button">Cancel</Link>
-					</p>
-
+	
+				</div>
+				<div className="content">
+					<div className="company-banner">
+							<h1> {companyInfo.name} </h1>
+							<h3> {teamInfo.team.name} </h3>
+					</div>
+					<div className="company-prefs">
+						<h3> Fill Your Preferences </h3>
+						<Progress pct={getProgress()}/>
+						<Form action="/team/survey" method="post" 
+							onSubmit={triggered === "next-q" ? next : previous}>
+							{stepComp}
+							<p className="cta">
+								{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
+								value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
+								{!isLastStep ? <button type="submit" name="_action"
+								value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
+								{isLastStep ? <Link to="/team/profile">Done</Link> : null}
+							</p>	
+						</Form>
+						
+						<p className="cta">
+							{/*(isFirstStep && !isLastStep) ? <Link to="/tprofile" className="prev-button">Cancel</Link> : null*/}
+							<Link to="/team/profile" className="prev-button">Cancel</Link>
+						</p>
+	
+					</div>
 				</div>
 			</div>
-		</div>
-	)
+		)
+	}
 }
