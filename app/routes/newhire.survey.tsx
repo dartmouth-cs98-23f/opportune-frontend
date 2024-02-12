@@ -145,15 +145,26 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return teamRes.data
 		}
 
-		const [profileRes, skillRes, teamsRes] = await Promise.all([
+		async function getCompanyRes() {
+			const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/company-info', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+			return companyRes.data
+		}
+
+		const [profileRes, skillRes, teamsRes, companyRes] = await Promise.all([
 			getProfileRes(),
 			getSkillRes(),
-			getTeamsRes()
+			getTeamsRes(),
+			getCompanyRes()
 		]);
 
 		return json({ profile: profileRes, 
 			          skills: skillRes,
-					  teams: teamsRes });
+					  teams: teamsRes,
+					  company: companyRes});
 	
 	} catch (error) {
 		console.log(error);
@@ -168,6 +179,7 @@ export default function Matching() {
 	const basicInfoSkills = basicInfo.skills.skills;
 	const allTeams = basicInfo.teams.teams;
 	const newHireSkills = basicInfo.profile.new_hire.skills;
+	const companyInfo = basicInfo.company.company;
 
 	// new addition
 	const favoriteTeams = basicInfo.profile.new_hire.favorited_teams;
@@ -242,7 +254,30 @@ export default function Matching() {
 		   previous, next, getProgress} = SurveyUtil(questionList);
 	const [triggered, setTriggered] = useState("next-q");
 
-	if (basicInfo.profile.new_hire.team_id === '') {
+	// check if survey is open yet
+	const currentDate = new Date();
+	var parseOpenDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
+	var parseCloseDate = companyInfo.newhire_survey_deadline.substr(0, 10).split('-');
+	const surveyOpen = new Date(parseInt(parseOpenDate[0]), parseInt(parseOpenDate[1]) - 1, parseInt(parseOpenDate[2]));
+	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
+
+	if (currentDate.getTime() < surveyOpen.getTime()) {
+		return (
+			<div>
+				The survey will be released soon!
+			</div>
+		)
+	} else if(currentDate.getTime() >= surveyClosed.getTime()) {
+		return (
+			<div>
+				The team matching survey is closed!
+				<p className="cta">
+					<Link to="/newhire/results">View Results</Link>
+				</p>
+			</div>
+		)
+		
+	} else if (basicInfo.profile.new_hire.team_id === '') {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
