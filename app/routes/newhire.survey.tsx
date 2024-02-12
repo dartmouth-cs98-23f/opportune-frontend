@@ -258,7 +258,7 @@ export default function Matching() {
 	const currentDate = new Date();
 	var parseOpenDate = companyInfo.team_survey_deadline.substr(0, 10).split('-');
 	var parseCloseDate = companyInfo.newhire_survey_deadline.substr(0, 10).split('-');
-	const surveyOpen = new Date(parseInt(parseOpenDate[0]), parseInt(parseOpenDate[1]) - 1, parseInt(parseOpenDate[2]));
+	const surveyOpen = new Date(parseInt(parseOpenDate[0]), parseInt(parseOpenDate[1]) - 1, parseInt(parseOpenDate[2]) + 1);
 	const surveyClosed = new Date(parseInt(parseCloseDate[0]), parseInt(parseCloseDate[1]) - 1, parseInt(parseCloseDate[2]) + 1);
 
 	if (currentDate.getTime() < surveyOpen.getTime()) {
