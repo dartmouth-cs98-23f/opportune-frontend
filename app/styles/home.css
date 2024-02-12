@@ -1143,3 +1143,64 @@ input[type='file'] {
   background: none;
   width: 30%;
 }
+
+.edit-button {
+  border: none;
+  background: none;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.edit-button:hover {
+  color: blue;
+}
+
+.buttons {
+  display: inline-block;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+.delete-button {
+  text-decoration: none;
+  background-color: red;
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  border: none;
+}
+
+.save-button {
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  padding: 0.5rem 2rem;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  margin-left: 1rem;
+}
+
+.buttons button:hover {
+  background-color: var(--color-secondary-10);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.company-deadlines {
+  display: flex;
+  width: 45%;
+  margin: 0 2rem;
+  flex-direction: column;
+}

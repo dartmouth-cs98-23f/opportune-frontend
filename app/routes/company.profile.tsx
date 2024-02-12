@@ -1,6 +1,10 @@
 import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import styles from '~/styles/home.css';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  PencilIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import axios from 'axios';
 import {
@@ -14,6 +18,11 @@ import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
 import Modal from '~/components/Modal';
 import ReadMore from '~/components/ReadMore';
+import ReactDatePicker from 'react-datepicker';
+import datepicker from 'react-datepicker/dist/react-datepicker.css';
+
+// @ts-expect-error
+const DatePicker = ReactDatePicker.default;
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -255,12 +264,16 @@ export default function CompanyProfile() {
     setShowHireModal(false);
   };
 
-  const [isEditingName, setIsEditingName] = useState(null);
+  // const [isEditingName, setIsEditingName] = useState(null);
 
-  const handleSave = (e, email) => {
+  const [editHire, setEditHire] = useState(false);
+  const [editTeam, setEditTeam] = useState(false);
+
+  const handleSave = (e) => {
     const value = e.target.value.split(' ');
     const first_name = value[0];
     const last_name = value[1];
+    const email = value[2];
     fetcher.submit(
       {
         first_name,
@@ -273,8 +286,9 @@ export default function CompanyProfile() {
         action: 'newhire/profile',
       },
     );
-    setIsEditingName(null);
   };
+
+  const [date, setDate] = useState(new Date('02/12/2024'));
 
   return (
     <div>
@@ -429,21 +443,69 @@ export default function CompanyProfile() {
           <div className="teams-list">
             {info?.newHires?.new_hires.map((newHire) => (
               <div key={newHire._id} className="company-team">
-                {isEditingName === newHire._id ? (
-                  <input
-                    className="edit-input"
-                    defaultValue={newHire.first_name + ' ' + newHire.last_name}
-                    onKeyDown={(e) =>
-                      e.key === 'Enter' && handleSave(e, newHire.email)
-                    }
-                  />
-                ) : (
-                  <h3 onClick={() => setIsEditingName(newHire._id)}>
-                    {newHire.first_name} {newHire.last_name}
-                  </h3>
-                )}
+                <h3>
+                  {newHire.first_name} {newHire.last_name}
+                </h3>
+
                 <p>{newHire.email}</p>
-                <button className="newhire-button">Email nudge</button>
+                <div className="expanded-content">
+                  <button
+                    className="newhire-button"
+                    name="_action"
+                    value="newHireNudge">
+                    Email nudge
+                  </button>
+                  <button
+                    className="edit-button"
+                    onClick={() => setEditHire(true)}>
+                    Edit
+                  </button>
+                </div>
+                <Modal
+                  open={editHire}
+                  onClose={() => setEditHire(false)}
+                  title={'Edit New Hire'}>
+                  <Form action="/company/profile" method="post">
+                    <TextField
+                      label="First Name"
+                      name="first_name"
+                      value={newHire.first_name}
+                    />
+                    <TextField
+                      label="Last Name"
+                      name="last_name"
+                      value={newHire.last_name}
+                    />
+                    <TextField
+                      label="Email"
+                      name="email"
+                      value={newHire.email}
+                    />
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        width: '100%',
+                        justifyContent: 'flex-end',
+                      }}>
+                      <div className="buttons">
+                        <button
+                          className="delete-button"
+                          name="_action"
+                          value="editNewHire">
+                          Delete
+                        </button>
+                        <button
+                          className="save-button"
+                          type="submit"
+                          name="_action"
+                          value="editNewHire">
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </Form>
+                </Modal>
               </div>
             ))}
           </div>
@@ -479,32 +541,57 @@ export default function CompanyProfile() {
           </Modal>
         </div>
       </div>
-      <Form
-        action="/company/profile"
-        method="post"
-        className="company-description">
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="row-container">
+        <Form
+          action="/company/profile"
+          method="post"
+          className="company-description">
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="company-teams-title">
+              <h2>Description:</h2>
+            </div>
+
+            <textarea
+              cols={60}
+              name="description"
+              defaultValue={info?.data?.company.description}></textarea>
+
+            <div
+              style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
+              <button
+                type="submit"
+                className="company-save"
+                name="_action"
+                value="companySave">
+                Save
+              </button>
+            </div>
+          </div>
+        </Form>
+        <Form
+          action="/company/profile"
+          method="post"
+          className="company-deadlines">
           <div className="company-teams-title">
-            <h2>Description:</h2>
+            <h2>Deadlines:</h2>
           </div>
+          <div className="row-container">
+            <label>
+              Team Survey Deadline:
+              <DatePicker selected={date} onChange={(date) => setDate(date)} />
+            </label>
 
-          <textarea
-            cols={60}
-            name="description"
-            defaultValue={info?.data?.company.description}></textarea>
-
-          <div
-            style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
-            <button
-              type="submit"
-              className="company-save"
-              name="_action"
-              value="companySave">
-              Save
-            </button>
+            <label>
+              New Hire Deadline:
+              <DatePicker
+                selected={date} // change to info.teams.team.survey_deadline or sth like that
+                onChange={(newDate) => setDate(newDate)} // do fetcher.submit
+              />
+            </label>
           </div>
-        </div>
-      </Form>
+        </Form>
+      </div>
+
       <p className="cta" style={{ textAlign: 'right' }}>
         {' '}
         <Link to="/company/matching">Next</Link>
@@ -514,5 +601,8 @@ export default function CompanyProfile() {
 }
 
 export function links() {
-  return [{ rel: 'stylesheet', href: styles }];
+  return [
+    { rel: 'stylesheet', href: styles },
+    { rel: 'stylesheet', href: datepicker },
+  ];
 }
