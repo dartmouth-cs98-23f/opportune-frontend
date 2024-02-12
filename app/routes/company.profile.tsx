@@ -154,6 +154,28 @@ export async function action({ request }: ActionFunctionArgs) {
       console.log(error);
       return null;
     }
+  } else if (_action === 'dateSave') {
+
+    // update json to correct format
+    myJson["team_survey_deadline"] = convertDateToAPIFormat(myJson["team_survey_deadline"]);
+    myJson["newhire_survey_deadline"] = convertDateToAPIFormat(myJson["newhire_survey_deadline"]);
+
+    try {
+      const response = await axios.patch(
+        process.env.BACKEND_URL + '/api/v1/company/profile',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch(error) {
+      console.log(error);
+      return null;
+    }
   } else {
     return redirect('/company/matching');
   }
@@ -312,7 +334,44 @@ export default function CompanyProfile() {
     );
   };
 
-  const [date, setDate] = useState(parseDate(info?.data.company.newhire_survey_deadline));
+  const validateDates = (nhDate, teamDate) => {
+    var nhDateAsDate = new Date(nhDate);
+    var teamDateAsDate = new Date(teamDate);
+
+    if(nhDateAsDate.getTime() <= teamDateAsDate.getTime()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  const [nhDate, setNHDate] = useState(parseDate(info?.data.company.newhire_survey_deadline));
+  const [teamDate, setTeamDate] = useState(parseDate(info?.data.company.team_survey_deadline));
+  const [dateButtonDisabled, setDateButtonDisabled] = useState(validateDates(nhDate, teamDate));
+
+  const handleNHDateChange = (date) => {
+
+    setNHDate(date);
+
+    if(!validateDates(date, teamDate)) {
+      setDateButtonDisabled(true);
+    } else {
+      setDateButtonDisabled(false);
+    }
+  }
+
+  const handleTeamDateChange = (date) => {
+    
+    setTeamDate(date);
+
+    if(!validateDates(nhDate, date)) {
+      setDateButtonDisabled(true);
+    } else {
+      setDateButtonDisabled(false);
+    }
+  }
+
+
 
   return (
     <div>
@@ -600,16 +659,27 @@ export default function CompanyProfile() {
           <div className="row-container">
             <label>
               Team Survey Deadline:
-              <DatePicker selected={date} onChange={(date) => setDate(date)} />
+              <DatePicker selected={teamDate} onChange={(date) => handleTeamDateChange(date)} name="team_survey_deadline"/>
             </label>
 
             <label>
               New Hire Deadline:
               <DatePicker
-                selected={date} // change to info.teams.team.survey_deadline or sth like that
-                onChange={(newDate) => setDate(newDate)} // do fetcher.submit
+                selected={nhDate} // change to info.teams.team.survey_deadline or sth like that
+                onChange={(date) => handleNHDateChange(date)
+                } // do fetcher.submit
+                name="newhire_survey_deadline"
               />
             </label>
+
+            <button
+                type="submit"
+                className="date-save"
+                name="_action"
+                value="dateSave"
+                disabled={dateButtonDisabled}>
+                Save
+              </button>
           </div>
         </Form>
       </div>
@@ -617,7 +687,7 @@ export default function CompanyProfile() {
       <p className="cta" style={{ textAlign: 'right' }}>
         {' '}
         {
-          allSurveysComplete ? <Link to="/company/matching">Next</Link> :
+          (allSurveysComplete || info?.data.company.newhire_survey_complete) ? <Link to="/company/matching">Next</Link> :
           <div>Team Matching will be available when all surveys are complete or the deadline is reached.</div>
         }
         
