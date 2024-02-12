@@ -1,0 +1,44 @@
+* {
+	box-sizing: border-box;
+  }
+  
+:root {
+	--color-primary-10: #1E2578;
+	--color-primary-20: #4559B8;
+	--color-primary-30: #A9B2DC;
+	--color-primary-40: #EAF1FE;
+	
+	--color-secondary-10: #F08E46;
+}
+  
+body {
+	margin: 0px;
+    padding: 0px;
+	font-family: Mulish, 'Open Sans', 'Roboto', 'Droid Sans', 'Helvetica Neue',
+	  sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background: radial-gradient(
+	  ellipse at top,
+	  var(--color-primary-400),
+	  var(--color-primary-100)
+	);
+	min-height: 100vh;
+}
+
+/* .error {
+	max-width: 25rem;
+	margin: 3rem auto;
+	padding: 2rem;
+	text-align: center;
+	background-color: var(--color-secondary-100);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	border-radius: 8px;
+}
+  
+.info-message {
+	margin: 2rem;
+	text-align: center;
+	color: var(--color-primary-50);
+	font-size: 1.5rem;
+} */
