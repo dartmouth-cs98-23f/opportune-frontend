@@ -2,6 +2,7 @@ import React, { ReactNode, useRef } from 'react';
 import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { Link, Form } from '@remix-run/react';
 import { useInView } from 'react-intersection-observer';
+import axios from 'axios';
 
 interface AnimatedSectionProps {
     children: ReactNode;
@@ -36,10 +37,12 @@ interface AnimatedSectionProps {
 	console.log(JSON.stringify(myJson));
 
 	try {
-		//const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
+		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/subscriber/subscribe', myJson);
+        console.log(response);
 
-		return null;
+		return redirect('/landingpage');
 	} catch(error) {
+        console.log(error);
 		return null;
 	}
 };
@@ -87,24 +90,17 @@ function LandingPage() {
 
                     </div>
                 </section>
-                {/* <!-- Masthead--> */}
+                {/* THIS USED TO BE THE SECTION FOR SUBSCRIBING!! /*
                 <header className="masthead">
                     <div className="container position-relative">
                         <div className="row justify-content-center">
                             <div className="col-xl-6">
                                 <div className="text-center text-white">
-                                    {/* <!-- Page heading--> */}
+                            
                                         <h1 className="mb-5">Join the Opportune Community Today!</h1>
-                                        {/* <!-- Signup form-->
-                                        <!-- * * * * * * * * * * * * * * *-->
-                                        <!-- * * SB Forms Contact Form * *-->
-                                        <!-- * * * * * * * * * * * * * * *-->
-                                        <!-- This form is pre-integrated with SB Forms.-->
-                                        <!-- To make this form functional, sign up at-->
-                                        <!-- https://startbootstrap.com/solution/contact-forms-->
-                                        <!-- to get an API token!--> */}
+                                
                                         <form className="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
-                                            {/* <!-- Email address input--> */}
+                                        
                                             <div className="row">
                                                 <div className="col">
                                                     <input className="form-control form-control-lg" id="emailAddress" type="email" placeholder="Email Address" data-sb-validations="required,email" />
@@ -113,10 +109,7 @@ function LandingPage() {
                                                 </div>
                                                 <div className="col-auto"><button className="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
                                             </div>
-                                            {/* <!-- Submit success message-->
-                                            <!---->
-                                            <!-- This is what your users will see when the form-->
-                                            <!-- has successfully submitted--> */}
+                                        
                                             <div className="d-none" id="submitSuccessMessage">
                                                 <div className="text-center mb-3">
                                                     <div className="fw-bolder">Form submission successful!</div>
@@ -124,17 +117,14 @@ function LandingPage() {
                                                     <a className="text-white" href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
                                                 </div>
                                             </div>
-                                            {/* <!-- Submit error message-->
-                                            <!---->
-                                            <!-- This is what your users will see when there is-->
-                                            <!-- an error submitting the form--> */}
+                                    
                                             <div className="d-none" id="submitErrorMessage"><div className="text-center text-danger mb-3">Error sending message!</div></div>
                                         </form>
                                 </div>
                             </div>
                         </div>
                     </div>                    
-                </header>
+    </header> */}
                 {/* <!-- Icons Grid--> */}
                 <section className="features-icons bg-light text-center">
                     <div className="container">
@@ -235,7 +225,7 @@ function LandingPage() {
                     <div className="container position-relative">
                         <div className="row justify-content-center">
                             <div className="col-xl-6">
-                                <h2 className="mb-4">Ready to get started? Sign up now!</h2>
+                                <h2 className="mb-4">Interested in our product? Subscribe to our newsletter!</h2>
                                 {/* <!-- Signup form-->
                                 <!-- * * * * * * * * * * * * * * *-->
                                 <!-- * * SB Forms Contact Form * *-->
