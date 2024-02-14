@@ -374,7 +374,7 @@ export default function CompanyProfile() {
 
 
   return (
-    <div>
+    <div className="flex-container">
       <div className="sidebar">
         <img
           className="opportune-logo-small"

@@ -265,7 +265,25 @@ export default function CompanyMatching() {
 
   if(currentDate.getTime() < surveyOpen.getTime()) {
     return (
-      <div> The matching page is not available yet! </div>
+      <div>
+        <div className="sidebar">
+          <img
+            className="opportune-logo-small"
+            src="../opportune_newlogo.svg"></img>
+          <Form action="/company/matching" method="post">
+            <p className="text-logo">Opportune</p>
+            <button
+              className="logout-button"
+              type="submit"
+              name="_action"
+              value="LogOut">
+              <ArrowLeftOnRectangleIcon />
+            </button>
+          </Form>
+        </div>
+        <div>The matching page is not available yet! </div> {/* TODO CSS */}
+        <Link to="/company/profile">Back</Link>
+      </div>
     )
   } else {
     return (

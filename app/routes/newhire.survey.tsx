@@ -263,14 +263,46 @@ export default function Matching() {
 
 	if (currentDate.getTime() < surveyOpen.getTime()) {
 		return (
-			<div>
-				The survey will be released soon! {/* TODO CSS */}
+			
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/newhire/survey" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
+				</div>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+				</div>
+				<div>The survey will be released soon!</div> {/* TODO CSS */}
+				<Link to="/newhire/teams">Back</Link>
 			</div>
 		)
 	} else if(currentDate.getTime() >= surveyClosed.getTime()) {
 		return (
-			<div>
-				The team matching survey is closed!
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/newhire/survey" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
+				</div>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+				</div>
+				The team matching survey is closed!  {/* TODO CSS */}
 				<p className="cta">
 					<Link to="/newhire/results">View Results</Link>
 				</p>
@@ -295,7 +327,7 @@ export default function Matching() {
 						<MainNavigation />
 					</div>
 					<div>
-						The Survey Will Close on {lastDay}.
+						The Survey Will Close on {lastDay}. {/* TODO CSS */}
 					</div>
 					<div>
 						<Progress pct={getProgress()}/>

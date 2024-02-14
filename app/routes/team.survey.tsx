@@ -169,8 +169,20 @@ export default function Tprefs() {
 
 	if(currentDate.getTime() > surveyClosed.getTime()) {
 		return (
-			<div>
-				The skills survey is closed. {/* TODO CSS */}
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/team/profile" method="post">
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
+					</Form>
+	
+				</div>
+				<div>The skills survey is closed. </div> {/* TODO CSS */}
+				<Link to="/team/profile">Back</Link>
 			</div>
 		)
 
@@ -194,7 +206,7 @@ export default function Tprefs() {
 							<h3> {teamInfo.team.name} </h3>
 					</div>
 					<div>
-						The Survey Will Close on {lastDay}.
+						The Survey Will Close on {lastDay}. {/* TODO CSS */}
 					</div>
 					<div className="company-prefs">
 						<h3> Fill Your Preferences </h3>
