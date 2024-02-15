@@ -371,7 +371,8 @@ export default function CompanyProfile() {
     }
   }
 
-
+  const date = new Date();
+  const surveysClosedDate = parseDate(info?.data.company.newhire_survey_deadline);
 
   return (
     <div className="flex-container">
@@ -530,6 +531,16 @@ export default function CompanyProfile() {
                 </h3>
 
                 <p>{newHire.email}</p>
+
+                <button
+                    className={
+                      newHire.survey_complete
+                        ? 'done-button'
+                        : 'in-progress-button'
+                    }>
+                    {newHire.survey_complete ? 'Done' : 'In Progress'}
+                  </button>
+
                 <div className="expanded-content">
                   <button
                     className="newhire-button"
@@ -664,12 +675,12 @@ export default function CompanyProfile() {
 
             <label>
               New Hire Deadline:
-              <DatePicker
+              <DatePicker 
                 selected={nhDate} // change to info.teams.team.survey_deadline or sth like that
                 onChange={(date) => handleNHDateChange(date)
                 } // do fetcher.submit
                 name="newhire_survey_deadline"
-              />
+              /> {/* TODO CSS */}
             </label>
 
             <button
@@ -679,7 +690,7 @@ export default function CompanyProfile() {
                 value="dateSave"
                 disabled={dateButtonDisabled}>
                 Save
-              </button>
+              </button> {/* TODO CSS */}
           </div>
         </Form>
       </div>
@@ -687,7 +698,7 @@ export default function CompanyProfile() {
       <p className="cta" style={{ textAlign: 'right' }}>
         {' '}
         {
-          (allSurveysComplete || info?.data.company.newhire_survey_complete) ? <Link to="/company/matching">Next</Link> :
+          (allSurveysComplete || date.getTime() > surveysClosedDate.getTime()) ? <Link to="/company/matching">Next</Link> :
           <div>Team Matching will be available when all surveys are complete or the deadline is reached.</div>
         }
         
