@@ -699,7 +699,7 @@ export default function CompanyProfile() {
         {' '}
         {
           (allSurveysComplete || date.getTime() > surveysClosedDate.getTime()) ? <Link to="/company/matching">Next</Link> :
-          <div>Team Matching will be available when all surveys are complete or the deadline is reached.</div>
+          <div>Team Matching will be available when all surveys are complete or the deadline is reached.</div> {/* TODO CSS */}
         }
         
       </p>
