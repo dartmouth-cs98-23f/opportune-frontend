@@ -36,6 +36,8 @@ export async function action({ request }: ActionFunctionArgs) {
     myJson[key] = value;
   }
 
+  console.log(myJson);
+
   // Actions
   if (_action === 'LogOut') {
     return redirect('/login', {
@@ -136,8 +138,59 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   } else if (_action === 'editNewHire') {
     try {
-      const response = await axios.patch(
-        process.env.BACKEND_URL + '/api/v1/newhire/profile',
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/edit-newhire',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'deleteNewHire') {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/delete-newhire',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'editTeam') {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/edit-team',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'deleteTeam') {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/delete-team',
         myJson,
         {
           headers: {
@@ -365,7 +418,6 @@ export default function CompanyProfile() {
                 <div key={team.name} className="company-team">
                   <div>
                     <h3>{team.name}</h3>
-                    <p>Org 1</p> {/* TO REMOVE AT SOME POINT */}
                     <div>Mountain View, California</div>{' '}
                     {/* TO REMOVE AT SOME POINT */}
                   </div>
@@ -378,8 +430,82 @@ export default function CompanyProfile() {
                     }>
                     {team.survey_complete ? 'Done' : 'In Progress'}
                   </button>
-                  <button className="newhire-button">Email nudge</button>
+                  <div className="expanded-content">
+                    <button
+                      className="newhire-button"
+                      name="_action"
+                      value="teamNudge">
+                      Email nudge
+                    </button>
+                    <button
+                      className="edit-button"
+                      onClick={() => setEditTeam(true)}>
+                      Edit
+                    </button>
+                  </div>
+                  <Modal open={editTeam} onClose={() => setEditTeam(false)} title={'Add a team'}>
+                    <Form action="/company/profile" method="post">
+                      <TextField
+                        className="add-team"
+                        label="Team Email"
+                        name="email"
+                        classLabel="email"
+                        value={team.email}
+                      />
+                      <TextField
+                        className="add-team"
+                        label="Team Name"
+                        name="name"
+                        classLabel="name"
+                        value={team.name}
+                      />
+                      <TextField
+                        className="add-team"
+                        label="Description"
+                        name="description"
+                        classLabel="description"
+                        value={team.description}
+                      />
+                      <TextField
+                        className="add-team"
+                        label="Calendly Link"
+                        name="calendlyLink"
+                        classLabel="calendly_link"
+                        value={team.calendly_link}
+                      />
+                      <TextField
+                        className="add-team"
+                        label="Capacity"
+                        name="capacity"
+                        classLabel="max_capacity"
+                        value={team.max_capacity}
+                      />
+                      <TextField
+                        className="add-team"
+                        label="Manager"
+                        name="manager"
+                        classLabel="manager"
+                        value={team.manager}
+                      />
+                      <div className="buttons">
+                        <button
+                          className="delete-button"
+                          name="_action"
+                          value="deleteTeam">
+                          Delete
+                        </button>
+                        <button
+                          className="save-button"
+                          type="submit"
+                          name="_action"
+                          value="editTeam">
+                          Save
+                        </button>
+                      </div>
+                    </Form>
+                  </Modal>
                 </div>
+                
               ),
             )}
           </div>
@@ -428,8 +554,7 @@ export default function CompanyProfile() {
                 className="center"
                 type="submit"
                 name="_action"
-                value="createTeam"
-                onClick={closeModal}>
+                value="createTeam">
                 Add Team
               </button>
             </Form>
@@ -469,16 +594,19 @@ export default function CompanyProfile() {
                     <TextField
                       label="First Name"
                       name="first_name"
+                      classLabel="first_name"
                       value={newHire.first_name}
                     />
                     <TextField
                       label="Last Name"
                       name="last_name"
+                      classLabel="last_name"
                       value={newHire.last_name}
                     />
                     <TextField
                       label="Email"
                       name="email"
+                      classLabel="email"
                       value={newHire.email}
                     />
 
@@ -492,7 +620,7 @@ export default function CompanyProfile() {
                         <button
                           className="delete-button"
                           name="_action"
-                          value="editNewHire">
+                          value="deleteNewHire">
                           Delete
                         </button>
                         <button
@@ -533,8 +661,7 @@ export default function CompanyProfile() {
                 className="center"
                 type="submit"
                 name="_action"
-                value="createNewhire"
-                onClick={closeHireModal}>
+                value="createNewhire">
                 Add New Hire
               </button>
             </Form>
