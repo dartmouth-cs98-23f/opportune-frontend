@@ -138,6 +138,15 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   } else if (_action === 'editNewHire') {
     try {
+      myJson["newhire"] = {
+        email: myJson["newemail"],
+        name: myJson["name"],
+        description: myJson["description"],
+        calendly_link: myJson["calendly_link"],
+        max_capacity: myJson["max_capacity"],
+        manager: myJson["manager"]
+      }
+
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-newhire',
         myJson,
@@ -172,6 +181,12 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   } else if (_action === 'editTeam') {
     try {
+      myJson["team"] = {
+        email: myJson["newemail"],
+        first_name: myJson["first_name"],
+        last_name: myJson["last_name"],
+      }
+
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
         myJson,
@@ -445,11 +460,16 @@ export default function CompanyProfile() {
                   </div>
                   <Modal open={editTeam} onClose={() => setEditTeam(false)} title={'Add a team'}>
                     <Form action="/company/profile" method="post">
+                      <textarea 
+                        name="email"
+                        classLabel="email"
+                        value={team.email}
+                        style={{display: 'none'}}/> 
                       <TextField
                         className="add-team"
                         label="Team Email"
-                        name="email"
-                        classLabel="email"
+                        name="newemail"
+                        classLabel="newemail"
                         value={team.email}
                       />
                       <TextField
@@ -514,11 +534,16 @@ export default function CompanyProfile() {
           </p>
           <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
             <Form action="/company/profile" method="post">
+              <textarea 
+                name="email"
+                classLabel="email"
+                value={team.email}
+                style={{display: 'none'}}/> 
               <TextField
                 className="add-team"
                 label="Team Email"
-                name="email"
-                classLabel="email"
+                name="newemail"
+                classLabel="newemail"
               />
               <TextField
                 className="add-team"
