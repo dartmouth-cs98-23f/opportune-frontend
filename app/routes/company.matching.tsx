@@ -298,9 +298,8 @@ export default function CompanyMatching() {
           }
       }
     }
-  }
 
-  
+
 
 
   const [url, updateUrl] = useState();
