@@ -140,11 +140,8 @@ export async function action({ request }: ActionFunctionArgs) {
     try {
       myJson["newhire"] = {
         email: myJson["newemail"],
-        name: myJson["name"],
-        description: myJson["description"],
-        calendly_link: myJson["calendly_link"],
-        max_capacity: myJson["max_capacity"],
-        manager: myJson["manager"]
+        first_name: myJson["first_name"],
+        last_name: myJson["last_name"],
       }
 
       const response = await axios.post(
@@ -181,11 +178,17 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   } else if (_action === 'editTeam') {
     try {
+      
       myJson["team"] = {
         email: myJson["newemail"],
-        first_name: myJson["first_name"],
-        last_name: myJson["last_name"],
+        name: myJson["name"],
+        description: myJson["description"],
+        calendly_link: myJson["calendly_link"],
+        max_capacity: myJson["max_capacity"],
+        manager: myJson["manager"]
       }
+
+      console.log(myJson);
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -332,28 +335,59 @@ export default function CompanyProfile() {
     setShowHireModal(false);
   };
 
+  // return the state to null before sending the server-side request
+  const handleCreateHireSubmit = async (event) => {
+    event.preventDefault();
+    setShowHireModal(false); // Update state before form submission
+  
+    const formData = new FormData(event.target); // Extract form data
+    const action = formData.get('_action');
+    formData.append('_action', "createNewhire");
+  
+    // Submit form data to the server
+    fetcher.submit(formData, {method: 'post', action: '/company/profile' });
+  };
+
+  const handleCreateTeamSubmit = async (event) => {
+    event.preventDefault();
+    setShowTeamModal(false); // Update state before form submission
+  
+    const formData = new FormData(event.target); // Extract form data
+    const action = formData.get('_action');
+    formData.append('_action', "createTeam");
+  
+    // Submit form data to the server
+    fetcher.submit(formData, {method: 'post', action: '/company/profile' });
+  };
+
   // const [isEditingName, setIsEditingName] = useState(null);
 
-  const [editHire, setEditHire] = useState(false);
-  const [editTeam, setEditTeam] = useState(false);
+  const [editHire, setEditHire] = useState(null);
+  const [editTeam, setEditTeam] = useState(null);
 
-  const handleSave = (e) => {
-    const value = e.target.value.split(' ');
-    const first_name = value[0];
-    const last_name = value[1];
-    const email = value[2];
-    fetcher.submit(
-      {
-        first_name,
-        last_name,
-        email,
-        _action: 'editNewHire',
-      },
-      {
-        method: 'patch',
-        action: 'newhire/profile',
-      },
-    );
+  // return the state to null before sending the server-side request
+  const handleEditHireSubmit = async (event) => {
+    event.preventDefault();
+    setEditHire(null); // Update state before form submission
+  
+    const formData = new FormData(event.target); // Extract form data
+    const action = formData.get('_action');
+    formData.append('_action', "editNewHire");
+  
+    // Submit form data to the server
+    fetcher.submit(formData, {method: 'post', action: '/company/profile' });
+  };
+
+  const handleEditTeamSubmit = async (event) => {
+    event.preventDefault();
+    setEditTeam(null); // Update state before form submission
+  
+    const formData = new FormData(event.target); // Extract form data
+    const action = formData.get('_action');
+    formData.append('_action', "editTeam");
+  
+    // Submit form data to the server
+    fetcher.submit(formData, {method: 'post', action: '/company/profile' });
   };
 
   const [date, setDate] = useState(new Date('02/12/2024'));
@@ -428,7 +462,7 @@ export default function CompanyProfile() {
           <div className="teams-list">
             {info?.teams.teams.map(
               (
-                team, // DISPLAY TEAMS HERE
+                team, i // DISPLAY TEAMS HERE
               ) => (
                 <div key={team.name} className="company-team">
                   <div>
@@ -454,76 +488,20 @@ export default function CompanyProfile() {
                     </button>
                     <button
                       className="edit-button"
-                      onClick={() => setEditTeam(true)}>
+                      onClick={() => setEditTeam(i)}>
                       Edit
                     </button>
-                  </div>
-                  <Modal open={editTeam} onClose={() => setEditTeam(false)} title={'Add a team'}>
                     <Form action="/company/profile" method="post">
-                      <textarea 
-                        name="email"
-                        classLabel="email"
-                        value={team.email}
-                        style={{display: 'none'}}/> 
-                      <TextField
-                        className="add-team"
-                        label="Team Email"
-                        name="newemail"
-                        classLabel="newemail"
-                        value={team.email}
-                      />
-                      <TextField
-                        className="add-team"
-                        label="Team Name"
-                        name="name"
-                        classLabel="name"
-                        value={team.name}
-                      />
-                      <TextField
-                        className="add-team"
-                        label="Description"
-                        name="description"
-                        classLabel="description"
-                        value={team.description}
-                      />
-                      <TextField
-                        className="add-team"
-                        label="Calendly Link"
-                        name="calendlyLink"
-                        classLabel="calendly_link"
-                        value={team.calendly_link}
-                      />
-                      <TextField
-                        className="add-team"
-                        label="Capacity"
-                        name="capacity"
-                        classLabel="max_capacity"
-                        value={team.max_capacity}
-                      />
-                      <TextField
-                        className="add-team"
-                        label="Manager"
-                        name="manager"
-                        classLabel="manager"
-                        value={team.manager}
-                      />
-                      <div className="buttons">
-                        <button
-                          className="delete-button"
-                          name="_action"
-                          value="deleteTeam">
-                          Delete
-                        </button>
-                        <button
-                          className="save-button"
-                          type="submit"
-                          name="_action"
-                          value="editTeam">
-                          Save
-                        </button>
-                      </div>
-                    </Form>
-                  </Modal>
+                    <button
+                      className="edit-button"
+                      type="submit"
+                      name="_action"
+                      value="deleteTeam">
+                      Delete
+                    </button>
+                    <input name="email" value={team.email} style={{display: 'none'}}/>
+                  </Form>
+                  </div>
                 </div>
                 
               ),
@@ -533,17 +511,12 @@ export default function CompanyProfile() {
             <button onClick={openTeamModal}>Add team</button>
           </p>
           <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
-            <Form action="/company/profile" method="post">
-              <textarea 
-                name="email"
-                classLabel="email"
-                value={team.email}
-                style={{display: 'none'}}/> 
+            <Form action="/company/profile" method="post" onSubmit={handleCreateTeamSubmit}>
               <TextField
                 className="add-team"
                 label="Team Email"
-                name="newemail"
-                classLabel="newemail"
+                name="email"
+                classLabel="email"
               />
               <TextField
                 className="add-team"
@@ -584,6 +557,71 @@ export default function CompanyProfile() {
               </button>
             </Form>
           </Modal>
+          <Modal
+            open={(editTeam != null)}
+            onClose={() => setEditTeam(null)}
+            title={'Edit New Hire'}>
+            {(editTeam != null) ? 
+              <Form action="/company/profile" method="post" onSubmit={handleEditTeamSubmit}>
+                <input 
+                  name="email"
+                  classLabel="email"
+                  value={info?.teams.teams[editTeam].email}
+                  style={{display: 'none'}}/> 
+                <TextField
+                  className="add-team"
+                  label="Team Email"
+                  name="newemail"
+                  classLabel="newemail"
+                  value={info?.teams.teams[editTeam].email}
+                />
+                <TextField
+                  className="add-team"
+                  label="Team Name"
+                  name="name"
+                  classLabel="name"
+                  value={info?.teams.teams[editTeam].name}
+                />
+                <TextField
+                  className="add-team"
+                  label="Description"
+                  name="description"
+                  classLabel="description"
+                  value={info?.teams.teams[editTeam].description}
+                />
+                <TextField
+                  className="add-team"
+                  label="Calendly Link"
+                  name="calendlyLink"
+                  classLabel="calendly_link"
+                  value={info?.teams.teams[editTeam].calendly_link}
+                />
+                <TextField
+                  className="add-team"
+                  label="Capacity"
+                  name="capacity"
+                  classLabel="max_capacity"
+                  value={info?.teams.teams[editTeam].max_capacity}
+                />
+                <TextField
+                  className="add-team"
+                  label="Manager"
+                  name="manager"
+                  classLabel="manager"
+                  value={info?.teams.teams[editTeam].manager}
+                />
+                <div className="buttons">
+                  <button
+                    className="save-button"
+                    type="submit"
+                    name="_action"
+                    value="editTeam">
+                    Save
+                  </button>
+                </div>
+              </Form>
+              : null }
+          </Modal>
         </div>
 
         <div className="new-hire-container">
@@ -591,7 +629,7 @@ export default function CompanyProfile() {
             <h2>New Hire</h2>
           </div>
           <div className="teams-list">
-            {info?.newHires?.new_hires.map((newHire) => (
+            {info?.newHires?.new_hires.map((newHire, i) => (
               <div key={newHire._id} className="company-team">
                 <h3>
                   {newHire.first_name} {newHire.last_name}
@@ -607,58 +645,21 @@ export default function CompanyProfile() {
                   </button>
                   <button
                     className="edit-button"
-                    onClick={() => setEditHire(true)}>
+                    type="button"
+                    onClick={() => setEditHire(i)}>
                     Edit
                   </button>
-                </div>
-                <Modal
-                  open={editHire}
-                  onClose={() => setEditHire(false)}
-                  title={'Edit New Hire'}>
                   <Form action="/company/profile" method="post">
-                    <TextField
-                      label="First Name"
-                      name="first_name"
-                      classLabel="first_name"
-                      value={newHire.first_name}
-                    />
-                    <TextField
-                      label="Last Name"
-                      name="last_name"
-                      classLabel="last_name"
-                      value={newHire.last_name}
-                    />
-                    <TextField
-                      label="Email"
-                      name="email"
-                      classLabel="email"
-                      value={newHire.email}
-                    />
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        width: '100%',
-                        justifyContent: 'flex-end',
-                      }}>
-                      <div className="buttons">
-                        <button
-                          className="delete-button"
-                          name="_action"
-                          value="deleteNewHire">
-                          Delete
-                        </button>
-                        <button
-                          className="save-button"
-                          type="submit"
-                          name="_action"
-                          value="editNewHire">
-                          Save
-                        </button>
-                      </div>
-                    </div>
+                    <button
+                      className="edit-button"
+                      type="submit"
+                      name="_action"
+                      value="deleteNewHire">
+                      Delete
+                    </button>
+                    <input name="email" value={newHire.email} style={{display: 'none'}}/>
                   </Form>
-                </Modal>
+                </div>
               </div>
             ))}
           </div>
@@ -666,10 +667,58 @@ export default function CompanyProfile() {
             <button onClick={openHireModal}>Add new hire</button>
           </p>
           <Modal
+            open={(editHire != null)}
+            onClose={() => setEditHire(null)}
+            title={'Edit New Hire'}>
+            {(editHire != null) ? 
+            <Form action="/company/profile" method="post" onSubmit={handleEditHireSubmit}>
+              <input 
+                name="email"
+                classLabel="email"
+                value={info?.newHires.new_hires[editHire].email}
+                style={{display: 'none'}}/>   
+              <TextField
+                label="First Name"
+                name="first_name"
+                classLabel="first_name"
+                value={info?.newHires.new_hires[editHire].first_name}
+              />
+              <TextField
+                label="Last Name"
+                name="last_name"
+                classLabel="last_name"
+                value={info?.newHires.new_hires[editHire].last_name}
+              />
+              <TextField
+                label="Email"
+                name="newemail"
+                classLabel="newemail"
+                value={info?.newHires.new_hires[editHire].email}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  justifyContent: 'flex-end',
+                }}>
+                <div className="buttons">
+                  <button
+                    className="save-button"
+                    type="submit"
+                    name="_action"
+                    value="editNewHire">
+                    Save
+                  </button>
+                </div>
+              </div>
+            </Form> : null}
+          </Modal>
+          <Modal
             open={showHireModal}
             onClose={closeHireModal}
             title={'Add new hire'}>
-            <Form action="/company/profile" method="post">
+            <Form action="/company/profile" method="post" onSubmit={handleCreateHireSubmit}>
               <TextField
                 label="First Name"
                 name="firstName"
