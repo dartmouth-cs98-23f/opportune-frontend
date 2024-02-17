@@ -182,7 +182,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
     }
 
-
     if (
       newHireRes.status === 200 &&
       teamsRes.status === 200 &&
@@ -213,6 +212,7 @@ export default function CompanyMatching() {
   const info = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
 
+  // accumulate maps of all of the newhires and teams and ensure all surveys are complete
   var allSurveysCompleted = true;
   var teamIdMap = {};
   var nhIdMap = {};
@@ -239,6 +239,69 @@ export default function CompanyMatching() {
       allSurveysCompleted = false;
     }
   }
+
+  // format diversity data
+  //const diversity = info?.diversity;
+  const diversity = {
+      diversity_after: {
+          age: {
+              ranges: {
+                  middle: 0.6,
+                  older: 0,
+                  young: 0.4
+              },
+              stddev: 8.58
+          },
+          race: {
+              Asian: 0.4,
+              Black: 0.2,
+              "Hispanic/Latino": 0.2,
+              White: 0.2
+          },
+          score: {
+              centroid: [
+                  0.9, 0.2, 0.2, 0.2, 0.4, 0, 0, 0, 0.4, 0.4, 0
+              ],
+              score: 0.65,
+              std_dev: 1.13
+          },
+          sex: {
+              Female: 0.4,
+              Male: 0.4,
+              Nonbinary: 0.2
+          }
+      },
+      diversity_before: 
+      {
+          age: {
+              ranges: {
+                  middle: 0.67,
+                  older: 0,
+                  young: 0.33
+              },
+              stddev: 9.42
+          },
+          race: {
+              Asian: 0.67,
+              White: 0.33
+          },
+          score: {
+              centroid: [
+                  0.96, 0.3333333333333333, 0, 0, 0.6666666666666666, 0, 0, 0, 0.6666666666666666, 0.3333333333333333, 0
+              ],
+              score: 0.48,
+              std_dev: 0.98
+          },
+          sex: {
+              Female: 0.33,
+              Male: 0.67
+          }
+      }
+    }
+  }
+
+  
+
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
