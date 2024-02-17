@@ -163,6 +163,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     );
 
+    // load team diversity information
+    var diversity = {};
+    for (var team of teamsRes.data.teams) {
+      const diversityRes = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/diversity-metrics',
+        {email: team.email},
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if(diversityRes.status === 200) {
+        diversity[team.email] = diversityRes.data;
+      }
+    }
+
+
     if (
       newHireRes.status === 200 &&
       teamsRes.status === 200 &&
@@ -171,7 +191,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       const newHires = newHireRes.data;
       const teams = teamsRes.data;
       const data = companyRes.data;
-      return json({ data, newHires, teams });
+      return json({ data, newHires, teams, diversity });
     }
   } catch (error) {
     console.log(error);
