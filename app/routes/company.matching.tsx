@@ -17,7 +17,83 @@ import {
 import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
 import { Checkbox } from '@mui/material';
+import CustomPieChart from '~/components/CustomPieChart';
 import React from 'react';
+import Modal from '~/components/Modal';
+
+function getDiversityMetrics(diversity) {
+  const diversityBefore = diversity["diversity_before"];
+  const diversityAfter = diversity["diversity_after"];
+
+  // age before
+  var ageBefore = [];
+  var i = 0;
+  const ageRangesBefore = diversityBefore["age"]["ranges"];
+  for(var key in ageRangesBefore) {
+    ageBefore.push({x: i, y: ageRangesBefore[key], label: key});
+    i++;
+  }
+
+  // age after
+  var ageAfter = [];
+  i = 0;
+  const ageRangesAfter = diversityAfter["age"]["ranges"];
+  for(var key in ageRangesAfter) {
+    ageAfter.push({x: i, y: ageRangesAfter[key], label: key});
+    i++;
+  }
+
+  // race before
+  var raceBefore = [];
+  i = 0;
+  const raceDistBefore = diversityBefore["race"];
+  for(var key in raceDistBefore) {
+    raceBefore.push({x: i, y: raceDistBefore[key], label: key});
+    i++;
+  }
+
+  // race after
+  var raceAfter = [];
+  i = 0;
+  const raceDistAfter = diversityAfter["race"];
+  for(var key in raceDistAfter) {
+    raceAfter.push({x: i, y: raceDistAfter[key], label: key});
+    i++;
+  }
+
+  // sex before
+  var sexBefore = [];
+  i = 0;
+  const sexDistBefore = diversityBefore["sex"];
+  for(var key in sexDistBefore) {
+    sexBefore.push({x: i, y: sexDistBefore[key], label: key});
+    i++;
+  }
+
+  // sex after
+  var sexAfter = [];
+  i = 0;
+  const sexDistAfter = diversityAfter["sex"];
+  for(var key in sexDistAfter) {
+    sexAfter.push({x: i, y: sexDistAfter[key], label: key});
+    i++;
+  }
+
+  // diversity scores
+  var diversityScoreBefore = diversity["diversity_before"]["score"]["score"];
+  var diversityScoreAfter = diversity["diversity_after"]["score"]["score"];
+
+  return {
+    diversityScoreBefore,
+    diversityScoreAfter,
+    ageBefore,
+    ageAfter,
+    raceBefore,
+    raceAfter,
+    sexBefore,
+    sexAfter
+  }
+}
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -240,6 +316,8 @@ export default function CompanyMatching() {
     }
   }
 
+  const [diversityModal, setDiversityModal] = useState(false);
+
   // format diversity data
   //const diversity = info?.diversity;
   const diversity = {
@@ -298,9 +376,6 @@ export default function CompanyMatching() {
           }
       }
     }
-
-
-
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
@@ -421,8 +496,70 @@ export default function CompanyMatching() {
                     </p>
                   ))}
                 </div>
+                <button onClick={() => setDiversityModal(true)}>Diversity Metrics</button>
               </Collapsible>
             ))}
+            <Modal
+            open={diversityModal}
+            onClose={() => setDiversityModal(false)}
+            title={'Diversity'}>
+                <div>
+                  <p>Diversity Score</p>
+                  <div>
+                    <p>5</p>
+                    <p>6</p>
+                  </div>
+
+                  <p>Age Metrics</p>
+                  <div>
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                  </div>
+
+                  <p>Race Metrics</p>
+                  <div>
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                  </div>
+                  
+                  <p>Sex Metrics</p>
+                  <div>
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                    <CustomPieChart
+                      data={[
+                        {x: 0, y: 0.4, label: "a"},
+                        {x: 1, y: 0.6, label: "b"}
+                        ]}
+                    />
+                  </div>
+                    
+                </div>
+            </Modal>
           </div>
         </div>
 
