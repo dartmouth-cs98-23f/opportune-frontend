@@ -89,7 +89,7 @@ export async function action({request}: ActionFunctionArgs) {
 	if (_action === "ToggleComplete") {
 		let myJson = { 
 			_id: body.get("_id"),
-			complete: false
+			complete: !(body.get("complete") === "true")
 	 	};
 		console.log("ToggleComplete myJSON: ", myJson)
 
@@ -100,7 +100,6 @@ export async function action({request}: ActionFunctionArgs) {
 				"Content-Type": "application/json",
 			},
 		})
-		console.log("ToggleComplete status: ", response.status)
 	}
 
 	if (_action === "LogOut") {
@@ -231,6 +230,12 @@ export default function Project() {
 		setCurrProj(event.target.selectedIndex);
 	}
 
+	function getProjName(proj_id:string) {
+		const project = projInfo.find((p) => p._id === proj_id);
+		const projName = project ? project.project.name : null;
+		return projName
+	}
+
 	function genDateArray(startDate:Date, endDate:Date, numElem=5) {
 		const dateArray = [];
 		const timeDifference = endDate.getTime() - startDate.getTime();
@@ -317,8 +322,8 @@ export default function Project() {
 							{taskList.filter((task) => !task.complete).map((task, i) => {
 								return <Form method="post" action="/project"> 
 								         <Checkbox task={task.name} classLabel="check-field"
-								                 checked={task.complete} id={task._id} key={task._id} 
-												 proj={task.project_id} />
+								                 checked={task.complete} task_id={task._id} key={task._id} 
+												 proj_name={getProjName(task.proj_id)} />
 										 <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
 										 <input name="_id" type="hidden" value={task._id}/>
 										 <input name="complete" type="hidden" value={task.complete}/>
@@ -330,8 +335,8 @@ export default function Project() {
 							{taskList.filter((task) => task.complete).map((task, i) => {
 								return <Form method="post" action="/project"> 
 									      <Checkbox task={task.name} classLabel="check-field"
-									             checked={task.complete} id={task._id} key={task._id}
-												 proj={task.project_id} />
+									             checked={task.complete} task_id={task._id} key={task._id}
+												 proj_name={getProjName(task.proj_id)} />
 										  <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
 										  <input name="_id" type="hidden" value={task._id}/>
 										  <input name="complete" type="hidden" value={task.complete}/>
