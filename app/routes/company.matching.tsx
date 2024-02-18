@@ -28,60 +28,89 @@ function getDiversityMetrics(diversity) {
   // age before
   var ageBefore = [];
   var i = 0;
-  const ageRangesBefore = diversityBefore["age"]["ranges"];
-  for(var key in ageRangesBefore) {
-    ageBefore.push({x: i, y: ageRangesBefore[key], label: key});
-    i++;
+  if(diversityBefore["age"]) {
+    const ageRangesBefore = diversityBefore["age"]["ranges"];
+    for(var key in ageRangesBefore) {
+      ageBefore.push({x: i, y: ageRangesBefore[key], label: key});
+      i++;
+    }
+  } else {
+    ageBefore = [{x: 0, y: 1, label: "No Data Available."}];
   }
+  
 
   // age after
   var ageAfter = [];
   i = 0;
-  const ageRangesAfter = diversityAfter["age"]["ranges"];
-  for(var key in ageRangesAfter) {
-    ageAfter.push({x: i, y: ageRangesAfter[key], label: key});
-    i++;
+  if(diversityAfter["age"]) {
+    const ageRangesAfter = diversityAfter["age"]["ranges"];
+    for(var key in ageRangesAfter) {
+      ageAfter.push({x: i, y: ageRangesAfter[key], label: key});
+      i++;
+    }
+  } else {
+    ageAfter = [{x: 0, y: 1, label: "No Data Available."}]; 
   }
+
 
   // race before
   var raceBefore = [];
   i = 0;
   const raceDistBefore = diversityBefore["race"];
-  for(var key in raceDistBefore) {
-    raceBefore.push({x: i, y: raceDistBefore[key], label: key});
-    i++;
+  if(raceDistBefore) {
+    for(var key in raceDistBefore) {
+      raceBefore.push({x: i, y: raceDistBefore[key], label: key});
+      i++;
+    }
+  } else {
+    raceBefore = [{x: 0, y: 1, label: "No Data Available."}];
   }
 
   // race after
   var raceAfter = [];
   i = 0;
   const raceDistAfter = diversityAfter["race"];
-  for(var key in raceDistAfter) {
-    raceAfter.push({x: i, y: raceDistAfter[key], label: key});
-    i++;
+  if(raceDistAfter) {
+    for(var key in raceDistAfter) {
+      raceAfter.push({x: i, y: raceDistAfter[key], label: key});
+      i++;
+    }
+  } else {
+    raceAfter = [{x: 0, y: 1, label: "No Data Available."}];
   }
 
   // sex before
   var sexBefore = [];
   i = 0;
   const sexDistBefore = diversityBefore["sex"];
-  for(var key in sexDistBefore) {
-    sexBefore.push({x: i, y: sexDistBefore[key], label: key});
-    i++;
+  if(sexDistBefore) {
+    for(var key in sexDistBefore) {
+      sexBefore.push({x: i, y: sexDistBefore[key], label: key});
+      i++;
+    }
+  } else {
+    sexBefore = [{x: 0, y: 1, label: "No Data Available."}];
   }
 
   // sex after
   var sexAfter = [];
   i = 0;
   const sexDistAfter = diversityAfter["sex"];
-  for(var key in sexDistAfter) {
-    sexAfter.push({x: i, y: sexDistAfter[key], label: key});
-    i++;
+  if(sexDistAfter) {
+    for(var key in sexDistAfter) {
+      sexAfter.push({x: i, y: sexDistAfter[key], label: key});
+      i++;
+    }
+  } else {
+    sexAfter = [{x: 0, y: 1, label: "No Data Available."}];
   }
+  
 
   // diversity scores
-  var diversityScoreBefore = diversity["diversity_before"]["score"]["score"];
-  var diversityScoreAfter = diversity["diversity_after"]["score"]["score"];
+  var diversityScoreBefore = Math.floor(diversity["diversity_before"]["score"]["score"] * 100);
+  var diversityScoreAfter = Math.floor(diversity["diversity_after"]["score"]["score"] * 100);
+  
+  var change = diversityScoreAfter / diversityScoreBefore;
 
   return {
     diversityScoreBefore,
@@ -91,7 +120,8 @@ function getDiversityMetrics(diversity) {
     raceBefore,
     raceAfter,
     sexBefore,
-    sexAfter
+    sexAfter,
+    change
   }
 }
 
@@ -240,7 +270,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     );
 
     // load team diversity information
-    var diversity = {};
+    var diversity = [];
     for (var team of teamsRes.data.teams) {
       const diversityRes = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/diversity-metrics',
@@ -254,7 +284,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       );
 
       if(diversityRes.status === 200) {
-        diversity[team.email] = diversityRes.data;
+        diversity.push(diversityRes.data);
       }
     }
 
@@ -316,11 +346,11 @@ export default function CompanyMatching() {
     }
   }
 
-  const [diversityModal, setDiversityModal] = useState(false);
+  const [diversityModal, setDiversityModal] = useState(null);
 
   // format diversity data
-  //const diversity = info?.diversity;
-  const diversity = {
+  const diversity = info?.diversity;
+  /*const diversity = [{
       diversity_after: {
           age: {
               ranges: {
@@ -375,9 +405,13 @@ export default function CompanyMatching() {
               Male: 0.67
           }
       }
-    }
+    }] */
 
-  const parsedDiversity = getDiversityMetrics(diversity);
+  var parsedDiversity = []
+  for(var i = 0; i < diversity.length; i++) {
+    const metrics = diversity[i];
+    parsedDiversity.push(getDiversityMetrics(metrics));
+  }
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
@@ -480,7 +514,7 @@ export default function CompanyMatching() {
             <h2>Teams</h2>
           </div>
           <div className="teams-list">
-            {info?.teams.teams.map((team) => (
+            {info?.teams.teams.map((team, i) => (
               <Collapsible
                 trigger={
                   <div className="company-team">
@@ -498,63 +532,71 @@ export default function CompanyMatching() {
                     </p>
                   ))}
                 </div>
-                <button onClick={() => setDiversityModal(true)}>Diversity Metrics</button>
+                <button onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
               </Collapsible>
             ))}
             <Modal
-            open={diversityModal}
-            onClose={() => setDiversityModal(false)}
-            title={'Diversity'}>
-                <div className='scrollable'>
-                  <div className='stat-box'>
-                    <p className='column'>{parsedDiversity.diversityScoreBefore}</p>
-                    <p className='column'>Diversity Score</p>
-                    <p className='column'>{parsedDiversity.diversityScoreAfter}</p>
-                  </div>
-
-                  <div className='stat-box'> 
-                    <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.ageBefore}
-                    />
-                    </p>
-                    <p className='column'>Age Metrics</p>
-                    <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.ageAfter}
-                    />
-                    </p>
-                  </div>
-
-                  <div className='stat-box'>
-                  <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.raceBefore}
-                    />
-                    </p>
-                    <p className='column'>Race Metrics</p>
-                    <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.raceAfter}
-                    />
-                    </p>
-                  </div>
-                  
-                  <div className='stat-box'>
-                  <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.sexBefore}
-                    />
-                    </p>
-                    <p className='column'>Gender Identity Metrics</p>
-                    <p className='column'>
-                    <CustomPieChart
-                      data={parsedDiversity.sexAfter}
-                    />
-                    </p>
-                  </div>
-                    
+            open={diversityModal != null}
+            onClose={() => setDiversityModal(null)}
+            title={(diversityModal != null) ? 'Diversity: ' + info.teams.teams[diversityModal].name : 'Diversity' }>
+              {diversityModal != null ? 
+              <div className='scrollable'>
+                <div className='stat-box'>
+                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreBefore}</p>
+                  <p className='column'>Diversity Score</p>
+                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreAfter}</p>
                 </div>
+
+                <div className='stat-box'> 
+                  <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].ageBefore}
+                  />
+                  </p>
+                  <p className='column'>Age Metrics</p>
+                  <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].ageAfter}
+                  />
+                  </p>
+                </div>
+
+                <div className='stat-box'>
+                <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].raceBefore}
+                  />
+                  </p>
+                  <p className='column'>Race Metrics</p>
+                  <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].raceAfter}
+                  />
+                  </p>
+                </div>
+                
+                <div className='stat-box'>
+                <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].sexBefore}
+                  />
+                  </p>
+                  <p className='column'>Gender Identity Metrics</p>
+                  <p className='column'>
+                  <CustomPieChart
+                    data={parsedDiversity[diversityModal].sexAfter}
+                  />
+                  </p>
+                </div>
+
+                {(diversityModal != null && diversityModal > 0) ? <button onClick={() => setDiversityModal(diversityModal - 1)}>Previous</button>: null} 
+                {(diversityModal != null && diversityModal < info.teams.teams.length - 1) ? <button onClick={() => setDiversityModal(diversityModal + 1)}>Next</button> : null} 
+                  
+              </div>
+            :
+            null
+            }
+                
             </Modal>
           </div>
         </div>

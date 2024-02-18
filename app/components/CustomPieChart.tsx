@@ -4,7 +4,7 @@ function CustomPieChart({ data }) {
     return (
         <VictoryPie
             data={data}
-            radius={({ datum }) => 30 + datum.y * 150}
+            radius={({ datum }) => 30 + datum.y * 100}
             innerRadius={30}
             cornerRadius={5}
             padAngle={({ datum }) => 5 }
