@@ -324,8 +324,8 @@ export default function CompanyMatching() {
       diversity_after: {
           age: {
               ranges: {
-                  middle: 0.6,
-                  older: 0,
+                  middle: 0.4,
+                  older: 0.2,
                   young: 0.4
               },
               stddev: 8.58
@@ -353,8 +353,8 @@ export default function CompanyMatching() {
       {
           age: {
               ranges: {
-                  middle: 0.67,
-                  older: 0,
+                  middle: 0.5,
+                  older: 0.17,
                   young: 0.33
               },
               stddev: 9.42
@@ -376,6 +376,8 @@ export default function CompanyMatching() {
           }
       }
     }
+
+  const parsedDiversity = getDiversityMetrics(diversity);
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
@@ -503,59 +505,53 @@ export default function CompanyMatching() {
             open={diversityModal}
             onClose={() => setDiversityModal(false)}
             title={'Diversity'}>
-                <div>
-                  <p>Diversity Score</p>
-                  <div>
-                    <p>5</p>
-                    <p>6</p>
+                <div className='scrollable'>
+                  <div className='stat-box'>
+                    <p className='column'>{parsedDiversity.diversityScoreBefore}</p>
+                    <p className='column'>Diversity Score</p>
+                    <p className='column'>{parsedDiversity.diversityScoreAfter}</p>
                   </div>
 
-                  <p>Age Metrics</p>
-                  <div>
+                  <div className='stat-box'> 
+                    <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.ageBefore}
                     />
+                    </p>
+                    <p className='column'>Age Metrics</p>
+                    <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.ageAfter}
                     />
+                    </p>
                   </div>
 
-                  <p>Race Metrics</p>
-                  <div>
+                  <div className='stat-box'>
+                  <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.raceBefore}
                     />
+                    </p>
+                    <p className='column'>Race Metrics</p>
+                    <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.raceAfter}
                     />
+                    </p>
                   </div>
                   
-                  <p>Sex Metrics</p>
-                  <div>
+                  <div className='stat-box'>
+                  <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.sexBefore}
                     />
+                    </p>
+                    <p className='column'>Gender Identity Metrics</p>
+                    <p className='column'>
                     <CustomPieChart
-                      data={[
-                        {x: 0, y: 0.4, label: "a"},
-                        {x: 1, y: 0.6, label: "b"}
-                        ]}
+                      data={parsedDiversity.sexAfter}
                     />
+                    </p>
                   </div>
                     
                 </div>

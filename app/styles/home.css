@@ -1205,3 +1205,23 @@ input[type='file'] {
   margin: 0 2rem;
   flex-direction: column;
 }
+
+.column {
+  float: left;
+  width: 33%;
+  margin: auto;
+  text-align: center; 
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: 90%;
+}
