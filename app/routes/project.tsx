@@ -1,57 +1,247 @@
-import { Link } from '@remix-run/react';
+import { Form, Link, useLoaderData, useFetcher } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
 import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
+import { json, redirect } from '@remix-run/node';
+import { destroySession, getSession } from '~/utils/sessions';
+import axios from 'axios';
 
 const matched = true;
+const createProjMode = false;
 
-const projList = [{name: "Authorization", start: 1, end: 4},
-				  {name: "UI/UX", start: 4, end: 5}]
-const taskList = [{id: 1, name: "Create User Profile", description: "This is task 1.", complete: false, project: "Authorization"}, 
-			      {id: 2, name: "Create Shop Profile", description: "This is task 2.", complete: false, project: "Authorization"},
-			      {id: 3, name: "Link Account Password Flag", description: "This is task 3.", complete: false, project: "Authorization"},
-				  {id: 4, name: "Pick Logo Colors", description: "This is task 4", complete: false, project: "UI/UX"}]
+export async function action({request}: ActionFunctionArgs) {
+	const body = await request.formData();
+	const _action = body.get("_action");
+
+	const session = await getSession(
+		request.headers.get("Cookie")
+	);
+
+	console.log("Auth: ", session.get("auth"));
+	if (!session.get("auth")) {
+		return redirect("/login")
+	}
+
+	const projRes = await axios.get(process.env.BACKEND_URL + '/api/v1/pm/newhire-view', {
+		params: {
+		  min_date: "2023-12-01",
+		  max_date: "2024-02-01"
+		},
+		headers: {
+		  "Authorization": session.get("auth"),
+		  "Content-Type": "application/json"
+	}}); 
+
+	if (_action === "AddTask") {
+		// construct subtask post request params
+		let myJson = {
+			name: body.get("description"),
+			project_id: projRes.data[body.get("projIdx")].project._id,
+			start_date: projRes.data[body.get("projIdx")].project.start_date,
+			end_date: projRes.data[body.get("projIdx")].project.end_date,
+		};
+		console.log("AddTask myJson: ", myJson)
+		
+		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+			headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+			},
+		})
+	}
+
+	if (_action === "AddUpdate") {
+		const myJson = {};
+		let update = "";
+		for (const [key, value] of body.entries()) {
+			if (key === "description") update = value;
+			if (key === "_id") myJson["_id"] = value;
+			if (key === "updates") {
+				myJson[key] = JSON.parse(value);
+				myJson[key].push(update);
+			}
+		}
+		console.log("AddUpdate myJson: ", myJson)
+
+		const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+			headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+			},
+		})
+	}
+
+	if (_action === "DeleteTask") {
+		let myJson = { _id: body.get("_id") };
+		console.log("DeleteTask myJSON: ", myJson)
+
+		// delete subtask given id
+		const response = await axios.delete(process.env.BACKEND_URL + '/api/v1/pm/subtask', {
+			headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+			}, data: { _id: myJson["_id"] }
+		})
+	}
+
+	if (_action === "ToggleComplete") {
+		let myJson = { 
+			_id: body.get("_id"),
+			complete: false
+	 	};
+		console.log("ToggleComplete myJSON: ", myJson)
+
+		// toggle task completion status
+		const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+			headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+			},
+		})
+		console.log("ToggleComplete status: ", response.status)
+	}
+
+	if (_action === "LogOut") {
+		return redirect("/login", {
+			headers: {
+				"Set-Cookie": await destroySession(session),
+			},
+		});
+	}
+
+	return redirect("/project");
+}
+
+
+export async function loader({request}: LoaderFunctionArgs) {
+	try {
+		const session = await getSession(
+			request.headers.get("Cookie")
+		);
+
+		console.log("Auth: ", session.get("auth"));
+		if (!session.get("auth")) {
+			return redirect("/login")
+		}
+
+		const profile = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+		}});
+
+		console.log("Project user profile: ", profile.data.new_hire._id)
+		console.log("Project Session Auth: ", session.get("auth"));
+
+		if (createProjMode) {
+			const createProjs = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/project', {
+				"name": "Authorization",
+				"description": "The project where each task feels like arguing over a petty color scheme.",
+				"start_date": "2023-12-01",
+				"end_date": "2024-01-16",
+				"assigned_team_id": "e9f01044-0d52-465d-b1fc-a26c90c79211",
+				"assigned_newhire_ids": [profile.data.new_hire._id]
+			}, {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+
+			console.log("Created project: ", createProjs.data)
+		}
+
+		const projRes = await axios.get(process.env.BACKEND_URL + '/api/v1/pm/newhire-view', {
+			params: {
+			  min_date: "2023-12-01",
+			  max_date: "2024-02-01"
+			},
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json"
+		}});
+
+		console.log("Loader projres: ", projRes.config.params.min_date);
+		return {
+			projInfo: projRes.data,
+			dates: projRes.config.params
+		};
+	
+	} catch (error) {
+		console.log("Error in project loader: ", error);
+		return null;
+	}
+};
+
 
 export default function Project() {
+	// load project info + start/end dates
+	const { projInfo, dates } = useLoaderData<typeof loader>();
+	
+	// build upcoming task lists
+	const taskList = [];
+	for (var i = 0; i < projInfo.length; ++i) {
+		if (projInfo[i].subtasks.length > 0) {
+			for (var j = 0; j < projInfo[i].subtasks.length; ++j) {
+				taskList.push(projInfo[i].subtasks[j]);
+			}
+	  	}
+	}
+
+	console.log("Start - Loader ProjInfo: ", projInfo, dates);
+	console.log("Start - TaskList: ", taskList);
+
+	// states
 	const [isEditing, setEditing] = useState(false);
-	const [tasks, setTasks] = useState(taskList);
 	const [task, setTask] = useState('');
+	const [currProj, setCurrProj] = useState(0);
+	console.log("currProj: ", currProj);
 
-	const date = new Date();
-	const options = { month: 'long', day: 'numeric', year: 'numeric' };
-	const formattedDate = date.toLocaleDateString('en-US', options);
+	// create dates
+	const createDate = (date: Date|string) => {
+		const options = { month: '2-digit', day: '2-digit', year: '2-digit' };
+		const formattedDate = new Date(date).toLocaleDateString('en-US', options);
+		return formattedDate;
+	}
 
+	const today = createDate(new Date());
+	const minDate = new Date(dates.min_date);
+	const maxDate = new Date(dates.max_date);
+
+	// todo and task bubble functions
 	function handleEditClick() {
 		setEditing(!isEditing);
 	}
 
-	function handleTaskAdd(task: {id: number, name:string, complete:boolean, project:string}) {
-		if (task.name) {
-			setTasks([...tasks, task]);
-		setTask('');
-		setEditing(!isEditing);
-	}}
-
-	function updateTask(task:string) {
-		setTask(task);
-	}
-
-	function handleToggle(taskId: number) {
+	/* function handleToggle(taskId: number) {
 		console.log(tasks);
 		const modTasks = tasks.map((task) => 
 			task.id === taskId ? { ...task, complete: !task.complete } : task
 		)
 		setTasks(modTasks);
 		console.log(tasks);
-	};
+	}; */
 
-	function handleRemove(taskId: number) {
-		console.log(tasks);
-		const modTasks = tasks.filter((task) => task.id !== taskId)
-		setTasks(modTasks);
-		console.log(tasks);
+	function updateTask(task:string) {
+		setTask(task);
+	}
+
+	function updateProj(event:any) {
+		setCurrProj(event.target.selectedIndex);
+	}
+
+	function genDateArray(startDate:Date, endDate:Date, numElem=5) {
+		const dateArray = [];
+		const timeDifference = endDate.getTime() - startDate.getTime();
+		const interval = timeDifference / (numElem - 1);
+	  
+		for (let i = 0; i < numElem; i++) {
+		  const newDate = new Date(startDate.getTime() + i * interval);
+		  dateArray.push(createDate(newDate));
+		}
+
+		return dateArray;
 	}
 
 	if (!matched) {
@@ -86,7 +276,7 @@ export default function Project() {
 					<h3> Timeline: Stephen 
 						<div id="date-bar">
 							<button id="time-scale"> Today ↓</button>
-							<button id="curr-date"> {formattedDate} </button>
+							<button id="curr-date"> {today} </button>
 						</div>
 					</h3>
 				</div>
@@ -96,61 +286,101 @@ export default function Project() {
 							Stephen
 						</div>
 						<div className="team-box task-list">
-							<h3> Upcoming Tasks ({tasks.filter((task) => !task.complete).length}) 
+							<h3> Upcoming Tasks ({taskList.filter((task) => !task.complete).length}) 
 								{!isEditing ? <button type="button" className="edit" 
 									onClick={handleEditClick}> + </button> : null}
 							</h3>
+
+							<Form action="/project" method="post" onSubmit={() => handleEditClick()}>
 							{!isEditing ? null :<div>  
 								<textarea name="description" id="task-input" 
 								onChange={(e) => updateTask(e.target.value)}/>
+
+								Project: <select name="currProj" id="currProj" 
+							          className="proj-dropdown" defaultValue={currProj} 
+									  onChange={(e) => updateProj(e)}>
+								      <input name="projIdx" type="hidden" defaultValue={currProj}/>
+								
+								{projInfo.map(((proj: {project: any, subtasks: []}, i:number) => {
+									return <option value={proj.project.name}> {proj.project.name} </option>
+								}))} </select>
 							</div>}
 							{isEditing ? <div>
-								<button className="edit" onClick={() => handleTaskAdd(
-								  {id: tasks.length + 1, name: task, complete: false, project: "Authorization"})}>
+								<button className="edit" name="_action" value="AddTask">
 								  Confirm
 								</button>
-								<button className="edit" onClick={() => handleEditClick()}>
-									Cancel
+								<button className="edit" onClick={handleEditClick}>
+								  Cancel
 								</button> </div>: null}
-							{tasks.filter((task) => !task.complete).map((task, i) => {
-								return <Checkbox task={task.name} classLabel="check-field"
-								                 checked={task.complete} onToggle={handleToggle} onRemove={handleRemove}
-												 id={task.id} />
+							</Form>
+
+							{taskList.filter((task) => !task.complete).map((task, i) => {
+								return <Form method="post" action="/project"> 
+								         <Checkbox task={task.name} classLabel="check-field"
+								                 checked={task.complete} id={task._id} key={task._id} 
+												 proj={task.project_id} />
+										 <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
+										 <input name="_id" type="hidden" value={task._id}/>
+										 <input name="complete" type="hidden" value={task.complete}/>
+									   </Form>
 							})}
 						</div>
 						<div className="team-box task-list">
-							<h3> Completed Tasks ({tasks.filter((task) => task.complete).length}) </h3>
-							{tasks.filter((task) => task.complete).map((task, i) => {
-								return <Checkbox task={task.name} classLabel="check-field"
-									             checked={task.complete} onToggle={handleToggle} onRemove={handleRemove}
-												 id={task.id} key={task.id}/>
+							<h3> Completed Tasks ({taskList.filter((task) => task.complete).length}) </h3>
+							{taskList.filter((task) => task.complete).map((task, i) => {
+								return <Form method="post" action="/project"> 
+									      <Checkbox task={task.name} classLabel="check-field"
+									             checked={task.complete} id={task._id} key={task._id}
+												 proj={task.project_id} />
+										  <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
+										  <input name="_id" type="hidden" value={task._id}/>
+										  <input name="complete" type="hidden" value={task.complete}/>
+									   </Form>
 							})}
 						</div>
 						<div className="div-line"></div>
 					</div>
 					<div id="timeline">
 						<div className="horiz-flex-container time">
-							<div className="time-markers"> 1 </div>
-							<div className="time-markers"> 2 </div>
-							<div className="time-markers"> 3 </div>
-							<div className="time-markers"> 4 </div>
-							<div className="time-markers"> 5 </div>
+							{genDateArray(minDate, maxDate).map((time:string, i) => (
+								<div key={i} className="time-markers">{ createDate(time) }</div>
+							))}
+						</div>
+						<div className="horiz-flex-container time">
+							{genDateArray(minDate, maxDate).map((time:string, i) => (
+								<div key={i} className="time-markers">{ "-" }</div>
+							))}
 						</div>
 						<div className="flex-container time">
-							{projList.map((proj, i) => {
-								return <div>
+							{projInfo.map((proj: {project: any, subtasks: []}, i:number) => {
+								return <div key={i}>
 									<TaskBubble classLabel={'team-box task-list proj'}
-									start={proj.start} end={proj.end} task={proj.name} descrip={""}
-									progress={(tasks.filter((task) => 
-									          (task.project === proj.name) && task.complete).length) / 
-											  (tasks.filter((task) => (task.project === proj.name)).length)} date={formattedDate} 
-											  updates={[]} />
-									{tasks.filter((task) => task.project === proj.name).map((task, i) => {
-										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
-										        descrip={task.description} start={proj.start} end={proj.end} task={task.name} 
-												progress={-1} date={formattedDate} updates={[]}/>
+									    start={new Date(proj.project.start_date)} 
+										end={new Date(proj.project.end_date)}  
+										minDate={minDate}
+										maxDate={maxDate}
+										task={proj.project.name} descrip={""}
+										progress={proj.subtasks.length !== 0 ? (taskList.filter((task) => 
+									          (task.project_id === proj.project._id) && task.complete).length) / 
+											  (taskList.filter((task) => (task.project_id === proj.project._id)).length) : 0} 
+										taskID={proj.project._id}
+										date={today} 
+										updates={[]} />
+									
+									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
+										return <Form action="/project" method="post">
+											<TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
+										        descrip={task.description} 
+												start={new Date(proj.project.start_date)}  
+												end={new Date(proj.project.end_date)} 
+												minDate={minDate}
+												maxDate={maxDate}
+												task={task.name} 
+												taskID={task._id}
+												progress={-1} date={today} updates={task.updates}/>
+											</Form>
 									})}
-								</div>
+								</div> 
 							})}
 						</div>
 					</div>
@@ -159,4 +389,3 @@ export default function Project() {
 		)
 	}
 }
-

@@ -737,6 +737,10 @@ input[type="checkbox"] {
 	transition: 0.3s;
 }
 
+.proj-dropdown {
+	margin: 10px;
+}
+
 /* LOGO */
 .opportune-logo-small {
 	display: inline;
