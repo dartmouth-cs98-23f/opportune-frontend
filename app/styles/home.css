@@ -1151,6 +1151,7 @@ input[type='file'] {
   font-weight: 500;
   cursor: pointer;
   text-align: right;
+  float: right;
   margin-top: 1rem;
 }
 
