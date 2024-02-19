@@ -5,6 +5,7 @@ import axios from 'axios';
 import { destroySession, getSession } from '../utils/sessions';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import PlainText from '~/components/survey_qs/PlainText';
+import { parseDatePlus1, parseDate, formatDate } from '~/lib/date';
 
 // ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
@@ -21,39 +22,44 @@ export async function action({request}: ActionFunctionArgs) {
 
 	// Actions
 	if (_action === "AddSkills") {
-		const skillRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			},
-		});
-
-		let currSkills = skillRes.data.team.skills;
-		var myJson = {};
-
-		for (const [key, value] of body.entries()) {
-			if (key === "skills") {
-				const skillList = value.split(",");
-				myJson[key] = skillList.map((skill:string) => {
-					const skillIdx = currSkills.findIndex(entry => entry.name === skill);
-					
-					let obj = {};
-					obj['name'] = skill
-					obj['score'] = skillIdx !== -1 ? currSkills[skillIdx].score : 5;
-					
-					return obj;
-				})
-			} else {
-				myJson[key] = value;
+		try {
+			const skillRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
+				headers: {
+				  "Authorization": session.get("auth"),
+				  "Content-Type": "application/json",
+				},
+			});
+	
+			let currSkills = skillRes.data.team.skills;
+			var myJson = {};
+	
+			for (const [key, value] of body.entries()) {
+				if (key === "skills") {
+					const skillList = value.split(",");
+					myJson[key] = skillList.map((skill:string) => {
+						const skillIdx = currSkills.findIndex(entry => entry.name === skill);
+						
+						let obj = {};
+						obj['name'] = skill
+						obj['score'] = skillIdx !== -1 ? currSkills[skillIdx].score : 5;
+						
+						return obj;
+					})
+				} else {
+					myJson[key] = value;
+				}
 			}
+	
+			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', myJson, {
+				headers: {
+				"Authorization": session.get("auth"),
+				"Content-Type": "application/json",
+				},
+			})
+		} catch(e) {
+			console.log(e);
+			return null;
 		}
-
-		const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/team/profile', myJson, {
-			headers: {
-			"Authorization": session.get("auth"),
-			"Content-Type": "application/json",
-			},
-		})
 	}
 
 	else if (_action === "LogOut") {
@@ -83,7 +89,14 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 		}});
-		return json(profileRes.data);
+
+		const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/company-info', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+		}});
+
+		return json({ profile: profileRes.data, company: companyRes.data });
 	
 	} catch (error) {
 		console.log(error);
@@ -101,11 +114,10 @@ export default function Tskills() {
 		}
 	}; */
 
-	const teamInfo = useLoaderData<typeof loader>();
+	const info = useLoaderData<typeof loader>();
+	const teamInfo = info?.profile;
 
-	let companyInfo = {
-		name: "OP Company",
-	}
+	const companyInfo = info?.company.company;
 
 	let techStacks = ["Python", "Javascript", "Typescript", "HTML/CSS", "SQL", "Rust", "C#", "Bash", "Go", "Java",
 					 "C++", "Kotlin", "C", "PHP", "Powershell", "Dart", "Swift", "Ruby", "Lua", "Elixir", "Assembly",
@@ -144,61 +156,90 @@ export default function Tskills() {
 		setSelectedTech(updated);
 	}
 
-	return (
-		<div className="flex-container">
-			<div id="sidebar">
-				<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-				<Form action="/team/skills" method="post">
-				<p className="text-logo">Opportune</p>
-				<button className="logout-button" type="submit"
-				name="_action" value="LogOut"> 
-					<ArrowLeftOnRectangleIcon /> 
-				</button>
-				</Form>
+	// check if survey is open yet
+	const currentDate = new Date();
+	const surveyClosed = parseDatePlus1(companyInfo.team_survey_deadline);
+	const lastDay = formatDate(parseDate(companyInfo.team_survey_deadline));
 
-			</div>
-			<div className="content">
-				<div className="company-banner">
-						<h1> {companyInfo.name} </h1>
-						<h3> {teamInfo.team.name} </h3>
-				</div>
-				<div className="company-prefs">
-					<h3> Fill Your Preferences </h3>
+	if(currentDate.getTime() > surveyClosed.getTime()) {
+		return (
+			
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 					<Form action="/team/skills" method="post">
-						<div className="team-box skills">
-							<PlainText text="Search and select all the tech stacks your team requires" key={2}/>
-							<input type="hidden" name="skills" value={selectedTech.join(',')} />
-							<div className="full-skills">
-								{selectedTech.map((skill:string, i:number) => (
-									<li key={i} className="filtered-skill" onClick={() => removeFromSelected(skill)}>
-										{skill + " ✕"}
-									</li>
-								))}
-							</div>
-							<div>
-								<input className="skill-search" type="text" placeholder="Search..." value={searchTerm}
-										onChange={(e) => setSearchTerm(e.target.value)} />
-								<button type="button" className="edit" onClick={() => addToSelected(searchTerm)}> 
-								+ Custom 
-								</button>
-								<div className="full-skills">
-									{filteredOptions.map((option, index) => (
-									<li key={index} className="filtered-skill" onClick={() => addToSelected(option)}>
-										{option}
-									</li>
-									))}
-								</div>
-    						</div>
-						</div>
-						<p className="cta">
-							<Link to="/team/profile" className="prev-button">Cancel</Link>
-						</p>
-						<p className="cta">
-							<button name="_action" value="AddSkills">Next</button>
-						</p>
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
 					</Form>
 				</div>
+				<div>The skills survey is closed. </div> {/* TODO CSS */}
+				<Link to="/team/profile">Back</Link>
 			</div>
-		</div>
-	)
+		)
+
+	} else {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/team/skills" method="post">
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
+					</Form>
+	
+				</div>
+				<div className="content">
+					<div className="company-banner">
+							<h1> {companyInfo.name} </h1>
+							<h3> {teamInfo.team.name} </h3>
+					</div>
+					<div>
+						The Survey Will Close on {lastDay}. {/* TODO CSS */}
+					</div>
+					<div className="company-prefs">
+						<h3> Fill Your Preferences </h3>
+						<Form action="/team/skills" method="post">
+							<div className="team-box skills">
+								<PlainText text="Search and select all the tech stacks your team requires" key={2}/>
+								<input type="hidden" name="skills" value={selectedTech.join(',')} />
+								<div className="full-skills">
+									{selectedTech.map((skill:string, i:number) => (
+										<li key={i} className="filtered-skill" onClick={() => removeFromSelected(skill)}>
+											{skill + " ✕"}
+										</li>
+									))}
+								</div>
+								<div>
+									<input className="skill-search" type="text" placeholder="Search..." value={searchTerm}
+											onChange={(e) => setSearchTerm(e.target.value)} />
+									<button type="button" className="edit" onClick={() => addToSelected(searchTerm)}> 
+									+ Custom 
+									</button>
+									<div className="full-skills">
+										{filteredOptions.map((option, index) => (
+										<li key={index} className="filtered-skill" onClick={() => addToSelected(option)}>
+											{option}
+										</li>
+										))}
+									</div>
+								</div>
+							</div>
+							<p className="cta">
+								<Link to="/team/profile" className="prev-button">Cancel</Link>
+							</p>
+							<p className="cta">
+								<button name="_action" value="AddSkills">Next</button>
+							</p>
+						</Form>
+					</div>
+				</div>
+			</div>
+		)
+	}
 }

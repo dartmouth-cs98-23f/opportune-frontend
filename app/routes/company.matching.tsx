@@ -18,6 +18,7 @@ import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
 import { Checkbox } from '@mui/material';
 import React from 'react';
+import { parseDate, parseDatePlus1 } from '~/lib/date';
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -258,196 +259,224 @@ export default function CompanyMatching() {
     );
   };
 
-  return (
-    <div>
-      <div className="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <Form action="/company/matching" method="post">
-          <p className="text-logo">Opportune</p>
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+  // check if survey is open yet
+	const currentDate = new Date();
+	const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
+
+  if(currentDate.getTime() < surveyOpen.getTime()) {
+    return (
+      <div>
+        <div className="sidebar">
+          <img
+            className="opportune-logo-small"
+            src="../opportune_newlogo.svg"></img>
+          <Form action="/company/matching" method="post">
+            <p className="text-logo">Opportune</p>
+            <button
+              className="logout-button"
+              type="submit"
+              name="_action"
+              value="LogOut">
+              <ArrowLeftOnRectangleIcon />
+            </button>
+          </Form>
+        </div>
+        <div>The matching page is not available yet! </div> {/* TODO CSS */}
+        <Link to="/company/profile">Back</Link>
       </div>
+    )
+  } else {
+    return (
+      <div>
+        <div className="sidebar">
+          <img
+            className="opportune-logo-small"
+            src="../opportune_newlogo.svg"></img>
+          <Form action="/company/matching" method="post">
+            <p className="text-logo">Opportune</p>
+            <button
+              className="logout-button"
+              type="submit"
+              name="_action"
+              value="LogOut">
+              <ArrowLeftOnRectangleIcon />
+            </button>
+          </Form>
+        </div>
 
-      <div
-        className="company-preview"
-        style={{ backgroundImage: `url(${coverUrl})` }}>
-        {url ? (
-          <img src={url} alt="Uploaded" />
-        ) : (
-          <img src="../defaultAvatar.png" alt="Placeholder" />
-        )}
+        <div
+          className="company-preview"
+          style={{ backgroundImage: `url(${coverUrl})` }}>
+          {url ? (
+            <img src={url} alt="Uploaded" />
+          ) : (
+            <img src="../defaultAvatar.png" alt="Placeholder" />
+          )}
 
-        <div>
-          <h1>{info?.data.company.name}</h1>
-          <p>Location: SF</p> {/* TO REMOVE */}
-          <div className="upload-buttons">
-            <ImageUpload onUpload={handleOnUpload}>
-              {({ open }) => {
-                return (
+          <div>
+            <h1>{info?.data.company.name}</h1>
+            <p>Location: SF</p> {/* TO REMOVE */}
+            <div className="upload-buttons">
+              <ImageUpload onUpload={handleOnUpload}>
+                {({ open }) => {
+                  return (
+                    <button
+                      className="custom-file-upload"
+                      onClick={open}
+                      type="button">
+                      Upload Image
+                    </button>
+                  );
+                }}
+              </ImageUpload>
+              <ImageUpload onUpload={handleCoverUpload}>
+                {({ open }) => (
                   <button
                     className="custom-file-upload"
                     onClick={open}
-                    type="button">
-                    Upload Image
+                    style={{ marginLeft: '10px' }}>
+                    Upload Cover
                   </button>
-                );
-              }}
-            </ImageUpload>
-            <ImageUpload onUpload={handleCoverUpload}>
-              {({ open }) => (
-                <button
-                  className="custom-file-upload"
-                  onClick={open}
-                  style={{ marginLeft: '10px' }}>
-                  Upload Cover
-                </button>
-              )}
-            </ImageUpload>
+                )}
+              </ImageUpload>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div className="company-teams-container">
-          <div className="company-teams-title">
-            <h2>Teams</h2>
-          </div>
-          <div className="teams-list">
-            {info?.teams.teams.map((team) => (
-              <Collapsible
-                trigger={
-                  <div className="company-team">
-                    <div>
-                      <h3>{team.name}</h3>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div className="company-teams-container">
+            <div className="company-teams-title">
+              <h2>Teams</h2>
+            </div>
+            <div className="teams-list">
+              {info?.teams.teams.map((team) => (
+                <Collapsible
+                  trigger={
+                    <div className="company-team">
+                      <div>
+                        <h3>{team.name}</h3>
+                      </div>
+                      <p>{team.email}</p>
                     </div>
-                    <p>{team.email}</p>
+                  }>
+                  <div style={{ flexDirection: 'row' }}>
+                    <p>Matched hires: </p>
+                    {teamNewHires[team._id]?.map((matchedHire) => (
+                      <p>
+                        {matchedHire.first_name} {matchedHire.last_name},
+                      </p>
+                    ))}
                   </div>
-                }>
-                <div style={{ flexDirection: 'row' }}>
-                  <p>Matched hires: </p>
-                  {teamNewHires[team._id]?.map((matchedHire) => (
-                    <p>
-                      {matchedHire.first_name} {matchedHire.last_name},
-                    </p>
-                  ))}
-                </div>
-              </Collapsible>
-            ))}
+                </Collapsible>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div className="new-hire-container">
-          <div className="company-teams-title">
-            <h2>New Hire</h2>
-          </div>
-          <div className="teams-list">
-            {info?.newHires.new_hires.map((newHire) => (
-              <div key={newHire.name} className="company-team">
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <h3>
-                    {newHire.first_name} {newHire.last_name}
-                  </h3>
-                  <p>{newHire.email}</p>
-                  {/*<p>
-                    {newHire.team_id
-                      ? teamIdMap[newHire.team_id].name
-                      : 'Unmatched'}
-                    </p> */}
-                </div>
-                <div style={{ display: 'flex' }}>
-                  <select
-                    className={
-                      !newHire.matched ? 'select-active' : 'select-inactive'
-                    }
-                    onChange={handleSelectChange}>
-                    <option key={'None'} value={newHire.email}>
-                      None
-                    </option>
-                    {info.teams.teams // first filter out the matched team from the first option
-                      .map((team) =>
-                        team._id === newHire.team_id ? (
-                          <option
-                            key={team.name}
-                            value={newHire.email + ' ' + team.email}
-                            selected>
-                            {team.name}
-                          </option>
+          <div className="new-hire-container">
+            <div className="company-teams-title">
+              <h2>New Hire</h2>
+            </div>
+            <div className="teams-list">
+              {info?.newHires.new_hires.map((newHire) => (
+                <div key={newHire.name} className="company-team">
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <h3>
+                      {newHire.first_name} {newHire.last_name}
+                    </h3>
+                    <p>{newHire.email}</p>
+                    {/*<p>
+                      {newHire.team_id
+                        ? teamIdMap[newHire.team_id].name
+                        : 'Unmatched'}
+                      </p> */}
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <select
+                      className={
+                        !newHire.matched ? 'select-active' : 'select-inactive'
+                      }
+                      onChange={handleSelectChange}>
+                      <option key={'None'} value={newHire.email}>
+                        None
+                      </option>
+                      {info.teams.teams // first filter out the matched team from the first option
+                        .map((team) =>
+                          team._id === newHire.team_id ? (
+                            <option
+                              key={team.name}
+                              value={newHire.email + ' ' + team.email}
+                              selected>
+                              {team.name}
+                            </option>
+                          ) : (
+                            <option
+                              key={team.name}
+                              value={newHire.email + ' ' + team.email}>
+                              {team.name}
+                            </option>
+                          ),
+                        )}
+                    </select>
+
+                    <Form action="/company/matching" method="post">
+                      <input
+                        name="email"
+                        type="hidden"
+                        value={newHire.email}></input>
+                      <input
+                        name="locked"
+                        type="hidden"
+                        value={newHire.matched ? 'false' : 'true'}></input>
+                      <button
+                        className="lock-button"
+                        type="submit"
+                        name="_action"
+                        value="newHireLock">
+                        {!newHire.matched ? (
+                          <LockOpenIcon className="lock-icon" />
                         ) : (
-                          <option
-                            key={team.name}
-                            value={newHire.email + ' ' + team.email}>
-                            {team.name}
-                          </option>
-                        ),
-                      )}
-                  </select>
-
-                  <Form action="/company/matching" method="post">
-                    <input
-                      name="email"
-                      type="hidden"
-                      value={newHire.email}></input>
-                    <input
-                      name="locked"
-                      type="hidden"
-                      value={newHire.matched ? 'false' : 'true'}></input>
-                    <button
-                      className="lock-button"
-                      type="submit"
-                      name="_action"
-                      value="newHireLock">
-                      {!newHire.matched ? (
-                        <LockOpenIcon className="lock-icon" />
-                      ) : (
-                        <LockClosedIcon className="lock-icon" />
-                      )}
-                    </button>
-                    <span className="hover-message">
-                      Click to manually override
-                    </span>
-                  </Form>
+                          <LockClosedIcon className="lock-icon" />
+                        )}
+                      </button>
+                      <span className="hover-message">
+                        Click to manually override
+                      </span>
+                    </Form>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <p className="cta" style={{ textAlign: 'right' }}>
-        {/* {allSurveysCompleted ? (
+        <p className="cta" style={{ textAlign: 'right' }}>
+          {/* {allSurveysCompleted ? (
+            <Form action="/company/matching" method="post">
+              <button type="submit" name="_action" value="matchingSurvey">
+                Run matching survey
+              </button>
+            </Form>
+          ) : (
+            <></>
+          )} */}
           <Form action="/company/matching" method="post">
             <button type="submit" name="_action" value="matchingSurvey">
               Run matching survey
             </button>
+            Enable Diversity Matching?
+            <input type="checkbox" name="diversity" />
           </Form>
-        ) : (
-          <></>
-        )} */}
-        <Form action="/company/matching" method="post">
-          <button type="submit" name="_action" value="matchingSurvey">
-            Run matching survey
-          </button>
-          Enable Diversity Matching?
-          <input type="checkbox" name="diversity" />
-        </Form>
-      </p>
-      <p className="cta" style={{ textAlign: 'right' }}>
-        <Form action="/company/matching" method="post">
-          <button type="submit" name="_action" value="completeMatching">
-            Complete Team-Matching
-          </button>
-        </Form>
-      </p>
-    </div>
-  );
+        </p>
+        <p className="cta" style={{ textAlign: 'right' }}>
+          <Form action="/company/matching" method="post">
+            <button type="submit" name="_action" value="completeMatching">
+              Complete Team-Matching
+            </button>
+          </Form>
+        </p>
+      </div>
+    );
+  }
 }
 
 export function links() {

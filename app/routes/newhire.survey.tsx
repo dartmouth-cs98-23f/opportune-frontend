@@ -11,6 +11,7 @@ import Scale from '~/components/survey_qs/Scale';
 import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
+import { parseDatePlus1, parseDate, formatDate } from '~/lib/date';
 
 
 export async function action({request}: ActionFunctionArgs) {
@@ -145,15 +146,26 @@ export async function loader({request}: LoaderFunctionArgs) {
 			return teamRes.data
 		}
 
-		const [profileRes, skillRes, teamsRes] = await Promise.all([
+		async function getCompanyRes() {
+			const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/company-info', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json",
+			}});
+			return companyRes.data
+		}
+
+		const [profileRes, skillRes, teamsRes, companyRes] = await Promise.all([
 			getProfileRes(),
 			getSkillRes(),
-			getTeamsRes()
+			getTeamsRes(),
+			getCompanyRes()
 		]);
 
 		return json({ profile: profileRes, 
 			          skills: skillRes,
-					  teams: teamsRes });
+					  teams: teamsRes,
+					  company: companyRes});
 	
 	} catch (error) {
 		console.log(error);
@@ -168,6 +180,7 @@ export default function Matching() {
 	const basicInfoSkills = basicInfo.skills.skills;
 	const allTeams = basicInfo.teams.teams;
 	const newHireSkills = basicInfo.profile.new_hire.skills;
+	const companyInfo = basicInfo.company.company;
 
 	// new addition
 	const favoriteTeams = basicInfo.profile.new_hire.favorited_teams;
@@ -242,7 +255,36 @@ export default function Matching() {
 		   previous, next, getProgress} = SurveyUtil(questionList);
 	const [triggered, setTriggered] = useState("next-q");
 
-	if (basicInfo.profile.new_hire.team_id === '') {
+	// check if survey is open yet
+	const currentDate = new Date();
+	const surveyOpen = parseDatePlus1(companyInfo.team_survey_deadline);
+	const surveyClosed = parseDatePlus1(companyInfo.newhire_survey_deadline);
+	const lastDay = formatDate(parseDate(companyInfo.newhire_survey_deadline));
+
+	if (currentDate.getTime() < surveyOpen.getTime()) {
+		return (
+			
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/newhire/survey" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
+				</div>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+				</div>
+				<div>The survey will be released soon!</div> {/* TODO CSS */}
+				<Link to="/newhire/teams">Back</Link>
+			</div>
+		)
+	} else if(currentDate.getTime() >= surveyClosed.getTime()) {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
@@ -258,6 +300,34 @@ export default function Matching() {
 					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
 					<div id="menubar">
 						<MainNavigation />
+					</div>
+				</div>
+				The team matching survey is closed!  {/* TODO CSS */}
+				<p className="cta">
+					<Link to="/newhire/results">View Results</Link>
+				</p>
+			</div>
+		)
+		
+	} else if (basicInfo.profile.new_hire.team_id === '') {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/newhire/survey" method="post">
+						<button className="logout-button" type="submit"
+						name="_action" value="LogOut"> 
+							<ArrowLeftOnRectangleIcon /> 
+						</button>
+					</Form>
+				</div>
+				<div id="content">
+					<h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
+					<div id="menubar">
+						<MainNavigation />
+					</div>
+					<div>
+						The Survey Will Close on {lastDay}. {/* TODO CSS */}
 					</div>
 					<div>
 						<Progress pct={getProgress()}/>

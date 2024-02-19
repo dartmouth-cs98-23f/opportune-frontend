@@ -179,7 +179,7 @@ export function matchingResults(resultsData: json) {
 		)
 	} else {
 		return (<div>
-				  <p>Matching results will be out on July 2.</p>
+				  <p>Matching results are not out yet.</p>
 				  <p className="cta"> <Link to="/newhire/survey">Edit Responses </Link></p>
 			    </div>)
 	}
