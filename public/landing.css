@@ -3734,7 +3734,7 @@ textarea.form-control-lg {
   --bs-navbar-active-color: rgba(0, 0, 0, 0.9);
   --bs-navbar-brand-padding-y: 0.3125rem;
   --bs-navbar-brand-margin-end: 1rem;
-  --bs-navbar-brand-font-size: 1.25rem;
+  --bs-navbar-brand-font-size: 1.75rem;
   --bs-navbar-brand-color: rgba(0, 0, 0, 0.9);
   --bs-navbar-brand-hover-color: rgba(0, 0, 0, 0.9);
   --bs-navbar-nav-link-padding-x: 0.5rem;
@@ -7668,6 +7668,8 @@ textarea.form-control-lg {
 
 .mb-5 {
   margin-bottom: 3rem !important;
+  text-align: center;
+
 }
 
 .mb-auto {
@@ -10896,8 +10898,8 @@ header.masthead h1, header.masthead .h1 {
 
 .call-to-action {
   position: relative;
-  background-color: #343a40;
-  background: url("/diamondbanner.png") no-repeat center center;
+  /* background-color: #343a40; */
+  background: url("/landingbg2.png") no-repeat center center;
   background-size: cover;
   padding-top: 7rem;
   padding-bottom: 7rem;
@@ -11036,13 +11038,18 @@ footer.footer {
 
 .animated-section {
   opacity: 0; /* Initially hide the element */
-  transform: translateX(-50px); /* Move the element 50px to the left */
+  transform: translateX(-100px); /* Move the element 50px to the left */
   transition: opacity 1s cubic-bezier(0.1, 0.05, 0.1, .5), transform 1s cubic-bezier(0.25, 0.1, 0.25, 1); /* Add transition for smooth fade-in and sliding */
 }
 
 .animated-section.in-view {
   opacity: 1; /* Show the element when it comes into view */
   transform: translateX(0); /* Move the element back to its original position */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: flex-end;
 }
 
 .subhead1 {
@@ -11054,12 +11061,36 @@ footer.footer {
 }
 
 .container1{
-  padding-top: 10%;
-  padding-bottom: 10%;
-  padding-left: 10%;
-  padding-right: 10%;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .my-new-section{
   text-align: center;
 }
+
+.container .customReviews {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Optional: Set the height of the section to center vertically */
+}
+
+.customReviews {
+  width: 80%;
+  display: flex;
+  align-items: center; /* Center vertically */
+  flex-wrap: wrap;
+  justify-content: center; /* Center horizontally */
+  padding: 0; /* Remove padding */
+  margin: 0 auto; /* Center horizontally */
+}
+

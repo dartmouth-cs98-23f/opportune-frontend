@@ -17,7 +17,7 @@ interface AnimatedSectionProps {
     return (
         <div ref={ref} className={inView ? 'animated-section in-view' : 'animated-section'}>
             {React.Children.map(children, (child, index) => (
-                <div style={{ transitionDelay: `${index * 1}s` }}>{child}</div>
+                <div className = "customReviews" style={{ transitionDelay: `${index * 1}s` }}>{child}</div>
             ))}
         </div>
     );
@@ -85,8 +85,7 @@ function LandingPage() {
                     <div className="position-relative container1">
                         <h2 className="productivity"> We're Here To Increase Your Productivity!</h2>
                         <p className="subhead1">Let us help you streamline your workflows, create diverse teams, and save time!</p>
-                        <img src="/icon1.png"/>
-                        <img src="/squarelogopixel.png"/>
+                        <img src="/landingbarleft.png"/>
 
                     </div>
                 </section>
@@ -184,7 +183,7 @@ function LandingPage() {
                 {/* <!-- Testimonials--> */}
                 <AnimatedSection>
                     <section className="testimonials text-center bg-light">
-                        <div className="container">
+                        <div className="container customReviews">
                             <h2 className="mb-5">What people are saying...</h2>
                             <AnimatedSection>
                             <div className="row justify-content-center">
