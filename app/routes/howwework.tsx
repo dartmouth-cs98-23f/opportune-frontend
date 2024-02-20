@@ -97,7 +97,8 @@ function HowWeWorkPage() {
                         <h2>About Us</h2>
                         <p>
                             Starting as a undergraduate Dartmouth College capstone project, our team has innovated and cultivated the perfect product to help
-                            companies and new hires alike. With Opportune you can match your skillset 
+                            companies and new hires alike. With Opportune you can match your skillset and curate diverse teams with
+                            the simple use of algorithms. 
                         </p>                   
                     </div>
 
@@ -246,7 +247,6 @@ function HowWeWorkPage() {
                             <a href="index.html" className="logo d-flex align-items-center">
                                 <span>Opportune</span>
                             </a>
-                            <p>We can add a bio here if wanted</p>
                         </div>
 
                         <div className="col-lg-2 col-6 footer-links">
@@ -255,8 +255,6 @@ function HowWeWorkPage() {
                                 <li><a href="#">Home</a></li>
                                 <li><a href="#">About us</a></li>
                                 <li><a href="#">Services</a></li>
-                                <li><a href="#">Terms of service</a></li>
-                                <li><a href="#">Privacy policy</a></li>
                             </ul>
                         </div>
 
@@ -275,7 +273,7 @@ function HowWeWorkPage() {
                                 15 Thayer Drive <br/>
                                 Hanover, NH 03755<br/>
                                 United States <br/><br/>
-                                <strong>Email:</strong> opportune.contact.us@gmail.com<br/>
+                                <strong>Email:</strong> opportune.contact.now@gmail.com<br/>
                             </p>
                         </div>
 

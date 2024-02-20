@@ -1353,7 +1353,6 @@ section {
     left: 0;
     right: 0;
     height: calc(50% + 20px);
-    background-color: #F08E46;
   }
 }
 
@@ -1393,7 +1392,7 @@ section {
 }
 
 .hero .icon-box:hover {
-  background: #F08E46;
+  background: #ee7a28;
 }
 
 .hero .icon-box:hover .title a,
