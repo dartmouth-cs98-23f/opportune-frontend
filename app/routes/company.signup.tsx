@@ -77,7 +77,7 @@ export default function SignUp() {
 			</p> */}
 			<p className="login-field">
 				<label id="email">Enter Email: </label>
-				<input type="text" id="email" name="email" required />
+				<input type="email" id="email" name="email" required />
 			</p>
 			<p className="login-field">
 				<label id="password">Create a password: </label>

@@ -599,36 +599,42 @@ export default function CompanyProfile() {
                 label="Team Email"
                 name="email"
                 classLabel="email"
+                type="email"
               />
               <TextField
                 className="add-team"
                 label="Team Name"
                 name="name"
                 classLabel="name"
+                type="text"
               />
               <TextField
                 className="add-team"
                 label="Description"
                 name="description"
                 classLabel="description"
+                type="text"
               />
               <TextField
                 className="add-team"
                 label="Calendly Link"
                 name="calendlyLink"
                 classLabel="calendly_link"
+                type="text"
               />
               <TextField
                 className="add-team"
                 label="Capacity"
                 name="capacity"
                 classLabel="max_capacity"
+                type="number"
               />
               <TextField
                 className="add-team"
                 label="Manager"
                 name="manager"
                 classLabel="manager"
+                type="text"
               />
               <button
                 className="center"
@@ -656,6 +662,7 @@ export default function CompanyProfile() {
                   name="newemail"
                   classLabel="newemail"
                   value={info?.teams.teams[editTeam].email}
+                  type="email"
                 />
                 <TextField
                   className="add-team"
@@ -663,6 +670,7 @@ export default function CompanyProfile() {
                   name="name"
                   classLabel="name"
                   value={info?.teams.teams[editTeam].name}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -670,6 +678,7 @@ export default function CompanyProfile() {
                   name="description"
                   classLabel="description"
                   value={info?.teams.teams[editTeam].description}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -677,6 +686,7 @@ export default function CompanyProfile() {
                   name="calendlyLink"
                   classLabel="calendly_link"
                   value={info?.teams.teams[editTeam].calendly_link}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -684,6 +694,7 @@ export default function CompanyProfile() {
                   name="capacity"
                   classLabel="max_capacity"
                   value={info?.teams.teams[editTeam].max_capacity}
+                  type="number"
                 />
                 <TextField
                   className="add-team"
@@ -691,6 +702,7 @@ export default function CompanyProfile() {
                   name="manager"
                   classLabel="manager"
                   value={info?.teams.teams[editTeam].manager}
+                  type="text"
                 />
                 <div className="buttons">
                   <button
@@ -774,18 +786,21 @@ export default function CompanyProfile() {
                 name="first_name"
                 classLabel="first_name"
                 value={info?.newHires.new_hires[editHire].first_name}
+                type="text"
               />
               <TextField
                 label="Last Name"
                 name="last_name"
                 classLabel="last_name"
                 value={info?.newHires.new_hires[editHire].last_name}
+                type="text"
               />
               <TextField
                 label="Email"
                 name="newemail"
                 classLabel="newemail"
                 value={info?.newHires.new_hires[editHire].email}
+                type="email"
               />
 
               <div
@@ -815,13 +830,15 @@ export default function CompanyProfile() {
                 label="First Name"
                 name="firstName"
                 classLabel="first_name"
+                type="text"
               />
               <TextField
                 label="Last Name"
                 name="lastName"
                 classLabel="last_name"
+                type="text"
               />
-              <TextField label="Email" name="email" classLabel="email" />
+              <TextField label="Email" name="email" classLabel="email" type="email" />
 
               <button
                 className="center"

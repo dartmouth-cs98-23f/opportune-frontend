@@ -133,26 +133,26 @@ export default function Profile() {
 							
 
 							<h3>Demographics</h3>
-							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.new_hire.first_name}/>
-							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.new_hire.last_name} />
+							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.new_hire.first_name} type="text"/>
+							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.new_hire.last_name} type="text"/>
 							<SelectField label="Race" classLabel="race"
 							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} value={basicInfoFields.new_hire.race} />
 							<SelectField label="Sex" classLabel="sex"
 							 options={["Male", "Female"]} value={basicInfoFields.new_hire.sex} />
 
 							<h3>Education</h3>
-							<TextField label="School" classLabel="school" value={basicInfoFields.new_hire.school} />
+							<TextField label="School" classLabel="school" value={basicInfoFields.new_hire.school} type="text"/>
 							<SelectField label="Graduation month" classLabel="grad_month"
 							 options={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} value={basicInfoFields.new_hire.grad_month} />
-							<TextField label="Graduation year" classLabel="grad_year" value={basicInfoFields.new_hire.grad_year} />
-							<TextField label="Major" classLabel="major" value={basicInfoFields.new_hire.major} />
+							<TextField label="Graduation year" classLabel="grad_year" value={basicInfoFields.new_hire.grad_year} type="number"/>
+							<TextField label="Major" classLabel="major" value={basicInfoFields.new_hire.major} type="text"/>
 
 							<h3>Address and basic info</h3>
-							<TextField label="Email Address" classLabel="email" value={basicInfoFields.email}/>
-							<TextField label="Address" classLabel="address" value={basicInfoFields.new_hire.address}/>
-							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city}/>
-							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province}/>
-							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code}/>
+							<TextField label="Email Address" classLabel="email" value={basicInfoFields.email} type="email"/>
+							<TextField label="Address" classLabel="address" value={basicInfoFields.new_hire.address} type="text"/>
+							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city} type="text"/>
+							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province} type="text"/>
+							<TextField label="Zip Code" classLabel="zip_code" value={basicInfoFields.new_hire.zip_code} type="text"/>
 							<p className="cta" style={{textAlign: 'right'}}>
 								<button type="submit" name="_action" value="updateProfile">
 									Next

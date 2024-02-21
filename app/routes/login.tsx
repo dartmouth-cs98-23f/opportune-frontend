@@ -119,7 +119,7 @@ export default function Login() {
 		<Form method="post" action="/login" id="login">
 			<p className="login-field">
 				<label htmlFor="email"><b>Email address</b></label>
-				<input name="email" />
+				<input type="email" name="email" />
 			</p>
 
 			<p className="login-field">
