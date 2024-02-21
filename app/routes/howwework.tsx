@@ -1,5 +1,8 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactNode, useRef } from 'react';
+import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { Link, Form } from '@remix-run/react';
+import { useInView } from 'react-intersection-observer';
+import axios from 'axios';
 
 function HowWeWorkPage() {
   return (
@@ -41,7 +44,7 @@ function HowWeWorkPage() {
                             </div>
                         </div>
                         <div className="col-lg-6 order-1 order-lg-2">
-                            <img src="assets/img/hero-img.svg" className="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="100"/>
+                            <img src="/teamwork.svg" className="img-fluid" alt="" data-aos="zoom-out" data-aos-delay="100"/>
                         </div>
                     </div>
                 </div>
@@ -237,6 +240,37 @@ function HowWeWorkPage() {
 
                 </div>
             </section>
+
+            {/* <!-- Call to Action--> */}
+            <section className="call-to-action text-white text-center" id="signup">
+                <div className="container position-relative">
+                    <div className="row justify-content-center">
+                        <div className="col-xl-6">
+                            <h2 className="mb-4">Interested in our product? Subscribe to our newsletter!</h2>
+                            {/* <!-- Signup form-->
+                            <!-- * * * * * * * * * * * * * * *-->
+                            <!-- * * SB Forms Contact Form * *-->
+                            <!-- * * * * * * * * * * * * * * *-->
+                            <!-- This form is pre-integrated with SB Forms.-->
+                            <!-- To make this form functional, sign up at-->
+                            <!-- https://startbootstrap.com/solution/contact-forms-->
+                            <!-- to get an API token!--> */}
+                            <Form className="fomr-subscribe" id="contactFormFooter" method="post" action="/landingpage">
+                                <div className="row">
+                                    <div className="col">
+                                        <input className="form-control form-control-lg" id="emailAddressBelow" type="email" placeholder="Email Address" name="email" />
+                                        {/*<div className="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>
+                                        <div className="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>*/}
+                                    </div>
+                                    <div className="col-auto"><button className="btn btn-primary btn-lg" id="submitButton" type="submit">Submit</button></div>
+                                </div>
+                            </Form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
             {/* <!-- End Frequently Asked Questions Section --> */}
             {/*   <!-- ======= Footer ======= --> */}
 
