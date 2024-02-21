@@ -135,10 +135,11 @@ export default function Profile() {
 							<h3>Demographics</h3>
 							<TextField label="First Name" classLabel="first_name" value={basicInfoFields.new_hire.first_name} type="text"/>
 							<TextField label="Last Name" classLabel="last_name" value={basicInfoFields.new_hire.last_name} type="text"/>
+							<TextField label="Age" classLabel="age" value={basicInfoFields.new_hire.age} type="number"/>
 							<SelectField label="Race" classLabel="race"
-							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other"]} value={basicInfoFields.new_hire.race} />
+							 options={["White", "Black", "Hispanic/Latino", "Asian", "American Indian", "Pacific Islander", "Other", "Prefer Not to Answer"]} value={basicInfoFields.new_hire.race} />
 							<SelectField label="Sex" classLabel="sex"
-							 options={["Male", "Female"]} value={basicInfoFields.new_hire.sex} />
+							 options={["Male", "Female", "Nonbinary", "Prefer Not to Answer"]} value={basicInfoFields.new_hire.sex} />
 
 							<h3>Education</h3>
 							<TextField label="School" classLabel="school" value={basicInfoFields.new_hire.school} type="text"/>
