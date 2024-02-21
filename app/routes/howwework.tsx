@@ -283,23 +283,6 @@ function HowWeWorkPage() {
                             </a>
                         </div>
 
-                        <div className="col-lg-2 col-6 footer-links">
-                            <h4>Useful Links</h4>
-                            <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">About us</a></li>
-                                <li><a href="#">Services</a></li>
-                            </ul>
-                        </div>
-
-                        <div className="col-lg-2 col-6 footer-links">
-                            <h4>Our Services</h4>
-                            <ul>
-                                <li><a href="#">Team Matching</a></li>
-                                <li><a href="#">Company Streamlining</a></li>
-                                <li><a href="#">Project Management</a></li>
-                            </ul>
-                        </div>
 
                         <div className="col-lg-3 col-md-12 footer-contact text-center text-md-start">
                             <h4>Contact Us</h4>
