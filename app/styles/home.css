@@ -877,11 +877,12 @@ input[type='file'] {
 .modal {
   background: aliceblue;
   width: 50%;
-  height: 60%;
+  height: 70%;
   max-width: 100%;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 1rem;
+  border-radius: 1rem;
   position: relative;
+  text-align: left;
 }
 
 .modal button.right {
@@ -1196,6 +1197,7 @@ input[type='file'] {
 .row-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -1204,4 +1206,61 @@ input[type='file'] {
   width: 45%;
   margin: 0 2rem;
   flex-direction: column;
+}
+
+.edit-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.team-member-card {
+  text-align: center;
+  width: fit-content;
+  white-space: nowrap;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card span {
+  margin-right: 10px;
+}
+
+.add-member-btn {
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-family: Mulish, Roboto;
+  font-size: 1rem;
+  padding: 0.5rem;
+  height: fit-content;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.team-member-card1 {
+  text-align: center;
+  width: fit-content;
+  padding: 0 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px #0000001a;
+}
+
+.member-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
