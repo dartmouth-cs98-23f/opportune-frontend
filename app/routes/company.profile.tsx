@@ -592,7 +592,7 @@ export default function CompanyProfile() {
           <p className="cta" style={{ textAlign: 'center' }}>
             <button onClick={openTeamModal}>Add team</button>
           </p>
-          <Modal open={showTeamModal} onClose={closeModal} title={'Add a team'}>
+          <Modal open={showTeamModal} onClose={closeTeamModal} title={'Add a team'}>
             <Form action="/company/profile" method="post" onSubmit={handleCreateTeamSubmit}>
               <TextField
                 className="add-team"
