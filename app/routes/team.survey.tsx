@@ -11,7 +11,9 @@ import Ranking from '~/components/survey_qs/Ranking';
 import PlainText from '~/components/survey_qs/PlainText';
 import { Select } from '@mui/material';
 import ScaleT from '~/components/survey_qs/ScaleT';
+import { parseDate, parseDatePlus1, formatDate } from '~/lib/date';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 	const _action = body.get("_action");
@@ -20,7 +22,6 @@ export async function action({request}: ActionFunctionArgs) {
 		request.headers.get("Cookie")
 	);
 	
-
 	const teamInfo = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
 		headers: {
 		  "Authorization": session.get("auth"),
@@ -28,13 +29,12 @@ export async function action({request}: ActionFunctionArgs) {
 		},
 	})
 
-	// 1-5 slider
+	// Actions
 	if (_action === "Scale" || _action === "ScaleT") {
 		// get the tech stack and score
 		var myJson = {};
 		for (const [key, value] of body.entries()) {
 			if (key !== "_action") {
-				console.log(key + ', ' + value); 
 				myJson["name"] = key;
 				myJson["score"] = parseInt(value, 10);
 			}
@@ -65,15 +65,7 @@ export async function action({request}: ActionFunctionArgs) {
 		}
 	}
 
-	if (_action === "Textbox") {
-		console.log("Entered textbox body");
-	}
-
-	if (_action === "PlainText") {
-		console.log("Entered plain textbox body");
-	}
-
-	if (_action === "LogOut") {
+	else if (_action === "LogOut") {
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
@@ -81,18 +73,18 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/tprefs");
+	return redirect("/team/survey");
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		console.log("Auth: ", session.get("auth"));
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "team")) {
+			return redirect("/login");
 		}
 
 		const profileRes = await axios.get(process.env.BACKEND_URL + '/api/v1/team/profile', {
@@ -100,9 +92,14 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Authorization": session.get("auth"),
 			  "Content-Type": "application/json",
 			}});
+
+		const companyRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/company-info', {
+				headers: {
+				  "Authorization": session.get("auth"),
+				  "Content-Type": "application/json",
+			}});
 		
-		console.log("Getting profile: ", profileRes.data)
-		return json(profileRes.data)
+		return json({profile: profileRes.data, company: companyRes.data})
 	
 	} catch (error) {
 		console.log(error);
@@ -118,12 +115,10 @@ export default function Tprefs() {
 	// 	members: ["Stephen Wang", "Eren Aldemir", "Ethan Chen", "Karina Montiel", "Ryan Luu"]
 	// };
 
-	const teamInfo = useLoaderData<typeof loader>();
-	console.log(teamInfo)
+	const info = useLoaderData<typeof loader>();
+	const teamInfo = info?.profile;
 
-	let companyInfo = {
-		name: "OP Company",
-	}
+	const companyInfo = info?.company.company;
 
 	// TODO: list of questions to incorporate in this order, make sure the survey works with the requests
 	// TODO: the Scale react component has been revised to generalize for more dynamic labels on the scale
@@ -167,46 +162,75 @@ export default function Tprefs() {
 	
  	const [triggered, setTriggered] = useState("next-q");
 
-	return (
-		<div className="flex-container">
-			<div id="sidebar">
-				<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/profile" method="post">
-				<p className="text-logo">Opportune</p>
-				<button className="logout-button" type="submit"
-				name="_action" value="LogOut"> 
-					<ArrowLeftOnRectangleIcon /> 
-				</button>
-				</Form>
+	// check if survey is open yet
+	const currentDate = new Date();
+	const surveyClosed = parseDatePlus1(companyInfo.team_survey_deadline);
+	const lastDay = formatDate(parseDate(companyInfo.team_survey_deadline));
 
-			</div>
-			<div className="content">
-				<div className="company-banner">
-						<h1> {companyInfo.name} </h1>
-						<h3> {teamInfo.team.name} </h3>
-				</div>
-				<div className="company-prefs">
-					<h3> Fill Your Preferences </h3>
-					<Progress pct={getProgress()}/>
-					<Form action="/tprefs" method="post" 
-						onSubmit={triggered === "next-q" ? next : previous}>
-						{stepComp}
-						<p className="cta">
-							{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
-							value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
-							{!isLastStep ? <button type="submit" name="_action"
-							value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
-							{isLastStep ? <Link to="/tprofile">Done</Link> : null}
-						</p>	
+	if(currentDate.getTime() > surveyClosed.getTime()) {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/team/profile" method="post">
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
 					</Form>
-					
-					<p className="cta">
-						{/*(isFirstStep && !isLastStep) ? <Link to="/tprofile" className="prev-button">Cancel</Link> : null*/}
-						<Link to="/tprofile" className="prev-button">Cancel</Link>
-					</p>
+	
+				</div>
+				<div>The skills survey is closed. </div> {/* TODO CSS */}
+				<Link to="/team/profile">Back</Link>
+			</div>
+		)
 
+	} else {
+		return (
+			<div className="flex-container">
+				<div id="sidebar">
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<Form action="/team/profile" method="post">
+					<p className="text-logo">Opportune</p>
+					<button className="logout-button" type="submit"
+					name="_action" value="LogOut"> 
+						<ArrowLeftOnRectangleIcon /> 
+					</button>
+					</Form>
+	
+				</div>
+				<div className="content">
+					<div className="company-banner">
+							<h1> {companyInfo.name} </h1>
+							<h3> {teamInfo.team.name} </h3>
+					</div>
+					<div>
+						The Survey Will Close on {lastDay}. {/* TODO CSS */}
+					</div>
+					<div className="company-prefs">
+						<h3> Fill Your Preferences </h3>
+						<Progress pct={getProgress()}/>
+						<Form action="/team/survey" method="post" 
+							onSubmit={triggered === "next-q" ? next : previous}>
+							{stepComp}
+							<p className="cta">
+								{(!isFirstStep && !isLastStep) ? <button type="submit" name="_action"
+								value={stepComp.type.name} className="prev-button" onClick={(e) => setTriggered(e.currentTarget.id)} id="prev-q">Previous</button> : null}
+								{!isLastStep ? <button type="submit" name="_action"
+								value={stepComp.type.name} id="next-q" onClick={(e) => setTriggered(e.currentTarget.id)}>Next</button> : null}
+								{isLastStep ? <Link to="/team/profile">Done</Link> : null}
+							</p>	
+						</Form>
+						
+						<p className="cta">
+							{/*(isFirstStep && !isLastStep) ? <Link to="/tprofile" className="prev-button">Cancel</Link> : null*/}
+							<Link to="/team/profile" className="prev-button">Cancel</Link>
+						</p>
+	
+					</div>
 				</div>
 			</div>
-		</div>
-	)
+		)
+	}
 }

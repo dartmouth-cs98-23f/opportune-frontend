@@ -16,7 +16,7 @@ export default function Project() {
 				</div>
 				<div>
 					<p>You will be able to see your project details after you are matched on July 2.</p>
-					<p className="cta"> <Link to="/results">Back to Results </Link></p>
+					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>
 		</div>

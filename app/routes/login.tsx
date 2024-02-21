@@ -1,8 +1,9 @@
 import { Link, Form, useLoaderData } from '@remix-run/react';
 import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import axios from 'axios';
-import { getSession, commitSession } from "../utils/sessions";
+import { getSession, commitSession, destroySession } from "../utils/sessions";
 
+// LOADER FUNCTION
 export async function loader({
 	request,
 }: LoaderFunctionArgs) {
@@ -11,18 +12,41 @@ export async function loader({
 	);
 
 	if (session.has("auth")) {
-		return redirect("/profile");
+
+		// redirect based on user type
+		const userType = session.get("user_type");
+		if (userType == 'new_hire') {
+			return redirect(`/newhire/profile`, {
+				headers: {
+					"Set-Cookie": await commitSession(session),
+				}
+			})
+	   } else if (userType == 'team') {
+			return redirect(`/team/profile`, {
+				headers: {
+					"Set-Cookie": await commitSession(session),
+				}
+			}) 
+	   } else if (userType == 'company') {
+		   return redirect(`/company/profile`, {
+			   headers: {
+				   "Set-Cookie": await commitSession(session),
+			   }
+		   })
+	   } else {
+		   return redirect('/login', {
+			   headers: {
+				   "Set-Cookie": await destroySession(session),
+			   }
+		   })
+	   }
 	}
 
-	const data = { error: session.get("error")};
-
-	return json(data, {
-		headers: {
-			"Set-Cookie": await commitSession(session),
-		},
-	})
+	return null;
 }
 
+
+// ACTION FUNCTIOn
 export async function action({
 	request,
   }: ActionFunctionArgs) {
@@ -31,7 +55,6 @@ export async function action({
 	const session = await getSession(
 		request.headers.get("Cookie")
 	);
-	// console.log("USERTYPE: ", session)
 
 	var myJson = {};
 	for (const [key, value] of body.entries()) {
@@ -42,27 +65,36 @@ export async function action({
 
 	try {
 		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
-		// const userType = response.config;
+		const userType = response.data.user_type;
 		session.set("auth", response.data.token);
-		// if (userType == 'new_hire') {
-		// 	return redirect(`/profile`, {
-		// 		headers: {
-		// 			"Set-Cookie": await commitSession(session),
-		// 		}
-		// 	})
-		// } else if (userType == 'team') {
-		// 	return redirect(`/tprofile`, {
-		// 		headers: {
-		// 			"Set-Cookie": await commitSession(session),
-		// 		}
-		// 	}) 
-		// } else {
-		return redirect(`/tprofile`, {
-			headers: {
-				"Set-Cookie": await commitSession(session),
-			}
-		})
-		// }
+		session.set("user_type", response.data.user_type);
+
+		// redirect based on user type
+		if (userType == 'new_hire') {
+		 	return redirect(`/newhire/profile`, {
+		 		headers: {
+		 			"Set-Cookie": await commitSession(session),
+		 		}
+		 	})
+		} else if (userType == 'team') {
+		 	return redirect(`/team/profile`, {
+		 		headers: {
+		 			"Set-Cookie": await commitSession(session),
+		 		}
+		 	}) 
+		} else if (userType == 'company') {
+			return redirect(`/company/profile`, {
+				headers: {
+					"Set-Cookie": await commitSession(session),
+				}
+			})
+		} else {
+			return redirect('/login', {
+				headers: {
+					"Set-Cookie": await destroySession(session),
+				}
+			})
+		}
 	} catch(error) {
 		console.log(error)
 		return redirect('/login', {
@@ -74,8 +106,9 @@ export async function action({
 };
 
 
+// Components
 export default function Login() {
-	const { currentUser, error } = useLoaderData<typeof loader>();
+	useLoaderData<typeof loader>();
 
     return (
     <main className="block-container">
@@ -97,7 +130,7 @@ export default function Login() {
 				<button type="submit"> {'Login'} </button>
 			</div>
 		</Form>
-		<p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+		<p>Are you a company trying to signup? <Link to="/company/signup">Enroll Your Company</Link></p>
 	  </div>
     </main>
   );

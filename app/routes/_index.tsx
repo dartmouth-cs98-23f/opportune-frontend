@@ -353,7 +353,6 @@ function HowWeWorkPage() {
 
         </body>
     </html>
-
   );
 }
 

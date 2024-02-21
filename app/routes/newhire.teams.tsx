@@ -8,11 +8,11 @@ import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from '@remix-r
 import { getSession, destroySession } from '~/utils/sessions';
 import axios from 'axios';
 
+// ACTION FUNCTION
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
 
 	const _action = body.get("_action");
-	// console.log("Action: ", _action);
 
 	const session = await getSession(
 		request.headers.get("Cookie")
@@ -20,16 +20,17 @@ export async function action({request}: ActionFunctionArgs) {
 
 	const favoriteJson = body.get("favorites");
 
+	// Actions
 	if (_action == "LogOut") {
 		return redirect("/login", {
 			headers: {
 			  "Set-Cookie": await destroySession(session),
 			},
 		});
+
 	} else {
 		try {
 			const newFavs = {favorited_teams: favoriteJson ? favoriteJson.split(",") : []};
-			console.log("Patch request: ", newFavs);
 			const response = await axios.patch(process.env.BACKEND_URL + '/api/v1/newhire/profile', newFavs, {
 				headers: {
 					"Authorization": session.get("auth"),
@@ -44,14 +45,15 @@ export async function action({request}: ActionFunctionArgs) {
 	}
 }
 
+// LOADER FUNCTION
 export async function loader({request}: LoaderFunctionArgs) {
 	try {
 		const session = await getSession(
 			request.headers.get("Cookie")
 		);
 
-		if (!session.get("auth")) {
-			return redirect("/login")
+		if(!session.has("auth") || (session.has("user_type") && session.get("user_type") !== "new_hire")) {
+			return redirect("/login");
 		}
 
 		async function getTeamsRes() {
@@ -76,8 +78,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 			getProfileRes(),
 			getTeamsRes()
 		]);
-
-		console.log("Get profile ", profileRes);
 
 		return json({ profile: profileRes, teams: teamsRes });
 	} catch (error) {
@@ -129,7 +129,6 @@ export default function Teams() {
 
 	const teamInfo = useLoaderData<typeof loader>();
 	const teamInfoList = teamInfo.teams.teams;
-	console.log("Teaminfo: ", teamInfo);
 
 	const favoritedTeamList = teamInfo.profile.new_hire.favorited_teams;
 	const [favoritedTeams, setFavoritedTeams] = useState(favoritedTeamList);
@@ -145,8 +144,9 @@ export default function Teams() {
     return (
         <div id="portal-root" className="flex-container">
             <div id="sidebar">
-                <img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
-				<Form action="/teams" method="post">
+                <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+				<Form action="/newhire/teams" method="post">
+				<p className="text-logo">Opportune</p>
 					<button className='logout-button' type="submit" 
 					name="_action" value="LogOut">
 					<ArrowLeftOnRectangleIcon /> 
@@ -161,7 +161,7 @@ export default function Teams() {
                 </div>
 
                 <div className="horiz-flex-container">
-					<Form action="/teams" method="post" className="teams-container">
+					<Form action="/newhire/teams" method="post" className="teams-container">
 						{teamInfoList.map((team) => {
 							const [expanded, setExpanded] = useState(false);
 
@@ -249,8 +249,8 @@ export default function Teams() {
                 </div>
 
                 <p className="cta">
-                    <Link to="/profile">{"←"}</Link>
-                    <Link to="/matching">{"→"}</Link>
+                    <Link to="/newhire/profile">{"←"}</Link>
+                    <Link to="/newhire/survey">{"→"}</Link>
                 </p>
             </div>
         </div>
