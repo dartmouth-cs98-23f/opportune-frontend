@@ -1,4 +1,4 @@
-import { Link, Form } from '@remix-run/react';
+import { Link, Form, useLocation } from '@remix-run/react';
 import { redirect, ActionFunctionArgs } from '@remix-run/node';
 import axios from 'axios';
 import { getSession, commitSession, destroySession } from "../utils/sessions";
@@ -48,6 +48,12 @@ export async function action({
 
 export default function TsignUp() {
 
+	const location = useLocation();
+
+	// Access query parameters from location.search
+	const queryParams = new URLSearchParams(location.search);
+	const email = queryParams.get('email');
+
   return (
     <div className="block-container">
 		<div className="landing-box">
@@ -57,7 +63,7 @@ export default function TsignUp() {
 			<Form method="post" action="/team/signup" id="login">
 			<p className="login-field">
 				<label id="email">Enter Email: </label>
-				<input type="email" id="email" name="email" required />
+				<input type="email" id="email" name="email" defaultValue={email ?? ""} required />
 			</p>
 			<p className="login-field">
 				<label id="password">Create a password: </label>
