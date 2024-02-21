@@ -149,7 +149,7 @@ export default function Profile() {
 							<TextField label="Major" classLabel="major" value={basicInfoFields.new_hire.major} type="text"/>
 
 							<h3>Address and basic info</h3>
-							<TextField label="Email Address" classLabel="email" value={basicInfoFields.email} type="email"/>
+							{/*<TextField label="Email Address" classLabel="email" value={basicInfoFields.email} type="email"/>*/}
 							<TextField label="Address" classLabel="address" value={basicInfoFields.new_hire.address} type="text"/>
 							<TextField label="City" classLabel="city" value={basicInfoFields.new_hire.city} type="text"/>
 							<TextField label="State/Province" classLabel="state_province" value={basicInfoFields.new_hire.state_province} type="text"/>
