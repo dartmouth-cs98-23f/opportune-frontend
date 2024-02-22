@@ -138,7 +138,7 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
 
         <p className="cta" style={{ textAlign: 'center' }}>
           <button type="button" onClick={handleAddMemberClick}>
-            Add Member
+            Save
           </button>
         </p>
       </div>

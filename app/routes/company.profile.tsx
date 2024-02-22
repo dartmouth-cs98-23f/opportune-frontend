@@ -188,29 +188,8 @@ export async function action({ request }: ActionFunctionArgs) {
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
         manager: myJson['manager'],
-        team_members: JSON.parse(myJson['team_members'])
+        members: JSON.parse(myJson['team_members'])
       };
-
-      const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/edit-team',
-        myJson,
-        {
-          headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      return redirect('/company/profile');
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  } else if (_action === 'editTeamMembers') {
-    try {
-      if(myJson['team_members']) {
-              myJson['team'] = {team: { team_members: JSON.parse(myJson['team_members'])}};
-      }
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -391,6 +370,7 @@ export default function CompanyProfile() {
 
   const closeTeamModal = () => {
     setShowTeamModal(false);
+    setTeamMembers([]);
   };
 
   const [showHireModal, setShowHireModal] = useState(false);
@@ -424,6 +404,8 @@ export default function CompanyProfile() {
     formData.append('team_members', JSON.stringify(teamMembers));
     formData.append('_action', 'createTeam');
 
+    setTeamMembers([]); // reset the list back to none
+
     // Submit form data to the server
     fetcher.submit(formData, { method: 'post', action: '/company/profile' });
   };
@@ -432,6 +414,11 @@ export default function CompanyProfile() {
 
   const [editHire, setEditHire] = useState(null);
   const [editTeam, setEditTeam] = useState(null);
+
+  const handleSetEditTeam = (i) => {
+    setEditTeam(i);
+    setTeamMembers(teams[i].members);
+  }
 
   // return the state to null before sending the server-side request
   const handleEditHireSubmit = async (event) => {
@@ -511,6 +498,7 @@ export default function CompanyProfile() {
   /******* TEAM MEMBER FUNCTIONS AND STATES  *********/
 
   const [showMemberModal, setShowMemberModal] = useState(false);
+  const [showEditMemberModal, setShowEditMemberModal] = useState(null);
 
   // Function to toggle the member addition modal
   const openMemberModal = () => {
@@ -528,33 +516,23 @@ export default function CompanyProfile() {
   };
 
   const handleMemberDelete = (index) => {
-    setTeamMembers((currentMembers) =>
-      currentMembers.filter((_, i) => i !== index),
-    );
-  };
+    var editedMembers = [];
+    for(var i = 0; i < teamMembers.length; i++) {
+      if(i == index) continue;
+      editedMembers.push(teamMembers[i])
+    }
 
-  const handleMemberTrash = (email, index) => {
-    const newMembers = teamMembers.filter((_, i) => i !== index);
-
-    setTeamMembers((currentMembers) =>
-      currentMembers.filter((_, i) => i !== index),
-    );
-
-    const formData = new FormData(); // Extract form data
-    formData.append('_action', 'editTeamMembers');
-    formData.append('email', email);
-    formData.append('team_members', JSON.stringify(newMembers));
-    fetcher.submit(formData, { method: 'post', action: '/company/profile' });
+    setTeamMembers(editedMembers);
   };
 
   const handleMemberEdit = (member, index) => {
-    console.log('Edit mem: ', member);
+    var editedMembers = [];
+    for(var i = 0; i < teamMembers.length; i++) {
+      if(i == index) editedMembers.push(member);
+      else editedMembers.push(teamMembers[i]);
+    }
 
-    setTeamMembers((currentMembers) =>
-      currentMembers.filter((_, i) => i !== index),
-    );
-
-    setTeamMembers((currentMembers) => [...currentMembers, member]);
+    setTeamMembers(editedMembers);
   };
 
 
@@ -660,7 +638,7 @@ export default function CompanyProfile() {
                         </button>
                         <button
                           className="edit-button"
-                          onClick={() => setEditTeam(i)}>
+                          onClick={() => handleSetEditTeam(i)}>
                           Edit
                         </button>
                         <Form action="/company/profile" method="post">
@@ -688,11 +666,11 @@ export default function CompanyProfile() {
                           <p>
                             {member.first_name} {member.last_name}
                           </p>
-                          <button
+                          {/* <button
                             className="edit-icon"
                             onClick={() => handleMemberTrash(team.email, i)}>
                             <TrashIcon />
-                          </button>
+                      </button> */}
                         </div>
                       ))}
                     </div>
@@ -756,11 +734,16 @@ export default function CompanyProfile() {
                       <span>
                         {member.first_name} {member.last_name}
                       </span>
-                      <button
-                        className="edit-icon"
-                        onClick={() => handleMemberDelete(team.email, index)}>
-                        x
-                      </button>
+                      <div>
+                    <PencilIcon 
+                      className="edit-icon"
+                      onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
+                      />
+                    <TrashIcon
+                      className="edit-icon"
+                      onClick={() => handleMemberDelete(index)} />
+                      </div>
+                        
                     </div>
                   ))}
                   <button className="add-member-btn" onClick={openMemberModal}>
@@ -774,7 +757,17 @@ export default function CompanyProfile() {
                 onClose={closeMemberModal}
                 addTeamMember={addTeamMember}
                 title="Add team member"></MemberModal>
-              {!showMemberModal && (
+              { showEditMemberModal != null ? 
+                <MemberModal
+                  open={showEditMemberModal != null }
+                  member = {teamMembers[showEditMemberModal] ?? {}}
+                  onClose={() => setShowEditMemberModal(null)}
+                  addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
+                  title="Add team member"></MemberModal> 
+                  : 
+                  null}
+              
+              {!showMemberModal && showEditMemberModal == null && (
                 <button
                   className="center"
                   type="submit"
@@ -842,15 +835,56 @@ export default function CompanyProfile() {
                   classLabel="manager"
                   value={info?.teams.teams[editTeam].manager}
                 />
-                <div className="buttons">
-                  <button
-                    className="save-button"
-                    type="submit"
-                    name="_action"
-                    value="editTeam">
-                    Save
-                  </button>
+                <div className="field-container">
+                  <label>Team Members</label>
+                  <div className="row-container">
+                    {teamMembers.map((member, index) => (
+                      <div key={index} className="team-member-card">
+                        <span>
+                          {member.first_name} {member.last_name}
+                        </span>
+                        <PencilIcon 
+                          className="edit-icon"
+                          onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
+                          />
+                        <TrashIcon
+                          className="edit-icon"
+                          onClick={() => handleMemberDelete(index)} />
+                          
+                      </div>
+                    ))}
+                    <button className="add-member-btn" onClick={openMemberModal}>
+                      Add Member
+                    </button>
+                  </div>
                 </div>
+                <MemberModal
+                  open={showMemberModal}
+                  member = {{}}
+                  onClose={closeMemberModal}
+                  addTeamMember={addTeamMember}
+                  title="Add team member"></MemberModal>
+                { showEditMemberModal != null ? 
+                  <MemberModal
+                    open={showEditMemberModal != null }
+                    member = {teamMembers[showEditMemberModal] ?? {}}
+                    onClose={() => setShowEditMemberModal(null)}
+                    addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
+                    title="Add team member"></MemberModal> 
+                    : 
+                    null}
+
+                {!showMemberModal && showEditMemberModal == null && (
+                  <div className="buttons">
+                    <button
+                      className="save-button"
+                      type="submit"
+                      name="_action"
+                      value="editTeam">
+                      Save
+                    </button>
+                  </div>
+                  )}
               </Form>
             ) : null}
           </Modal>

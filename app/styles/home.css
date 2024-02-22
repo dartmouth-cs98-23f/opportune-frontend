@@ -1216,12 +1216,16 @@ input[type='file'] {
   height: 2rem;
 }
 
+.edit-icon:hover {
+  color: #1e90ff;
+}
+
 .team-member-card {
   text-align: center;
   width: fit-content;
   white-space: nowrap;
   padding: 0.5rem;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
   border-radius: 10px;
   background-color: white;
   border: 1px solid rgb(101, 101, 101);
