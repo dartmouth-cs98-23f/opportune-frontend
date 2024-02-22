@@ -15,7 +15,6 @@ export default function Checkbox(props:Fields) {
 
   const handleCheckChange = (e) => {
 	const isChecked = e.target.checked
-	// console.log("isChecked: ", isChecked)
 	setChecked(isChecked);
 
     fetcher.submit(e.currentTarget.form, {
@@ -26,9 +25,10 @@ export default function Checkbox(props:Fields) {
   return (
 	<div className={`check-field ${checked ? 'checked': ''}`} key={props.task_id}>
 		<fetcher.Form method="post" action="/project">
-			<input type="checkbox" id={String(props.task_id)} checked={checked} 
+			<input type="checkbox" id={String(props.task_id)} defaultChecked={checked} 
 			       onClick={(e) => handleCheckChange(e)} />
 			<label htmlFor={String(props.task_id)}>{`${props.task} (${props.proj_name})`}</label>
+			<button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
 			<input type="hidden" name="_action" value="ToggleComplete" />
 			<input type="hidden" name="_id" value={props.task_id} />
 			<input type="hidden" name="complete" value={String(checked)} />
@@ -36,6 +36,3 @@ export default function Checkbox(props:Fields) {
 	</div>
   )
 }
-
-// onClick={() => props.onToggle(props.id)}
-// onToggle: Function;

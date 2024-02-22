@@ -1,3 +1,4 @@
+import { Form } from "@remix-run/react";
 import { useState } from "react";
 
 interface Fields {
@@ -50,6 +51,7 @@ export default function TaskBubble(props:Fields) {
 			)
 		} else {
 			return (
+				<Form action="/project" method="post" onSubmit={() => handleEditClick()}>
 				<div className={props.classLabel} style={{width: `calc(${(endScaled - startScaled) * 20}% + 60px)`, 
 															 marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
 				  <b> {props.task} </b> 
@@ -60,20 +62,20 @@ export default function TaskBubble(props:Fields) {
 					return <li> {update} </li>
 				  })} </p>
 				  {!isEditing ? <button type="button" className="edit" 
-									onClick={() => handleEditClick()}> + Update </button> : null}
+								 onClick={() => handleEditClick()}> + Update </button> : null}
 				  {!isEditing ? null :<div> 
 					 <textarea name="description" id="task-input"
 					 onChange={(e) => handleUpdate(e.target.value)} /> 
 					</div>}
 				  {isEditing ? <div>
-						<button className="edit" name="_action" value="AddUpdate">
-						  Confirm 
-						</button>
-						<button className="edit" onClick={() => handleEditClick()}> Cancel </button> 
+						<button className="edit" name="_action" value="AddUpdate"> Confirm </button>
+						<button type="button" className="edit" 
+						 onClick={() => handleEditClick()}> Cancel </button> 
 					</div> : null}
 				   <input type="hidden" name="_id" defaultValue={props.taskID}/>
 				   <input type="hidden" name="updates" defaultValue={JSON.stringify(props.updates)}/>
 				</div>
+				</Form>
 			)
 		}
 	} else {
@@ -84,10 +86,12 @@ export default function TaskBubble(props:Fields) {
 		return (
 			<div className={props.classLabel} style={{width: `${(endScaled - startScaled) * 20}%`, 
 													  marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
-			  <b> {props.task} </b> ({Math.round(props.progress * 100)}%)
-			  <div className="progress-container">
-				<div id="progress" style={{width: `${props.progress * 100}%`}}></div>
-			  </div>
+			 	<div className="proj-progress-txt">
+					<b> {props.task} </b> ({Math.round(props.progress * 100)}%)
+				</div>
+				<div className="progress-container">
+					<div id="progress" style={{width: `${props.progress * 100}%`}}></div>
+				</div>
 			</div>
 		)
 	}

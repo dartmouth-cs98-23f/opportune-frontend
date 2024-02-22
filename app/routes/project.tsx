@@ -8,7 +8,7 @@ import { json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 
-const matched = true;
+const matched = true; // check that company matching is complete
 const createProjMode = false;
 
 export async function action({request}: ActionFunctionArgs) {
@@ -213,15 +213,6 @@ export default function Project() {
 		setEditing(!isEditing);
 	}
 
-	/* function handleToggle(taskId: number) {
-		console.log(tasks);
-		const modTasks = tasks.map((task) => 
-			task.id === taskId ? { ...task, complete: !task.complete } : task
-		)
-		setTasks(modTasks);
-		console.log(tasks);
-	}; */
-
 	function updateTask(task:string) {
 		setTask(task);
 	}
@@ -230,8 +221,8 @@ export default function Project() {
 		setCurrProj(event.target.selectedIndex);
 	}
 
-	function getProjName(proj_id:string) {
-		const project = projInfo.find((p) => p._id === proj_id);
+	function getProjName(task_proj_id:string) {
+		const project = projInfo.find((p) => (p.project._id === task_proj_id));
 		const projName = project ? project.project.name : null;
 		return projName
 	}
@@ -323,8 +314,7 @@ export default function Project() {
 								return <Form method="post" action="/project"> 
 								         <Checkbox task={task.name} classLabel="check-field"
 								                 checked={task.complete} task_id={task._id} key={task._id} 
-												 proj_name={getProjName(task.proj_id)} />
-										 <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
+												 proj_name={getProjName(task.project_id)} />
 										 <input name="_id" type="hidden" value={task._id}/>
 										 <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -336,8 +326,7 @@ export default function Project() {
 								return <Form method="post" action="/project"> 
 									      <Checkbox task={task.name} classLabel="check-field"
 									             checked={task.complete} task_id={task._id} key={task._id}
-												 proj_name={getProjName(task.proj_id)} />
-										  <button className="edit-clear" name="_action" value="DeleteTask"> ❌ </button>
+												 proj_name={getProjName(task.project_id)} />
 										  <input name="_id" type="hidden" value={task._id}/>
 										  <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -373,8 +362,7 @@ export default function Project() {
 										updates={[]} />
 									
 									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
-										return <Form action="/project" method="post">
-											<TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
+										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
 										        descrip={task.description} 
 												start={new Date(proj.project.start_date)}  
 												end={new Date(proj.project.end_date)} 
@@ -383,7 +371,6 @@ export default function Project() {
 												task={task.name} 
 												taskID={task._id}
 												progress={-1} date={today} updates={task.updates}/>
-											</Form>
 									})}
 								</div> 
 							})}
