@@ -405,6 +405,11 @@ export default function CompanyMatching() {
     parsedDiversity.push(getDiversityMetrics(metrics));
   }
 
+  const getPercentage = (scoreBefore, scoreAfter) => {
+    var percentage = (scoreAfter - scoreBefore) / scoreBefore;
+    return Math.floor(percentage * 1000) / 10;
+  }
+
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
@@ -571,9 +576,31 @@ export default function CompanyMatching() {
               {diversityModal != null ? 
               <div className='scrollable'>
                 <div className='stat-box'>
-                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</p>
-                  <p className='column'>Diversity Score</p>
-                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreAfter + "/100"}</p>
+                  <h2 className='column'>Before Matching </h2>
+                  <div className='column'></div>
+                  <h2 className='column'>After Matching</h2>
+                </div>
+
+                <div className='stat-box'>
+                  <h4 className='column'>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</h4>
+                  <h3 className='column'>Diversity Score</h3>
+                  <div className='column'>
+                    <h4>
+                      {parsedDiversity[diversityModal].diversityScoreAfter + "/100 "}
+
+                      {getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) > 0.0 ?
+                        <span style={{color: 'green', 'font-size': '12px'}}>                        
+                          {'(+' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
+                        </span>
+                        :
+                        <span style={{color: 'red', 'font-size': '12px'}}>                        
+                          {'(' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
+                        </span>
+                      }
+
+                    </h4>
+                    
+                  </div>
                 </div>
 
                 <div className='stat-box'> 
@@ -582,7 +609,7 @@ export default function CompanyMatching() {
                     data={parsedDiversity[diversityModal].ageBefore}
                   />
                   </p>
-                  <p className='column'>Age Metrics</p>
+                  <h3 className='column'>Age Metrics</h3>
                   <p className='column'>
                   <CustomPieChart
                     data={parsedDiversity[diversityModal].ageAfter}
@@ -596,7 +623,7 @@ export default function CompanyMatching() {
                     data={parsedDiversity[diversityModal].raceBefore}
                   />
                   </p>
-                  <p className='column'>Race Metrics</p>
+                  <h3 className='column'>Race Metrics</h3>
                   <p className='column'>
                   <CustomPieChart
                     data={parsedDiversity[diversityModal].raceAfter}
@@ -610,7 +637,7 @@ export default function CompanyMatching() {
                     data={parsedDiversity[diversityModal].sexBefore}
                   />
                   </p>
-                  <p className='column'>Gender Identity Metrics</p>
+                  <h3 className='column'>Gender Identity Metrics</h3>
                   <p className='column'>
                   <CustomPieChart
                     data={parsedDiversity[diversityModal].sexAfter}
