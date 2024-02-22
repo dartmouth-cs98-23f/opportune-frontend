@@ -22,6 +22,8 @@ import ReadMore from '~/components/ReadMore';
 import ReactDatePicker from 'react-datepicker';
 import datepicker from 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateToAPIFormat } from '~/lib/date';
+import { MemberModal } from '~/components/MemberModal';
+import { Collapsible } from '~/components/Collapsible';
 
 // @ts-expect-error
 const DatePicker = ReactDatePicker.default;
@@ -65,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return null;
     }
   } else if (_action === 'createTeam') {
-    myJson['team_members'] = []; // TEMPORARY
+    // myJson['team_members'] = JSON.parse(myJson['team_members'], '[]');
 
     try {
       const response = await axios.post(
@@ -401,6 +403,8 @@ export default function CompanyProfile() {
 
     const formData = new FormData(event.target); // Extract form data
     const action = formData.get('_action');
+
+    formData.append('team_members', JSON.stringify(teamMembers));
     formData.append('_action', 'createTeam');
 
     // Submit form data to the server
@@ -482,9 +486,37 @@ export default function CompanyProfile() {
   const surveysClosedDate = parseDate(
     info?.data.company.newhire_survey_deadline,
   );
+  const [showMemberModal, setShowMemberModal] = useState(false);
+
+  // Function to toggle the member addition modal
+  const openMemberModal = () => {
+    setShowMemberModal(true);
+  };
+
+  const closeMemberModal = () => {
+    setShowMemberModal(false);
+  };
+
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  const addTeamMember = (member) => {
+    setTeamMembers((currentMembers) => [...currentMembers, member]);
+  };
+
+  const handleMemberDelete = (index) => {
+    setTeamMembers((currentMembers) =>
+      currentMembers.filter((_, i) => i !== index),
+    );
+  };
+
+  const handleMemberEdit = (member) => {
+    console.log('Edit mem: ', member);
+  };
+
+  console.log('Thinsg', info);
 
   return (
-    <div className="flex-container">
+    <div className="company-container">
       <div className="sidebar">
         <img
           className="opportune-logo-small"
@@ -551,50 +583,84 @@ export default function CompanyProfile() {
             <h2>Teams</h2>
           </div>
           <div className="teams-list">
-            {info?.teams.teams.map((team, i) => (
-              <div key={team.name} className="company-team">
-                <div style={{ textAlign: 'left', marginLeft: '0.5rem' }}>
-                  <h3>{team.name}</h3>
-                  <div>Mountain View, California</div>{' '}
-                  {/* TO REMOVE AT SOME POINT */}
-                </div>
-                <ReadMore text={team.description}></ReadMore>
-                <button
-                  className={
-                    team.survey_complete ? 'done-button' : 'in-progress-button'
-                  }>
-                  {team.survey_complete ? 'Done' : 'In Progress'}
-                </button>
-                <div className="expanded-content">
-                  <button
-                    className="newhire-button"
-                    name="_action"
-                    value="teamNudge">
-                    Email nudge
-                  </button>
-                  <div className="row-container">
+            {info?.teams?.teams.map((team, i) => (
+              <Collapsible
+                trigger={
+                  <div key={team.name} className="company-team">
+                    <div>
+                      <h3>{team.name}</h3>
+                      <div>Mountain View, California</div>{' '}
+                    </div>
                     <button
-                      className="edit-button"
-                      onClick={() => setEditTeam(i)}>
-                      <PencilIcon />
+                      className={
+                        team.survey_complete
+                          ? 'done-button'
+                          : 'in-progress-button'
+                      }>
+                      {team.survey_complete ? 'Done' : 'In Progress'}
                     </button>
-                    <Form action="/company/profile" method="post">
+                    <div className="expanded-content">
                       <button
-                        className="edit-button"
-                        type="submit"
+                        className="newhire-button"
                         name="_action"
-                        value="deleteTeam">
-                        <TrashIcon />
+                        value="teamNudge">
+                        Email nudge
                       </button>
-                      <input
-                        name="email"
-                        value={team.email}
-                        style={{ display: 'none' }}
-                      />
-                    </Form>
+                      <div className="row-container">
+                        <button
+                          className="edit-button"
+                          onClick={() => setEditTeam(i)}>
+                          <PencilIcon />
+                        </button>
+                        <Form action="/company/profile" method="post">
+                          <button
+                            className="edit-button"
+                            type="submit"
+                            name="_action"
+                            value="deleteTeam">
+                            <TrashIcon />
+                          </button>
+                          <input
+                            name="email"
+                            value={team.email}
+                            style={{ display: 'none' }}
+                          />
+                        </Form>
+                      </div>
+                    </div>
+                  </div>
+                }>
+                <div>
+                  <h3>Team Description: </h3>
+                  {team.description}
+                  <span>
+                    <h4>Email:</h4>
+                    {team.email}
+                  </span>
+                </div>
+                <div>
+                  <h3>Team Members: </h3>
+                  <div className="member-container">
+                    {team.members?.map((member) => (
+                      <div className="row-container team-member-card1">
+                        <p>
+                          {member.first_name} {member.last_name}
+                        </p>
+                        <button
+                          className="edit-icon"
+                          onClick={() => handleMemberEdit(member)}>
+                          <PencilIcon />
+                        </button>
+                        <button
+                          className="edit-icon"
+                          onClick={() => handleMemberDelete(member)}>
+                          <TrashIcon />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </div>
+              </Collapsible>
             ))}
           </div>
           <p className="cta" style={{ textAlign: 'center' }}>
@@ -644,19 +710,46 @@ export default function CompanyProfile() {
                 name="manager"
                 classLabel="manager"
               />
-              <button
-                className="center"
-                type="submit"
-                name="_action"
-                value="createTeam">
-                Add Team
-              </button>
+              <div className="field-container">
+                <label>Team Members</label>
+                <div className="row-container">
+                  {teamMembers.map((member, index) => (
+                    <div key={index} className="team-member-card">
+                      <span>
+                        {member.first_name} {member.last_name}
+                      </span>
+                      <button
+                        className="edit-icon"
+                        onClick={() => handleMemberDelete(index)}>
+                        x
+                      </button>
+                    </div>
+                  ))}
+                  <button className="add-member-btn" onClick={openMemberModal}>
+                    Add Member
+                  </button>
+                </div>
+              </div>
+              <MemberModal
+                open={showMemberModal}
+                onClose={closeMemberModal}
+                addTeamMember={addTeamMember}
+                title="Add team member"></MemberModal>
+              {!showMemberModal && (
+                <button
+                  className="center"
+                  type="submit"
+                  name="_action"
+                  value="createTeam">
+                  Add Team
+                </button>
+              )}
             </Form>
           </Modal>
           <Modal
             open={editTeam != null}
             onClose={() => setEditTeam(null)}
-            title={'Edit New Hire'}>
+            title={'Edit Team'}>
             {editTeam != null ? (
               <Form
                 action="/company/profile"

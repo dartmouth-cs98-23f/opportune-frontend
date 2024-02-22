@@ -18,6 +18,15 @@
   overflow: auto;
 }
 
+.company-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  color: var(--color-primary-10);
+  height: 100vh;
+  overflow: auto;
+}
+
 .horiz-flex-container {
   display: flex;
   flex-direction: row;
@@ -841,6 +850,7 @@ input[type='file'] {
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 .company-team h3 {
@@ -875,11 +885,12 @@ input[type='file'] {
 .modal {
   background: aliceblue;
   width: 50%;
-  height: 60%;
+  height: 70%;
   max-width: 100%;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 1rem;
+  border-radius: 1rem;
   position: relative;
+  text-align: left;
 }
 
 .modal button.right {
@@ -1128,11 +1139,14 @@ input[type='file'] {
 
 .collapsible {
   overflow: hidden;
-  transition: height 0.3s ease;
+  max-height: 0;
+  transition: max-height 0.8s ease;
 }
 
 .collapsible.open {
-  height: auto;
+  border-top: none;
+  max-height: fit-content;
+  margin-bottom: 1rem;
 }
 
 .edit-input {
@@ -1197,6 +1211,7 @@ input[type='file'] {
 .row-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: flex-end;
 }
 
@@ -1253,4 +1268,65 @@ input[type='file'] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+.edit-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 2rem;
+  font-size: 1rem;
+}
+
+.edit-icon:hover {
+  color: red;
+}
+
+.team-member-card {
+  text-align: center;
+  width: fit-content;
+  white-space: nowrap;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card span {
+  margin-right: 10px;
+}
+
+.add-member-btn {
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-family: Mulish, Roboto;
+  font-size: 1rem;
+  padding: 0.5rem;
+  height: fit-content;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.team-member-card1 {
+  text-align: center;
+  width: fit-content;
+  padding: 0 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px #0000001a;
+}
+
+.member-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
