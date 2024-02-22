@@ -567,9 +567,9 @@ export default function CompanyMatching() {
               {diversityModal != null ? 
               <div className='scrollable'>
                 <div className='stat-box'>
-                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreBefore}</p>
+                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</p>
                   <p className='column'>Diversity Score</p>
-                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreAfter}</p>
+                  <p className='column'>{parsedDiversity[diversityModal].diversityScoreAfter + "/100"}</p>
                 </div>
 
                 <div className='stat-box'> 
