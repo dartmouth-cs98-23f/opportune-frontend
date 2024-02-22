@@ -66,7 +66,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return null;
     }
   } else if (_action === 'createTeam') {
-    // myJson['team_members'] = []; // TEMPORARY
+    if(myJson['team_members']) myJson['team_members'] = JSON.parse(myJson['team_members']);
 
     try {
       const response = await axios.post(
@@ -188,9 +188,29 @@ export async function action({ request }: ActionFunctionArgs) {
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
         manager: myJson['manager'],
+        team_members: JSON.parse(myJson['team_members'])
       };
 
-      console.log(myJson);
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/edit-team',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'editTeamMembers') {
+    try {
+      if(myJson['team_members']) {
+              myJson['team'] = {team: { team_members: JSON.parse(myJson['team_members'])}};
+      }
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -401,7 +421,6 @@ export default function CompanyProfile() {
     setShowTeamModal(false); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
     formData.append('team_members', JSON.stringify(teamMembers));
     formData.append('_action', 'createTeam');
 
@@ -420,7 +439,6 @@ export default function CompanyProfile() {
     setEditHire(null); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
     formData.append('_action', 'editNewHire');
 
     // Submit form data to the server
@@ -432,8 +450,9 @@ export default function CompanyProfile() {
     setEditTeam(null); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
     formData.append('_action', 'editTeam');
+    formData.append('team_members', JSON.stringify(teamMembers));
+    fetcher.submit(formData, { method: 'post', action: '/company/profile' });
 
     // Submit form data to the server
     fetcher.submit(formData, { method: 'post', action: '/company/profile' });
@@ -485,6 +504,12 @@ export default function CompanyProfile() {
     info?.data.company.newhire_survey_deadline,
   );
 
+
+
+
+
+  /******* TEAM MEMBER FUNCTIONS AND STATES  *********/
+
   const [showMemberModal, setShowMemberModal] = useState(false);
 
   // Function to toggle the member addition modal
@@ -508,11 +533,33 @@ export default function CompanyProfile() {
     );
   };
 
-  const handleMemberEdit = (member) => {
-    console.log('Edit mem: ', member);
+  const handleMemberTrash = (email, index) => {
+    const newMembers = teamMembers.filter((_, i) => i !== index);
+
+    setTeamMembers((currentMembers) =>
+      currentMembers.filter((_, i) => i !== index),
+    );
+
+    const formData = new FormData(); // Extract form data
+    formData.append('_action', 'editTeamMembers');
+    formData.append('email', email);
+    formData.append('team_members', JSON.stringify(newMembers));
+    fetcher.submit(formData, { method: 'post', action: '/company/profile' });
   };
 
-  console.log('Teams: ', info?.teams.teams);
+  const handleMemberEdit = (member, index) => {
+    console.log('Edit mem: ', member);
+
+    setTeamMembers((currentMembers) =>
+      currentMembers.filter((_, i) => i !== index),
+    );
+
+    setTeamMembers((currentMembers) => [...currentMembers, member]);
+  };
+
+
+  /*********** END  *************/
+  
 
   return (
     <div className="flex-container">
@@ -643,12 +690,7 @@ export default function CompanyProfile() {
                           </p>
                           <button
                             className="edit-icon"
-                            onClick={() => handleMemberEdit(member)}>
-                            <PencilIcon />
-                          </button>
-                          <button
-                            className="edit-icon"
-                            onClick={() => handleMemberDelete(member)}>
+                            onClick={() => handleMemberTrash(team.email, i)}>
                             <TrashIcon />
                           </button>
                         </div>
@@ -716,7 +758,7 @@ export default function CompanyProfile() {
                       </span>
                       <button
                         className="edit-icon"
-                        onClick={() => handleMemberDelete(index)}>
+                        onClick={() => handleMemberDelete(team.email, index)}>
                         x
                       </button>
                     </div>
@@ -728,6 +770,7 @@ export default function CompanyProfile() {
               </div>
               <MemberModal
                 open={showMemberModal}
+                member = {{}}
                 onClose={closeMemberModal}
                 addTeamMember={addTeamMember}
                 title="Add team member"></MemberModal>

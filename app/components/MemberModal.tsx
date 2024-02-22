@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-export const MemberModal = ({ open, onClose, title, addTeamMember }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [role, setRole] = useState('');
-  const [age, setAge] = useState('');
-  const [sex, setSex] = useState('');
-  const [race, setRace] = useState('');
+export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => {
+  const [firstName, setFirstName] = useState(member.first_name ?? '');
+  const [lastName, setLastName] = useState(member.last_name ?? '');
+  const [role, setRole] = useState(member.role ?? '');
+  const [age, setAge] = useState(member.age ?? '');
+  const [sex, setSex] = useState(member.sex ?? '');
+  const [race, setRace] = useState(member.race ?? '');
 
   const handleAddMemberClick = () => {
     const memberData = {
