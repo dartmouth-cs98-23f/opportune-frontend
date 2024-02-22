@@ -988,7 +988,7 @@ export default function CompanyProfile() {
           <div className="row-container">
             <label>
               Team Survey Deadline:
-              <DatePicker selected={date} onChange={(date) => setDate(date)} />
+              <DatePicker selected={teamDate} onChange={(date) => handleTeamDateChange(date)} name="team_survey_deadline" />
             </label>
 
             <label>
@@ -1000,6 +1000,14 @@ export default function CompanyProfile() {
               />{' '}
               {/* TODO CSS */}
             </label>
+            <button
+                type="submit"
+                className="date-save"
+                name="_action"
+                value="dateSave"
+                disabled={dateButtonDisabled}>
+                Save
+              </button> {/* TODO CSS */}
           </div>
         </Form>
       </div>
