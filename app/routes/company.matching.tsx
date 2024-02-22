@@ -433,6 +433,17 @@ export default function CompanyMatching() {
     return Math.floor(percentage * 1000) / 10;
   }
 
+  const getDiversityModalName = () => {
+    return (<div>
+      {'Diversity: ' + info.teams.teams[diversityModal].name}
+      <div className='stat-box'>
+        <div className='column' style={{width: '40%'}}>Before Matching </div>
+        <div className='column' style={{width: '20%'}}></div>
+        <div className='column' style={{width: '40%'}}>After Matching</div>
+      </div>
+    </div>)
+  }
+
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
@@ -586,7 +597,7 @@ export default function CompanyMatching() {
                       ))}
                     </div>
                   </div>
-                  <div style={{ flexDirection: 'row', 'margin-top': '10px', 'margin-bottom': '15px' }}>
+                  <div style={{ flexDirection: 'row', 'margin-top': '15px', 'margin-bottom': '15px' }}>
                     <button className='diversity' onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
                   </div>
                 </Collapsible>
@@ -596,14 +607,9 @@ export default function CompanyMatching() {
             <ModalLarge
             open={diversityModal != null}
             onClose={() => setDiversityModal(null)}
-            title={(diversityModal != null) ? 'Diversity: ' + info.teams.teams[diversityModal].name : 'Diversity' }>
+            title={(diversityModal != null) ? getDiversityModalName() : 'Diversity' }>
               {diversityModal != null ? 
               <div className='scrollable'>
-                <div className='stat-box'>
-                  <h1 className='column' style={{width: '40%'}}>Before Matching </h1>
-                  <div className='column' style={{width: '20%'}}></div>
-                  <h1 className='column' style={{width: '40%'}}>After Matching</h1>
-                </div>
 
                 <div className='stat-box'>
                   <h2 className='column' style={{width: '40%'}}>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</h2>

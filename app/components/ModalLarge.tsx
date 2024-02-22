@@ -23,7 +23,7 @@ function ModalLarge({ open, children, onClose, title }) {
     <div className="modal-overlay">
       <div className="modal-large">
         {/* Close icon */}
-        <h1 style={{ textAlign: 'center', marginBottom: 0 }}>{title}</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '10px' }}>{title}</h1>
         <button className="right" onClick={onClose}>
           &times;
         </button>
