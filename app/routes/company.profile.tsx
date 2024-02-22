@@ -491,12 +491,6 @@ export default function CompanyProfile() {
     info?.data.company.newhire_survey_deadline,
   );
 
-
-
-
-
-  /******* TEAM MEMBER FUNCTIONS AND STATES  *********/
-
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [showEditMemberModal, setShowEditMemberModal] = useState(null);
 
@@ -511,10 +505,12 @@ export default function CompanyProfile() {
 
   const [teamMembers, setTeamMembers] = useState([]);
 
+  // append to the members state
   const addTeamMember = (member) => {
     setTeamMembers((currentMembers) => [...currentMembers, member]);
   };
 
+  // remove by index
   const handleMemberDelete = (index) => {
     var editedMembers = [];
     for(var i = 0; i < teamMembers.length; i++) {
@@ -525,6 +521,7 @@ export default function CompanyProfile() {
     setTeamMembers(editedMembers);
   };
 
+  // update by index
   const handleMemberEdit = (member, index) => {
     var editedMembers = [];
     for(var i = 0; i < teamMembers.length; i++) {
@@ -534,10 +531,6 @@ export default function CompanyProfile() {
 
     setTeamMembers(editedMembers);
   };
-
-
-  /*********** END  *************/
-  
 
   return (
     <div className="flex-container">
