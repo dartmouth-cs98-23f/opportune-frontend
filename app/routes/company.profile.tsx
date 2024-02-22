@@ -563,7 +563,6 @@ export default function CompanyProfile() {
 
         <div>
           <h1>{info?.data.company.name}</h1>
-          <p>Location: SF</p>
           <div className="upload-buttons">
             <ImageUpload onUpload={handleOnUpload}>
               {({ open }) => {
@@ -727,7 +726,7 @@ export default function CompanyProfile() {
               />
               <TextField
                 className="add-team"
-                label="Capacity"
+                label="New Hire Capacity"
                 name="capacity"
                 classLabel="max_capacity"
               />
