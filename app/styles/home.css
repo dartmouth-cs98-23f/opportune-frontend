@@ -475,7 +475,7 @@
 .diversity {
   background-color: var(--color-primary-20);
   color: #fff;
-  padding: 0.5rem 2rem;
+  padding: 0.3rem 1rem;
   transition: .3s;
 }
 
@@ -927,7 +927,19 @@ input[type='file'] {
   text-align: left;
 }
 
-.modal button.right {
+.modal-large {
+  background: aliceblue;
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  position: relative;
+  text-align: left;
+}
+
+.modal button.right,
+.modal-large button.right {
   position: absolute;
   top: 10px;
   right: 10px;

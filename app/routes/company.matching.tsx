@@ -21,6 +21,7 @@ import { Checkbox } from '@mui/material';
 import CustomPieChart from '~/components/CustomPieChart';
 import React from 'react';
 import Modal from '~/components/Modal';
+import ModalLarge from '~/components/ModalLarge';
 import { parseDate, parseDatePlus1 } from '~/lib/date';
 
 function getDiversityMetrics(diversity) {
@@ -33,7 +34,9 @@ function getDiversityMetrics(diversity) {
   if(diversityBefore["age"]) {
     const ageRangesBefore = diversityBefore["age"]["ranges"];
     for(var key in ageRangesBefore) {
-      ageBefore.push({x: i, y: ageRangesBefore[key], label: key});
+      if(ageRangesBefore[key] != 0) {
+        ageBefore.push({x: i, y: ageRangesBefore[key], label: key + '\n' + (ageRangesBefore[key] * 100) + '%'});
+      }
       i++;
     }
   } else {
@@ -47,7 +50,9 @@ function getDiversityMetrics(diversity) {
   if(diversityAfter["age"]) {
     const ageRangesAfter = diversityAfter["age"]["ranges"];
     for(var key in ageRangesAfter) {
-      ageAfter.push({x: i, y: ageRangesAfter[key], label: key});
+      if(ageRangesAfter[key] != 0) {
+        ageAfter.push({x: i, y: ageRangesAfter[key], label: key + '\n' + (ageRangesAfter[key] * 100) + '%'});
+      }
       i++;
     }
   } else {
@@ -58,10 +63,16 @@ function getDiversityMetrics(diversity) {
   // race before
   var raceBefore = [];
   i = 0;
-  const raceDistBefore = diversityBefore["race"];
-  if(raceDistBefore) {
-    for(var key in raceDistBefore) {
-      raceBefore.push({x: i, y: raceDistBefore[key], label: key});
+  const raceDivBefore = diversityBefore["race"];
+  if(raceDivBefore) {
+    for(var key in raceDivBefore) {
+      if(key == 'White') {
+        raceBefore.push({x: i, y: raceDivBefore[key], label: "White\n" + (raceDivBefore[key] * 100) + '%'}); // get period to float out of the svg
+      } else if(key == 'Black') {
+        raceBefore.push({x: i, y: raceDivBefore[key], label: "Black\n" + (raceDivBefore[key] * 100) + '%'}); // get period to float out of the svg
+      } else {
+        raceBefore.push({x: i, y: raceDivBefore[key], label: key + '\n' + (raceDivBefore[key] * 100) + '%'});
+      }
       i++;
     }
   } else {
@@ -71,10 +82,16 @@ function getDiversityMetrics(diversity) {
   // race after
   var raceAfter = [];
   i = 0;
-  const raceDistAfter = diversityAfter["race"];
-  if(raceDistAfter) {
-    for(var key in raceDistAfter) {
-      raceAfter.push({x: i, y: raceDistAfter[key], label: key});
+  const raceDivAfter = diversityAfter["race"];
+  if(raceDivAfter) {
+    for(var key in raceDivAfter) {
+      if(key == 'White') {
+        raceAfter.push({x: i, y: raceDivAfter[key], label: "White\n" + (raceDivAfter[key] * 100) + '%'}); // get period to float out of the svg
+      } else if(key == 'Black') {
+        raceAfter.push({x: i, y: raceDivAfter[key], label: "Black\n" + (raceDivAfter[key] * 100) + '%'}); // get period to float out of the svg
+      } else {
+        raceAfter.push({x: i, y: raceDivAfter[key], label: key + '\n' + (raceDivAfter[key] * 100) + '%'});
+      }
       i++;
     }
   } else {
@@ -84,10 +101,10 @@ function getDiversityMetrics(diversity) {
   // sex before
   var sexBefore = [];
   i = 0;
-  const sexDistBefore = diversityBefore["sex"];
-  if(sexDistBefore) {
-    for(var key in sexDistBefore) {
-      sexBefore.push({x: i, y: sexDistBefore[key], label: key});
+  const sexDivBefore = diversityBefore["sex"];
+  if(sexDivBefore) {
+    for(var key in sexDivBefore) {
+      sexBefore.push({x: i, y: sexDivBefore[key], label: key + '\n' + (sexDivBefore[key] * 100) + '%'});
       i++;
     }
   } else {
@@ -97,10 +114,10 @@ function getDiversityMetrics(diversity) {
   // sex after
   var sexAfter = [];
   i = 0;
-  const sexDistAfter = diversityAfter["sex"];
-  if(sexDistAfter) {
-    for(var key in sexDistAfter) {
-      sexAfter.push({x: i, y: sexDistAfter[key], label: key});
+  const sexDivAfter = diversityAfter["sex"];
+  if(sexDivAfter) {
+    for(var key in sexDivAfter) {
+      sexAfter.push({x: i, y: sexDivAfter[key], label: key + '\n' + (sexDivAfter[key] * 100) + '%'});
       i++;
     }
   } else {
@@ -570,91 +587,89 @@ export default function CompanyMatching() {
               ))}
             </div>
 
-            <Modal
+            <ModalLarge
             open={diversityModal != null}
             onClose={() => setDiversityModal(null)}
             title={(diversityModal != null) ? 'Diversity: ' + info.teams.teams[diversityModal].name : 'Diversity' }>
               {diversityModal != null ? 
               <div className='scrollable'>
                 <div className='stat-box'>
-                  <h2 className='column'>Before Matching </h2>
-                  <div className='column'></div>
-                  <h2 className='column'>After Matching</h2>
+                  <h1 className='column' style={{width: '40%'}}>Before Matching </h1>
+                  <div className='column' style={{width: '20%'}}></div>
+                  <h1 className='column' style={{width: '40%'}}>After Matching</h1>
                 </div>
 
                 <div className='stat-box'>
-                  <h4 className='column'>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</h4>
-                  <h3 className='column'>Diversity Score</h3>
-                  <div className='column'>
-                    <h4>
+                  <h2 className='column' style={{width: '40%'}}>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</h2>
+                  <h2 className='column' style={{width: '20%'}}>Diversity Score</h2>
+                  <div className='column' style={{width: '40%'}}>
+                    <h2>
                       {parsedDiversity[diversityModal].diversityScoreAfter + "/100 "}
 
                       {getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) > 0.0 ?
-                        <span style={{color: 'green', 'font-size': '12px'}}>                        
+                        <span style={{color: 'green', 'font-size': '14px'}}>                        
                           {'(+' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
                         </span>
                         :
-                        <span style={{color: 'red', 'font-size': '12px'}}>                        
+                        <span style={{color: 'red', 'font-size': '14px'}}>                        
                           {'(' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
                         </span>
                       }
 
-                    </h4>
-                    
+                    </h2>
                   </div>
                 </div>
 
                 <div className='stat-box'> 
-                  <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].ageBefore}
-                  />
+                  <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].ageBefore}
+                    />
                   </p>
-                  <h3 className='column'>Age Metrics</h3>
-                  <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].ageAfter}
-                  />
+                  <h2 className='column' style={{width: '20%'}}>Age Metrics</h2>
+                  <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].ageAfter}
+                    />
                   </p>
                 </div>
 
                 <div className='stat-box'>
-                <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].raceBefore}
-                  />
+                  <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].raceBefore}
+                    />
                   </p>
-                  <h3 className='column'>Race Metrics</h3>
-                  <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].raceAfter}
-                  />
+                  <h2 className='column' style={{width: '20%'}}>Race Metrics</h2>
+                  <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].raceAfter}
+                    />
                   </p>
                 </div>
                 
                 <div className='stat-box'>
-                <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].sexBefore}
-                  />
-                  </p>
-                  <h3 className='column'>Gender Identity Metrics</h3>
-                  <p className='column'>
-                  <CustomPieChart
-                    data={parsedDiversity[diversityModal].sexAfter}
-                  />
+                  <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].sexBefore}
+                    />
+                    </p>
+                    <h2 className='column' style={{width: '20%'}}>Gender Identity Metrics</h2>
+                    <p className='column' style={{width: '40%'}}>
+                    <CustomPieChart
+                      data={parsedDiversity[diversityModal].sexAfter}
+                    />
                   </p>
                 </div>
 
                 {(diversityModal != null && diversityModal > 0) ? <button onClick={() => setDiversityModal(diversityModal - 1)}>Previous</button>: null} 
                 {(diversityModal != null && diversityModal < info.teams.teams.length - 1) ? <button onClick={() => setDiversityModal(diversityModal + 1)}>Next</button> : null} 
-                  
               </div>
             :
             null
             }
                 
-            </Modal>
+            </ModalLarge>
           </div>
 
           <div className="new-hire-container">
