@@ -446,7 +446,7 @@
   text-decoration: none;
   background-color: var(--color-primary-20);
   color: white;
-  margin: 10px;
+  margin: 1rem;
   border: none;
   border-radius: 4px;
   transition: 0.3s;
@@ -462,6 +462,14 @@
   background-color: var(--color-secondary-10);
   cursor: pointer;
   transition: 0.3s;
+}
+
+.cta .match {
+  font-size: 1.3rem;
+}
+
+.cta .confirm {
+  background-color: var(--color-primary-10);
 }
 
 .longer a {
@@ -846,11 +854,25 @@ input[type='file'] {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+.company-hire {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
   border: 1px solid #cccccc;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   text-align: left;
+}
+
+.company-hire h3 {
+  margin-top: 0.9rem;
 }
 
 .company-team h3 {
@@ -1071,6 +1093,7 @@ input[type='file'] {
   position: relative;
   margin-top: 1rem;
   background: none;
+  margin-left: 1rem;
 }
 
 .lock-icon {
@@ -1137,18 +1160,21 @@ input[type='file'] {
   width: 7rem;
 }
 
-.collapsible {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.8s ease;
-}
-
-.collapsible.open {
-  border-top: none;
-  max-height: fit-content;
+.collapsible-container {
+  border: 1px solid #cccccc;
+  border-radius: 1rem;
   margin-bottom: 1rem;
 }
 
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease;
+}
+
+.collapsible.open {
+  max-height: 1000px;
+}
 .edit-input {
   margin-top: 0.8em;
   font-size: 1.17em;
@@ -1171,7 +1197,11 @@ input[type='file'] {
 }
 
 .edit-button:hover {
-  color: blue;
+  color: var(--color-primary-20);
+}
+
+.trash:hover {
+  color: red;
 }
 
 .buttons {
@@ -1211,7 +1241,6 @@ input[type='file'] {
 .row-container {
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: flex-end;
 }
 
@@ -1221,10 +1250,8 @@ input[type='file'] {
 }
 
 .company-deadlines {
-  display: flex;
   width: 45%;
   margin: 0 2rem;
-  flex-direction: column;
 }
 
 .date-container {
@@ -1274,16 +1301,25 @@ input[type='file'] {
   border: none;
   position: relative;
   background: none;
-  width: 2rem;
+  width: 1rem;
   font-size: 1rem;
 }
 
-.edit-icon:hover {
+.trash-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 1rem;
+  font-size: 1rem;
+}
+
+.trash-icon:hover {
   color: red;
 }
 
 .team-member-card {
-  text-align: center;
+  display: flex;
+  align-items: center;
   width: fit-content;
   white-space: nowrap;
   padding: 0.5rem;
@@ -1316,6 +1352,8 @@ input[type='file'] {
 .team-member-card1 {
   text-align: center;
   width: fit-content;
+  align-items: center;
+  height: 2rem;
   padding: 0 0.5rem;
   margin-right: 0.5rem;
   border-radius: 10px;
@@ -1329,4 +1367,80 @@ input[type='file'] {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+}
+
+.react-datepicker__input-container input {
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  border-bottom: 2px solid #f08e46;
+  font-size: 1.2rem;
+  font-family: Mulish, Roboto;
+  font-weight: 600;
+  width: 90%;
+  margin-top: 1rem;
+  &:focus {
+    outline: none;
+  }
+}
+
+.react-datepicker__month-container {
+  color: #969eac;
+  font-size: 1rem;
+  font-family: 'Mulish';
+}
+
+.react-datepicker__month {
+  padding: 1rem 0;
+}
+
+.react-datepicker__month-text {
+  display: inline-block;
+  width: 5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  padding: 0.2rem;
+  &:hover {
+    background-color: #534cea;
+  }
+}
+
+/* Hide the checkbox */
+.toggle-button {
+  display: none;
+}
+
+/* Custom styling for the label */
+.toggle-label {
+  position: relative;
+  display: block;
+  width: 3rem;
+  height: 1.6rem;
+  background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 1rem;
+}
+
+/* Circle inside the toggle */
+.toggle-label::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Change styles when the checkbox is checked */
+.toggle-button:checked + .toggle-label {
+  background-color: var(--color-secondary-10);
+}
+
+.toggle-button:checked + .toggle-label::after {
+  transform: translateX(1.4rem);
 }

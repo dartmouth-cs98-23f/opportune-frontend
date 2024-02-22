@@ -287,7 +287,7 @@ export default function CompanyMatching() {
           <img
             className="opportune-logo-small"
             src="../opportune_newlogo.svg"></img>
-            <p className="text-logo">Opportune</p>
+          <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
             <button
               className="logout-button"
@@ -373,7 +373,7 @@ export default function CompanyMatching() {
             </div>
             <div className="teams-list">
               {info?.newHires.new_hires.map((newHire) => (
-                <div key={newHire.name} className="company-team">
+                <div key={newHire.name} className="company-hire">
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h3>
                       {newHire.first_name} {newHire.last_name}
@@ -390,7 +390,8 @@ export default function CompanyMatching() {
                       className={
                         !newHire.matched ? 'select-active' : 'select-inactive'
                       }
-                      onChange={handleSelectChange}>
+                      onChange={handleSelectChange}
+                      disabled={newHire.matched}>
                       <option key={'None'} value={newHire.email}>
                         None
                       </option>
@@ -443,9 +444,9 @@ export default function CompanyMatching() {
             </div>
           </div>
         </div>
-
-        <p className="cta" style={{ textAlign: 'right' }}>
-          {/* {allSurveysCompleted ? (
+        <div className="row-container" style={{ marginRight: '1rem' }}>
+          <p className="cta" style={{ textAlign: 'right' }}>
+            {/* {allSurveysCompleted ? (
             <Form action="/company/matching" method="post">
               <button type="submit" name="_action" value="matchingSurvey">
                 Run matching survey
@@ -454,21 +455,39 @@ export default function CompanyMatching() {
           ) : (
             <></>
           )} */}
-          <Form action="/company/matching" method="post">
-            <button type="submit" name="_action" value="matchingSurvey">
-              Run matching survey
-            </button>
-            Enable Diversity Matching?
-            <input type="checkbox" name="diversity" />
-          </Form>
-        </p>
-        <p className="cta" style={{ textAlign: 'right' }}>
-          <Form action="/company/matching" method="post">
-            <button type="submit" name="_action" value="completeMatching">
-              Complete Team-Matching
-            </button>
-          </Form>
-        </p>
+            <Form action="/company/matching" method="post">
+              <button
+                className="match"
+                type="submit"
+                name="_action"
+                value="matchingSurvey">
+                Run matching survey
+              </button>
+              <div
+                className="row-container"
+                style={{ alignItems: 'center', marginRight: '1rem' }}>
+                <p>Enable Diversity Matching?</p>
+                <input
+                  type="checkbox"
+                  id="toggle-button"
+                  className="toggle-button"
+                />
+                <label for="toggle-button" className="toggle-label"></label>
+              </div>
+            </Form>
+          </p>
+          <p className="cta">
+            <Form action="/company/matching" method="post">
+              <button
+                className="match confirm"
+                type="submit"
+                name="_action"
+                value="completeMatching">
+                Confirm Team Matches
+              </button>
+            </Form>
+          </p>
+        </div>
       </div>
     );
   }
