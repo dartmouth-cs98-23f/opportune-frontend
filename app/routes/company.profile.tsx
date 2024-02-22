@@ -2,6 +2,7 @@ import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import styles from '~/styles/home.css';
 import {
   ArrowLeftOnRectangleIcon,
+  InformationCircleIcon,
   PencilIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
@@ -533,13 +534,13 @@ export default function CompanyProfile() {
   };
 
   return (
-    <div className="flex-container">
+    <div className="company-container">
       <div className="sidebar">
         <img
           className="opportune-logo-small"
           src="../opportune_newlogo.svg"></img>
+        <p className="text-logo">Opportune</p>
         <Form action="/company/profile" method="post">
-          <p className="text-logo">Opportune</p>
           <button
             className="logout-button"
             type="submit"
@@ -629,25 +630,29 @@ export default function CompanyProfile() {
                           value="teamNudge">
                           Email nudge
                         </button>
-                        <button
-                          className="edit-button"
-                          onClick={() => handleSetEditTeam(i)}>
-                          Edit
-                        </button>
-                        <Form action="/company/profile" method="post">
+
+                        <div className="row-container">
                           <button
                             className="edit-button"
-                            type="submit"
-                            name="_action"
-                            value="deleteTeam">
-                            Delete
+                            type="button"
+                            onClick={() => handleSetEditTeam(i)}>
+                            <PencilIcon />
                           </button>
-                          <input
-                            name="email"
-                            value={team.email}
-                            style={{ display: 'none' }}
-                          />
-                        </Form>
+                          <Form action="/company/profile" method="post">
+                            <button
+                              className="edit-button"
+                              type="submit"
+                              name="_action"
+                              value="deleteTeam">
+                              <TrashIcon />
+                            </button>
+                            <input
+                              name="email"
+                              value={team.email}
+                              style={{ display: 'none' }}
+                            />
+                          </Form>
+                        </div>
                       </div>
                     </div>
                   }>
@@ -908,26 +913,28 @@ export default function CompanyProfile() {
                     value="newHireNudge">
                     Email nudge
                   </button>
-                  <button
-                    className="edit-button"
-                    type="button"
-                    onClick={() => setEditHire(i)}>
-                    Edit
-                  </button>
-                  <Form action="/company/profile" method="post">
+                  <div className="row-container">
                     <button
                       className="edit-button"
-                      type="submit"
-                      name="_action"
-                      value="deleteNewHire">
-                      Delete
+                      type="button"
+                      onClick={() => setEditHire(i)}>
+                      <PencilIcon />
                     </button>
-                    <input
-                      name="email"
-                      value={newHire.email}
-                      style={{ display: 'none' }}
-                    />
-                  </Form>
+                    <Form action="/company/profile" method="post">
+                      <button
+                        className="edit-button"
+                        type="submit"
+                        name="_action"
+                        value="deleteNewHire">
+                        <TrashIcon />
+                      </button>
+                      <input
+                        name="email"
+                        value={newHire.email}
+                        style={{ display: 'none' }}
+                      />
+                    </Form>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1053,13 +1060,16 @@ export default function CompanyProfile() {
           <div className="company-teams-title">
             <h2>Deadlines:</h2>
           </div>
-          <div className="row-container">
-            <label>
+          <div className="row-container-start">
+            <label className="date-container">
               Team Survey Deadline:
-              <DatePicker selected={teamDate} onChange={(date) => handleTeamDateChange(date)} name="team_survey_deadline" />
+              <DatePicker
+                selected={teamDate}
+                onChange={(date) => handleTeamDateChange(date)}
+                name="team_survey_deadline"
+              />
             </label>
-
-            <label>
+            <label className="date-container">
               New Hire Deadline:
               <DatePicker
                 selected={nhDate} // change to info.teams.team.survey_deadline or sth like that
@@ -1069,13 +1079,13 @@ export default function CompanyProfile() {
               {/* TODO CSS */}
             </label>
             <button
-                type="submit"
-                className="date-save"
-                name="_action"
-                value="dateSave"
-                disabled={dateButtonDisabled}>
-                Save
-              </button> {/* TODO CSS */}
+              type="submit"
+              name="_action"
+              className="company-save"
+              value="dateSave"
+              disabled={false}>
+              Save
+            </button>
           </div>
         </Form>
       </div>
@@ -1085,9 +1095,12 @@ export default function CompanyProfile() {
         {allSurveysComplete || date.getTime() > surveysClosedDate.getTime() ? (
           <Link to="/company/matching">Next</Link>
         ) : (
-          <div>
-            Team Matching will be available when all surveys are complete or the
-            deadline is reached.
+          <div className="matching-unavailable">
+            <InformationCircleIcon className="lock-icon" />
+            <p style={{ marginLeft: '0.5rem' }}>
+              Team Matching will be available when all surveys are complete or
+              the deadline is reached.
+            </p>
           </div>
         )}
       </p>
