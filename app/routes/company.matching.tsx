@@ -34,8 +34,9 @@ function getDiversityMetrics(diversity) {
   if(diversityBefore["age"]) {
     const ageRangesBefore = diversityBefore["age"]["ranges"];
     for(var key in ageRangesBefore) {
+      var percent = Math.floor(ageRangesBefore[key] * 100);
       if(ageRangesBefore[key] != 0) {
-        ageBefore.push({x: i, y: ageRangesBefore[key], label: key + '\n' + (ageRangesBefore[key] * 100) + '%'});
+        ageBefore.push({x: i, y: ageRangesBefore[key], label: key + '\n' + percent + '%'});
       }
       i++;
     }
@@ -50,8 +51,9 @@ function getDiversityMetrics(diversity) {
   if(diversityAfter["age"]) {
     const ageRangesAfter = diversityAfter["age"]["ranges"];
     for(var key in ageRangesAfter) {
+      var percent = Math.floor(ageRangesAfter[key] * 100);
       if(ageRangesAfter[key] != 0) {
-        ageAfter.push({x: i, y: ageRangesAfter[key], label: key + '\n' + (ageRangesAfter[key] * 100) + '%'});
+        ageAfter.push({x: i, y: ageRangesAfter[key], label: key + '\n' + percent + '%'});
       }
       i++;
     }
@@ -66,12 +68,13 @@ function getDiversityMetrics(diversity) {
   const raceDivBefore = diversityBefore["race"];
   if(raceDivBefore) {
     for(var key in raceDivBefore) {
+      var percent = Math.floor(raceDivBefore[key] * 100);
       if(key == 'White') {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: "White\n" + (raceDivBefore[key] * 100) + '%'}); // get period to float out of the svg
+        raceBefore.push({x: i, y: raceDivBefore[key], label: "White\n" + percent + '%'}); // get period to float out of the svg
       } else if(key == 'Black') {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: "Black\n" + (raceDivBefore[key] * 100) + '%'}); // get period to float out of the svg
+        raceBefore.push({x: i, y: raceDivBefore[key], label: "Black\n" + percent + '%'}); // get period to float out of the svg
       } else {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: key + '\n' + (raceDivBefore[key] * 100) + '%'});
+        raceBefore.push({x: i, y: raceDivBefore[key], label: key + '\n' + percent + '%'});
       }
       i++;
     }
@@ -85,12 +88,13 @@ function getDiversityMetrics(diversity) {
   const raceDivAfter = diversityAfter["race"];
   if(raceDivAfter) {
     for(var key in raceDivAfter) {
+      var percent = Math.floor(raceDivAfter[key] * 100);
       if(key == 'White') {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: "White\n" + (raceDivAfter[key] * 100) + '%'}); // get period to float out of the svg
+        raceAfter.push({x: i, y: raceDivAfter[key], label: "White\n" + percent + '%'}); // get period to float out of the svg
       } else if(key == 'Black') {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: "Black\n" + (raceDivAfter[key] * 100) + '%'}); // get period to float out of the svg
+        raceAfter.push({x: i, y: raceDivAfter[key], label: "Black\n" + percent + '%'}); // get period to float out of the svg
       } else {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: key + '\n' + (raceDivAfter[key] * 100) + '%'});
+        raceAfter.push({x: i, y: raceDivAfter[key], label: key + '\n' + percent + '%'});
       }
       i++;
     }
@@ -104,7 +108,8 @@ function getDiversityMetrics(diversity) {
   const sexDivBefore = diversityBefore["sex"];
   if(sexDivBefore) {
     for(var key in sexDivBefore) {
-      sexBefore.push({x: i, y: sexDivBefore[key], label: key + '\n' + (sexDivBefore[key] * 100) + '%'});
+      var percent = Math.floor(sexDivBefore[key] * 100);
+      sexBefore.push({x: i, y: sexDivBefore[key], label: key + '\n' + percent + '%'});
       i++;
     }
   } else {
@@ -117,7 +122,8 @@ function getDiversityMetrics(diversity) {
   const sexDivAfter = diversityAfter["sex"];
   if(sexDivAfter) {
     for(var key in sexDivAfter) {
-      sexAfter.push({x: i, y: sexDivAfter[key], label: key + '\n' + (sexDivAfter[key] * 100) + '%'});
+      var percent = Math.floor(sexDivAfter[key] * 100);
+      sexAfter.push({x: i, y: sexDivAfter[key], label: key + '\n' + percent + '%'});
       i++;
     }
   } else {
@@ -662,8 +668,8 @@ export default function CompanyMatching() {
                   </p>
                 </div>
 
-                {(diversityModal != null && diversityModal > 0) ? <button onClick={() => setDiversityModal(diversityModal - 1)}>Previous</button>: null} 
-                {(diversityModal != null && diversityModal < info.teams.teams.length - 1) ? <button onClick={() => setDiversityModal(diversityModal + 1)}>Next</button> : null} 
+                {(diversityModal != null && diversityModal > 0) ? <button className='off-left' onClick={() => setDiversityModal(diversityModal - 1)}>←</button>: null} 
+                {(diversityModal != null && diversityModal < info.teams.teams.length - 1) ? <button className='off-right' onClick={() => setDiversityModal(diversityModal + 1)}>→</button> : null} 
               </div>
             :
             null

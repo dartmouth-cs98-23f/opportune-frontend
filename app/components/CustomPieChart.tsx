@@ -8,7 +8,6 @@ function CustomPieChart({ data }) {
             radius={100}
             cornerRadius={5}
             padAngle={({ datum }) => 5}
-            animate={{duration: 2000}}
             style={{ labels: { fontSize: 10, fontWeight: 'bold'} }}
             colorScale={["#173F5F", "#ED553B", "#3CAEA3", "#F6D55C", "#20639B"]}
         />

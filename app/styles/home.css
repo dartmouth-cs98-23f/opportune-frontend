@@ -938,6 +938,34 @@ input[type='file'] {
   text-align: left;
 }
 
+.modal-large button.off-right {
+  position: absolute;
+  top: 50%;
+  right: -8%;
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  padding: 0.5rem 1.5rem;
+  border: none;
+}
+
+.modal-large button.off-left {
+  position: absolute;
+  top: 50%;
+  left: -8%;
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  padding: 0.5rem 1.5rem;
+  border: none;
+}
+
 .modal button.right,
 .modal-large button.right {
   position: absolute;
@@ -979,7 +1007,8 @@ input[type='file'] {
   transition: 0.3s;
 }
 
-.modal button:hover {
+.modal button:hover,
+.modal-large button:hover {
   color: #06d6a0;
 }
 
