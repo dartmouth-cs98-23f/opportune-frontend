@@ -548,12 +548,16 @@ export default function CompanyMatching() {
                     </div>
                   }>
                   <div style={{ flexDirection: 'row' }}>
-                    <p>Matched hires: </p>
-                    {teamNewHires[team._id]?.map((matchedHire) => (
-                      <p>
-                        {matchedHire.first_name} {matchedHire.last_name},
-                      </p>
-                    ))}
+                    <h3>Matched Hires: </h3>
+                    <div className="member-container">
+                      {teamNewHires[team._id]?.map((matchedHire) => (
+                        <div className="row-container team-member-card1">
+                          <div>
+                            {matchedHire.first_name} {matchedHire.last_name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <button onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
                 </Collapsible>
