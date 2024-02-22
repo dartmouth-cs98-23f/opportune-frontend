@@ -1110,14 +1110,27 @@ export default function CompanyProfile() {
               />{' '}
               {/* TODO CSS */}
             </label>
-            <button
-              type="submit"
-              name="_action"
-              className="company-save"
-              value="dateSave"
-              disabled={false}>
-              Save
+            {
+              dateButtonDisabled ? 
+              <button
+                type="submit"
+                name="_action"
+                className="company-save"
+                style={{'background-color': 'gray', cursor: 'auto'}}
+                value="dateSave"
+                disabled={true}>
+                Save
             </button>
+              :
+              <button
+                type="submit"
+                name="_action"
+                className="company-save"
+                value="dateSave"
+                disabled={false}>
+                Save
+            </button>
+            }
           </div>
         </Form>
       </div>
