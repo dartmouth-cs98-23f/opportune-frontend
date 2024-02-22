@@ -16,6 +16,7 @@ import {
 } from '@remix-run/node';
 import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
+import { Collapsible } from '~/components/Collapsible';
 import { Checkbox } from '@mui/material';
 import React from 'react';
 import { parseDate, parseDatePlus1 } from '~/lib/date';
@@ -179,16 +180,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return null;
   }
 }
-const Collapsible = ({ trigger, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className={`collapsible ${isOpen && 'open'}`}>
-      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
-      {isOpen && <div style={{ marginLeft: '1rem' }}>{children}</div>}
-    </div>
-  );
-};
 
 export default function CompanyMatching() {
   const info = useLoaderData<typeof loader>();
@@ -260,18 +251,18 @@ export default function CompanyMatching() {
   };
 
   // check if survey is open yet
-	const currentDate = new Date();
-	const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
+  const currentDate = new Date();
+  const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
 
-  if(currentDate.getTime() < surveyOpen.getTime()) {
+  if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
-      <div>
+      <div style={{ height: '100vh', textAlign: 'center' }}>
         <div className="sidebar">
           <img
             className="opportune-logo-small"
             src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
-            <p className="text-logo">Opportune</p>
             <button
               className="logout-button"
               type="submit"
@@ -281,10 +272,14 @@ export default function CompanyMatching() {
             </button>
           </Form>
         </div>
-        <div>The matching page is not available yet! </div> {/* TODO CSS */}
-        <Link to="/company/profile">Back</Link>
+        <div className="unavailable-content">
+          The matching page is not available yet!
+        </div>
+        <p className="cta" style={{ textAlign: 'center' }}>
+          <Link to="/company/profile">Back</Link>
+        </p>
       </div>
-    )
+    );
   } else {
     return (
       <div>
