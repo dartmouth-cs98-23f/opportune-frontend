@@ -18,6 +18,15 @@
   overflow: auto;
 }
 
+.company-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  color: var(--color-primary-10);
+  height: 100vh;
+  overflow: auto;
+}
+
 .horiz-flex-container {
   display: flex;
   flex-direction: row;
@@ -351,7 +360,8 @@
   border-radius: 10px;
   transition: 0.3s;
   box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
-  padding: 10px;
+  padding: 1rem;
+  margin-top: 2rem;
 }
 
 .team-box.skills {
@@ -375,7 +385,7 @@
 
 .meets-container {
   margin-left: 25px;
-  width: 35%;
+  width: 50%;
 }
 
 .team-box:hover {
@@ -436,7 +446,7 @@
   text-decoration: none;
   background-color: var(--color-primary-20);
   color: white;
-  margin: 10px;
+  margin: 1rem;
   border: none;
   border-radius: 4px;
   transition: 0.3s;
@@ -452,6 +462,14 @@
   background-color: var(--color-secondary-10);
   cursor: pointer;
   transition: 0.3s;
+}
+
+.cta .match {
+  font-size: 1.3rem;
+}
+
+.cta .confirm {
+  background-color: var(--color-primary-10);
 }
 
 .longer a {
@@ -817,13 +835,6 @@ input[type='file'] {
   background-color: var(--color-primary-10);
 }
 
-.company-preview {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  height: 20%;
-}
-
 .company-teams-title {
   text-align: left;
   margin: 2em 0;
@@ -843,10 +854,29 @@ input[type='file'] {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+.company-hire {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
   border: 1px solid #cccccc;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
+  text-align: left;
+}
+
+.company-hire h3 {
+  margin-top: 0.9rem;
+}
+
+.company-team h3 {
+  margin-top: 0.9rem;
 }
 
 .company-description {
@@ -868,20 +898,21 @@ input[type='file'] {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 100;
 }
 
 .modal {
   background: aliceblue;
   width: 50%;
-  height: 60%;
+  height: 70%;
   max-width: 100%;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 1rem;
+  border-radius: 1rem;
   position: relative;
+  text-align: left;
 }
 
 .modal button.right {
@@ -960,6 +991,7 @@ input[type='file'] {
   border-radius: 4px;
   font-size: 1rem;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .new-hire-container {
@@ -989,6 +1021,7 @@ input[type='file'] {
 .company-preview p {
   margin-top: 0;
   margin-bottom: 10px;
+  text-align: left;
 }
 
 .add-team {
@@ -1021,7 +1054,7 @@ input[type='file'] {
   transition: 0.3s;
   text-align: center;
   white-space: nowrap;
-  margin: 20px;
+  margin: 1rem;
 }
 
 .teamsDropdown {
@@ -1060,6 +1093,7 @@ input[type='file'] {
   position: relative;
   margin-top: 1rem;
   background: none;
+  margin-left: 1rem;
 }
 
 .lock-icon {
@@ -1126,15 +1160,21 @@ input[type='file'] {
   width: 7rem;
 }
 
+.collapsible-container {
+  border: 1px solid #cccccc;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
 .collapsible {
+  max-height: 0;
   overflow: hidden;
-  transition: height 0.3s ease;
+  transition: max-height 0.6s ease;
 }
 
 .collapsible.open {
-  height: auto;
+  max-height: 1000px;
 }
-
 .edit-input {
   margin-top: 0.8em;
   font-size: 1.17em;
@@ -1153,10 +1193,15 @@ input[type='file'] {
   text-align: right;
   float: right;
   margin-top: 1rem;
+  width: 2rem;
 }
 
 .edit-button:hover {
-  color: blue;
+  color: var(--color-primary-20);
+}
+
+.trash:hover {
+  color: red;
 }
 
 .buttons {
@@ -1196,14 +1241,208 @@ input[type='file'] {
 .row-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
+}
+
+.row-container-start {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .company-deadlines {
-  display: flex;
   width: 45%;
   margin: 0 2rem;
+}
+
+.date-container {
+  text-align: left;
+  margin-left: 1rem;
+  width: 40%;
+}
+
+.unavailable-content {
+  display: flex;
   flex-direction: column;
+  /* border: 1.5px solid gray; */
+  width: 50%;
+  margin: 2rem auto;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unavailable-content img {
+  width: 50%;
+}
+
+.survey-will-close {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.matching-unavailable {
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.edit-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 1rem;
+  font-size: 1rem;
+}
+
+.trash-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 1rem;
+  font-size: 1rem;
+}
+
+.trash-icon:hover {
+  color: red;
+}
+
+.team-member-card {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  white-space: nowrap;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-member-card span {
+  margin-right: 10px;
+}
+
+.add-member-btn {
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: 0.3s;
+  font-family: Mulish, Roboto;
+  font-size: 1rem;
+  padding: 0.5rem;
+  height: fit-content;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.team-member-card1 {
+  text-align: center;
+  width: fit-content;
+  align-items: center;
+  height: 2rem;
+  padding: 0 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid rgb(101, 101, 101);
+  box-shadow: 0 4px 6px #0000001a;
+}
+
+.member-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.react-datepicker__input-container input {
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  border-bottom: 2px solid #f08e46;
+  font-size: 1.2rem;
+  font-family: Mulish, Roboto;
+  font-weight: 600;
+  width: 90%;
+  margin-top: 1rem;
+  &:focus {
+    outline: none;
+  }
+}
+
+.react-datepicker__month-container {
+  color: #969eac;
+  font-size: 1rem;
+  font-family: 'Mulish';
+}
+
+.react-datepicker__month {
+  padding: 1rem 0;
+}
+
+.react-datepicker__month-text {
+  display: inline-block;
+  width: 5rem;
+  margin: 0.5rem;
+  font-size: 1rem;
+  padding: 0.2rem;
+  &:hover {
+    background-color: #534cea;
+  }
+}
+
+/* Hide the checkbox */
+.toggle-button {
+  display: none;
+}
+
+/* Custom styling for the label */
+.toggle-label {
+  position: relative;
+  display: block;
+  width: 3rem;
+  height: 1.6rem;
+  background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 1rem;
+}
+
+/* Circle inside the toggle */
+.toggle-label::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Change styles when the checkbox is checked */
+.toggle-button:checked + .toggle-label {
+  background-color: var(--color-secondary-10);
+}
+
+.toggle-button:checked + .toggle-label::after {
+  transform: translateX(1.4rem);
 }
 
 .column {
