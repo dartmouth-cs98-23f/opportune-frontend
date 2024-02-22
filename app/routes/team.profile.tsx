@@ -221,8 +221,8 @@ export default function Tprofile() {
             <h3> Team Members </h3>
             <div className="team-box">
               {teamInfo.team.members.length > 0 ? (
-                teamInfo.team.members.map((member: string, i: number) => {
-                  return <p key={i}> {member} </p>;
+                teamInfo.team.members.map((member: { first_name: string; last_name: string }, i: number) => {
+                  return <p key={i}> {member.first_name + ' ' + member.last_name} </p>;
                 })
               ) : (
                 <img src="../empty.svg"></img>
