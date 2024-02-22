@@ -734,7 +734,6 @@ export default function CompanyProfile() {
                       <span>
                         {member.first_name} {member.last_name}
                       </span>
-                      <div>
                     <PencilIcon 
                       className="edit-icon"
                       onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
@@ -742,7 +741,6 @@ export default function CompanyProfile() {
                     <TrashIcon
                       className="edit-icon"
                       onClick={() => handleMemberDelete(index)} />
-                      </div>
                         
                     </div>
                   ))}
