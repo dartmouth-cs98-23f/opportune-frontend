@@ -67,7 +67,8 @@ export async function action({ request }: ActionFunctionArgs) {
       return null;
     }
   } else if (_action === 'createTeam') {
-    if(myJson['team_members']) myJson['team_members'] = JSON.parse(myJson['team_members']);
+    if (myJson['team_members'])
+      myJson['team_members'] = JSON.parse(myJson['team_members']);
 
     try {
       const response = await axios.post(
@@ -189,7 +190,7 @@ export async function action({ request }: ActionFunctionArgs) {
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
         manager: myJson['manager'],
-        members: JSON.parse(myJson['team_members'])
+        members: JSON.parse(myJson['team_members']),
       };
 
       const response = await axios.post(
@@ -419,7 +420,7 @@ export default function CompanyProfile() {
   const handleSetEditTeam = (i) => {
     setEditTeam(i);
     setTeamMembers(teams[i].members);
-  }
+  };
 
   // return the state to null before sending the server-side request
   const handleEditHireSubmit = async (event) => {
@@ -514,9 +515,9 @@ export default function CompanyProfile() {
   // remove by index
   const handleMemberDelete = (index) => {
     var editedMembers = [];
-    for(var i = 0; i < teamMembers.length; i++) {
-      if(i == index) continue;
-      editedMembers.push(teamMembers[i])
+    for (var i = 0; i < teamMembers.length; i++) {
+      if (i == index) continue;
+      editedMembers.push(teamMembers[i]);
     }
 
     setTeamMembers(editedMembers);
@@ -525,8 +526,8 @@ export default function CompanyProfile() {
   // update by index
   const handleMemberEdit = (member, index) => {
     var editedMembers = [];
-    for(var i = 0; i < teamMembers.length; i++) {
-      if(i == index) editedMembers.push(member);
+    for (var i = 0; i < teamMembers.length; i++) {
+      if (i == index) editedMembers.push(member);
       else editedMembers.push(teamMembers[i]);
     }
 
@@ -614,7 +615,6 @@ export default function CompanyProfile() {
                         <div>Mountain View, California</div>{' '}
                         {/* TO REMOVE AT SOME POINT */}
                       </div>
-                      <ReadMore text={team.description}></ReadMore>
                       <button
                         className={
                           team.survey_complete
@@ -657,13 +657,17 @@ export default function CompanyProfile() {
                     </div>
                   }>
                   <div>
-                    <p>Team Members: </p>
+                    <h3>Team Description: </h3>
+                    {team.description}
+                  </div>
+                  <div>
+                    <h3>Team Members: </h3>
                     <div className="member-container">
                       {team.members?.map((member) => (
                         <div className="row-container team-member-card1">
-                          <p>
+                          <div>
                             {member.first_name} {member.last_name}
-                          </p>
+                          </div>
                           {/* <button
                             className="edit-icon"
                             onClick={() => handleMemberTrash(team.email, i)}>
@@ -672,6 +676,15 @@ export default function CompanyProfile() {
                         </div>
                       ))}
                     </div>
+                    <span>
+                      <h3>
+                        Email:
+                        <span style={{ fontWeight: '100', fontSize: '1rem' }}>
+                          {' '}
+                          {team.email}
+                        </span>
+                      </h3>
+                    </span>
                   </div>
                 </Collapsible>
               ),
@@ -726,20 +739,30 @@ export default function CompanyProfile() {
               />
               <div className="field-container">
                 <label>Team Members</label>
-                <div className="row-container">
+                <div
+                  className="row-container"
+                  style={{
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                  }}>
                   {teamMembers.map((member, index) => (
                     <div key={index} className="team-member-card">
                       <span>
                         {member.first_name} {member.last_name}
                       </span>
-                    <PencilIcon 
-                      className="edit-icon"
-                      onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
+                      <PencilIcon
+                        className="edit-icon"
+                        onClick={() => {
+                          setShowEditMemberModal(index);
+                          console.log(index);
+                          console.log(teamMembers);
+                          console.log(teamMembers[index]);
+                        }}
                       />
-                    <TrashIcon
-                      className="edit-icon"
-                      onClick={() => handleMemberDelete(index)} />
-                        
+                      <TrashIcon
+                        className="trash-icon"
+                        onClick={() => handleMemberDelete(index)}
+                      />
                     </div>
                   ))}
                   <button className="add-member-btn" onClick={openMemberModal}>
@@ -749,20 +772,21 @@ export default function CompanyProfile() {
               </div>
               <MemberModal
                 open={showMemberModal}
-                member = {{}}
+                member={{}}
                 onClose={closeMemberModal}
                 addTeamMember={addTeamMember}
                 title="Add team member"></MemberModal>
-              { showEditMemberModal != null ? 
+              {showEditMemberModal != null ? (
                 <MemberModal
-                  open={showEditMemberModal != null }
-                  member = {teamMembers[showEditMemberModal] ?? {}}
+                  open={showEditMemberModal != null}
+                  member={teamMembers[showEditMemberModal] ?? {}}
                   onClose={() => setShowEditMemberModal(null)}
-                  addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
-                  title="Add team member"></MemberModal> 
-                  : 
-                  null}
-              
+                  addTeamMember={(m) =>
+                    handleMemberEdit(m, showEditMemberModal)
+                  }
+                  title="Add team member"></MemberModal>
+              ) : null}
+
               {!showMemberModal && showEditMemberModal == null && (
                 <button
                   className="center"
@@ -839,36 +863,44 @@ export default function CompanyProfile() {
                         <span>
                           {member.first_name} {member.last_name}
                         </span>
-                        <PencilIcon 
+                        <PencilIcon
                           className="edit-icon"
-                          onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
-                          />
+                          onClick={() => {
+                            setShowEditMemberModal(index);
+                            console.log(index);
+                            console.log(teamMembers);
+                            console.log(teamMembers[index]);
+                          }}
+                        />
                         <TrashIcon
                           className="edit-icon"
-                          onClick={() => handleMemberDelete(index)} />
-                          
+                          onClick={() => handleMemberDelete(index)}
+                        />
                       </div>
                     ))}
-                    <button className="add-member-btn" onClick={openMemberModal}>
+                    <button
+                      className="add-member-btn"
+                      onClick={openMemberModal}>
                       Add Member
                     </button>
                   </div>
                 </div>
                 <MemberModal
                   open={showMemberModal}
-                  member = {{}}
+                  member={{}}
                   onClose={closeMemberModal}
                   addTeamMember={addTeamMember}
                   title="Add team member"></MemberModal>
-                { showEditMemberModal != null ? 
+                {showEditMemberModal != null ? (
                   <MemberModal
-                    open={showEditMemberModal != null }
-                    member = {teamMembers[showEditMemberModal] ?? {}}
+                    open={showEditMemberModal != null}
+                    member={teamMembers[showEditMemberModal] ?? {}}
                     onClose={() => setShowEditMemberModal(null)}
-                    addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
-                    title="Add team member"></MemberModal> 
-                    : 
-                    null}
+                    addTeamMember={(m) =>
+                      handleMemberEdit(m, showEditMemberModal)
+                    }
+                    title="Add team member"></MemberModal>
+                ) : null}
 
                 {!showMemberModal && showEditMemberModal == null && (
                   <div className="buttons">
@@ -880,7 +912,7 @@ export default function CompanyProfile() {
                       Save
                     </button>
                   </div>
-                  )}
+                )}
               </Form>
             ) : null}
           </Modal>
@@ -892,7 +924,7 @@ export default function CompanyProfile() {
           </div>
           <div className="teams-list">
             {info?.newHires?.new_hires.map((newHire, i) => (
-              <div key={newHire._id} className="company-team">
+              <div key={newHire._id} className="company-hire">
                 <h3>
                   {newHire.first_name} {newHire.last_name}
                 </h3>
@@ -922,7 +954,7 @@ export default function CompanyProfile() {
                     </button>
                     <Form action="/company/profile" method="post">
                       <button
-                        className="edit-button"
+                        className="edit-button trash"
                         type="submit"
                         name="_action"
                         value="deleteNewHire">
@@ -1078,19 +1110,32 @@ export default function CompanyProfile() {
               />{' '}
               {/* TODO CSS */}
             </label>
-            <button
-              type="submit"
-              name="_action"
-              className="company-save"
-              value="dateSave"
-              disabled={false}>
-              Save
+            {
+              dateButtonDisabled ? 
+              <button
+                type="submit"
+                name="_action"
+                className="company-save"
+                style={{'background-color': 'gray', cursor: 'auto'}}
+                value="dateSave"
+                disabled={true}>
+                Save
             </button>
+              :
+              <button
+                type="submit"
+                name="_action"
+                className="company-save"
+                value="dateSave"
+                disabled={false}>
+                Save
+            </button>
+            }
           </div>
         </Form>
       </div>
 
-      <p className="cta" style={{ textAlign: 'right' }}>
+      <p className="cta" style={{ textAlign: 'right', marginRight: '2rem' }}>
         {' '}
         {allSurveysComplete || date.getTime() > surveysClosedDate.getTime() ? (
           <Link to="/company/matching">Next</Link>
@@ -1110,7 +1155,7 @@ export default function CompanyProfile() {
 
 export function links() {
   return [
-    { rel: 'stylesheet', href: styles },
     { rel: 'stylesheet', href: datepicker },
+    { rel: 'stylesheet', href: styles },
   ];
 }

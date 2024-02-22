@@ -4,15 +4,14 @@ export const Collapsible = ({ trigger, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div>
+    <div className="collapsible-container">
       <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
-      {isOpen && (
-        <div
-          style={{ marginLeft: '1rem' }}
-          className={`collapsible ${isOpen ? 'open' : ''}`}>
-          {children}
-        </div>
-      )}
+
+      <div
+        style={{ marginLeft: '1rem' }}
+        className={`collapsible ${isOpen ? 'open' : ''}`}>
+        {children}
+      </div>
     </div>
   );
 };
