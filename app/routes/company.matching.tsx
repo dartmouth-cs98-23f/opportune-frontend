@@ -508,7 +508,6 @@ export default function CompanyMatching() {
 
           <div>
             <h1>{info?.data.company.name}</h1>
-            <p>Location: SF</p> {/* TO REMOVE */}
             <div className="upload-buttons">
               <ImageUpload onUpload={handleOnUpload}>
                 {({ open }) => {
@@ -564,7 +563,9 @@ export default function CompanyMatching() {
                       ))}
                     </div>
                   </div>
-                  <button onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
+                  <div style={{ flexDirection: 'row', 'margin-top': '10px', 'margin-bottom': '15px' }}>
+                    <button className='diversity' onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
+                  </div>
                 </Collapsible>
               ))}
             </div>
@@ -750,7 +751,7 @@ export default function CompanyMatching() {
                 type="submit"
                 name="_action"
                 value="matchingSurvey">
-                Run matching survey
+                Run Matching Survey
               </button>
               <div
                 className="row-container"

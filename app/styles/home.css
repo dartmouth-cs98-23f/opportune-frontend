@@ -472,6 +472,18 @@
   background-color: var(--color-primary-10);
 }
 
+.diversity {
+  background-color: var(--color-primary-20);
+  color: #fff;
+  padding: 0.5rem 2rem;
+  transition: .3s;
+}
+
+.diversity:hover {
+  background-color: var(--color-secondary-10);
+  transition: 0.3s;
+}
+
 .longer a {
   padding: 0.5rem 5rem;
 }
