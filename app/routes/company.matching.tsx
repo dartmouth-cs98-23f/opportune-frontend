@@ -282,13 +282,13 @@ export default function CompanyMatching() {
     );
   } else {
     return (
-      <div>
+      <div className="company-container">
         <div className="sidebar">
           <img
             className="opportune-logo-small"
             src="../opportune_newlogo.svg"></img>
-          <Form action="/company/matching" method="post">
             <p className="text-logo">Opportune</p>
+          <Form action="/company/matching" method="post">
             <button
               className="logout-button"
               type="submit"

@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
       return null;
     }
   } else if (_action === 'createTeam') {
-    // myJson['team_members'] = JSON.parse(myJson['team_members'], '[]');
+    if(myJson['team_members']) myJson['team_members'] = JSON.parse(myJson['team_members']);
 
     try {
       const response = await axios.post(
@@ -189,9 +189,8 @@ export async function action({ request }: ActionFunctionArgs) {
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
         manager: myJson['manager'],
+        members: JSON.parse(myJson['team_members'])
       };
-
-      console.log(myJson);
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -372,6 +371,7 @@ export default function CompanyProfile() {
 
   const closeTeamModal = () => {
     setShowTeamModal(false);
+    setTeamMembers([]);
   };
 
   const [showHireModal, setShowHireModal] = useState(false);
@@ -402,10 +402,10 @@ export default function CompanyProfile() {
     setShowTeamModal(false); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
-
     formData.append('team_members', JSON.stringify(teamMembers));
     formData.append('_action', 'createTeam');
+
+    setTeamMembers([]); // reset the list back to none
 
     // Submit form data to the server
     fetcher.submit(formData, { method: 'post', action: '/company/profile' });
@@ -416,13 +416,17 @@ export default function CompanyProfile() {
   const [editHire, setEditHire] = useState(null);
   const [editTeam, setEditTeam] = useState(null);
 
+  const handleSetEditTeam = (i) => {
+    setEditTeam(i);
+    setTeamMembers(teams[i].members);
+  }
+
   // return the state to null before sending the server-side request
   const handleEditHireSubmit = async (event) => {
     event.preventDefault();
     setEditHire(null); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
     formData.append('_action', 'editNewHire');
 
     // Submit form data to the server
@@ -434,8 +438,9 @@ export default function CompanyProfile() {
     setEditTeam(null); // Update state before form submission
 
     const formData = new FormData(event.target); // Extract form data
-    const action = formData.get('_action');
     formData.append('_action', 'editTeam');
+    formData.append('team_members', JSON.stringify(teamMembers));
+    fetcher.submit(formData, { method: 'post', action: '/company/profile' });
 
     // Submit form data to the server
     fetcher.submit(formData, { method: 'post', action: '/company/profile' });
@@ -486,7 +491,9 @@ export default function CompanyProfile() {
   const surveysClosedDate = parseDate(
     info?.data.company.newhire_survey_deadline,
   );
+
   const [showMemberModal, setShowMemberModal] = useState(false);
+  const [showEditMemberModal, setShowEditMemberModal] = useState(null);
 
   // Function to toggle the member addition modal
   const openMemberModal = () => {
@@ -499,21 +506,32 @@ export default function CompanyProfile() {
 
   const [teamMembers, setTeamMembers] = useState([]);
 
+  // append to the members state
   const addTeamMember = (member) => {
     setTeamMembers((currentMembers) => [...currentMembers, member]);
   };
 
+  // remove by index
   const handleMemberDelete = (index) => {
-    setTeamMembers((currentMembers) =>
-      currentMembers.filter((_, i) => i !== index),
-    );
+    var editedMembers = [];
+    for(var i = 0; i < teamMembers.length; i++) {
+      if(i == index) continue;
+      editedMembers.push(teamMembers[i])
+    }
+
+    setTeamMembers(editedMembers);
   };
 
-  const handleMemberEdit = (member) => {
-    console.log('Edit mem: ', member);
-  };
+  // update by index
+  const handleMemberEdit = (member, index) => {
+    var editedMembers = [];
+    for(var i = 0; i < teamMembers.length; i++) {
+      if(i == index) editedMembers.push(member);
+      else editedMembers.push(teamMembers[i]);
+    }
 
-  console.log('Thinsg', info);
+    setTeamMembers(editedMembers);
+  };
 
   return (
     <div className="company-container">
@@ -583,85 +601,81 @@ export default function CompanyProfile() {
             <h2>Teams</h2>
           </div>
           <div className="teams-list">
-            {info?.teams?.teams.map((team, i) => (
-              <Collapsible
-                trigger={
-                  <div key={team.name} className="company-team">
-                    <div>
-                      <h3>{team.name}</h3>
-                      <div>Mountain View, California</div>{' '}
-                    </div>
-                    <button
-                      className={
-                        team.survey_complete
-                          ? 'done-button'
-                          : 'in-progress-button'
-                      }>
-                      {team.survey_complete ? 'Done' : 'In Progress'}
-                    </button>
-                    <div className="expanded-content">
+            {info?.teams.teams.map(
+              (
+                team,
+                i, // DISPLAY TEAMS HERE
+              ) => (
+                <Collapsible
+                  trigger={
+                    <div key={team.name} className="company-team">
+                      <div>
+                        <h3>{team.name}</h3>
+                        <div>Mountain View, California</div>{' '}
+                        {/* TO REMOVE AT SOME POINT */}
+                      </div>
+                      <ReadMore text={team.description}></ReadMore>
                       <button
-                        className="newhire-button"
-                        name="_action"
-                        value="teamNudge">
-                        Email nudge
+                        className={
+                          team.survey_complete
+                            ? 'done-button'
+                            : 'in-progress-button'
+                        }>
+                        {team.survey_complete ? 'Done' : 'In Progress'}
                       </button>
-                      <div className="row-container">
+                      <div className="expanded-content">
                         <button
-                          className="edit-button"
-                          onClick={() => setEditTeam(i)}>
-                          <PencilIcon />
+                          className="newhire-button"
+                          name="_action"
+                          value="teamNudge">
+                          Email nudge
                         </button>
-                        <Form action="/company/profile" method="post">
+
+                        <div className="row-container">
                           <button
                             className="edit-button"
-                            type="submit"
-                            name="_action"
-                            value="deleteTeam">
-                            <TrashIcon />
+                            type="button"
+                            onClick={() => handleSetEditTeam(i)}>
+                            <PencilIcon />
                           </button>
-                          <input
-                            name="email"
-                            value={team.email}
-                            style={{ display: 'none' }}
-                          />
-                        </Form>
+                          <Form action="/company/profile" method="post">
+                            <button
+                              className="edit-button"
+                              type="submit"
+                              name="_action"
+                              value="deleteTeam">
+                              <TrashIcon />
+                            </button>
+                            <input
+                              name="email"
+                              value={team.email}
+                              style={{ display: 'none' }}
+                            />
+                          </Form>
+                        </div>
                       </div>
                     </div>
+                  }>
+                  <div>
+                    <p>Team Members: </p>
+                    <div className="member-container">
+                      {team.members?.map((member) => (
+                        <div className="row-container team-member-card1">
+                          <p>
+                            {member.first_name} {member.last_name}
+                          </p>
+                          {/* <button
+                            className="edit-icon"
+                            onClick={() => handleMemberTrash(team.email, i)}>
+                            <TrashIcon />
+                      </button> */}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                }>
-                <div>
-                  <h3>Team Description: </h3>
-                  {team.description}
-                  <span>
-                    <h4>Email:</h4>
-                    {team.email}
-                  </span>
-                </div>
-                <div>
-                  <h3>Team Members: </h3>
-                  <div className="member-container">
-                    {team.members?.map((member) => (
-                      <div className="row-container team-member-card1">
-                        <p>
-                          {member.first_name} {member.last_name}
-                        </p>
-                        <button
-                          className="edit-icon"
-                          onClick={() => handleMemberEdit(member)}>
-                          <PencilIcon />
-                        </button>
-                        <button
-                          className="edit-icon"
-                          onClick={() => handleMemberDelete(member)}>
-                          <TrashIcon />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Collapsible>
-            ))}
+                </Collapsible>
+              ),
+            )}
           </div>
           <p className="cta" style={{ textAlign: 'center' }}>
             <button onClick={openTeamModal}>Add team</button>
@@ -718,11 +732,14 @@ export default function CompanyProfile() {
                       <span>
                         {member.first_name} {member.last_name}
                       </span>
-                      <button
-                        className="edit-icon"
-                        onClick={() => handleMemberDelete(index)}>
-                        x
-                      </button>
+                    <PencilIcon 
+                      className="edit-icon"
+                      onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
+                      />
+                    <TrashIcon
+                      className="edit-icon"
+                      onClick={() => handleMemberDelete(index)} />
+                        
                     </div>
                   ))}
                   <button className="add-member-btn" onClick={openMemberModal}>
@@ -732,10 +749,21 @@ export default function CompanyProfile() {
               </div>
               <MemberModal
                 open={showMemberModal}
+                member = {{}}
                 onClose={closeMemberModal}
                 addTeamMember={addTeamMember}
                 title="Add team member"></MemberModal>
-              {!showMemberModal && (
+              { showEditMemberModal != null ? 
+                <MemberModal
+                  open={showEditMemberModal != null }
+                  member = {teamMembers[showEditMemberModal] ?? {}}
+                  onClose={() => setShowEditMemberModal(null)}
+                  addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
+                  title="Add team member"></MemberModal> 
+                  : 
+                  null}
+              
+              {!showMemberModal && showEditMemberModal == null && (
                 <button
                   className="center"
                   type="submit"
@@ -803,15 +831,56 @@ export default function CompanyProfile() {
                   classLabel="manager"
                   value={info?.teams.teams[editTeam].manager}
                 />
-                <div className="buttons">
-                  <button
-                    className="save-button"
-                    type="submit"
-                    name="_action"
-                    value="editTeam">
-                    Save
-                  </button>
+                <div className="field-container">
+                  <label>Team Members</label>
+                  <div className="row-container">
+                    {teamMembers.map((member, index) => (
+                      <div key={index} className="team-member-card">
+                        <span>
+                          {member.first_name} {member.last_name}
+                        </span>
+                        <PencilIcon 
+                          className="edit-icon"
+                          onClick={() => {setShowEditMemberModal(index); console.log(index); console.log(teamMembers); console.log(teamMembers[index])}}
+                          />
+                        <TrashIcon
+                          className="edit-icon"
+                          onClick={() => handleMemberDelete(index)} />
+                          
+                      </div>
+                    ))}
+                    <button className="add-member-btn" onClick={openMemberModal}>
+                      Add Member
+                    </button>
+                  </div>
                 </div>
+                <MemberModal
+                  open={showMemberModal}
+                  member = {{}}
+                  onClose={closeMemberModal}
+                  addTeamMember={addTeamMember}
+                  title="Add team member"></MemberModal>
+                { showEditMemberModal != null ? 
+                  <MemberModal
+                    open={showEditMemberModal != null }
+                    member = {teamMembers[showEditMemberModal] ?? {}}
+                    onClose={() => setShowEditMemberModal(null)}
+                    addTeamMember={(m) => handleMemberEdit(m, showEditMemberModal)}
+                    title="Add team member"></MemberModal> 
+                    : 
+                    null}
+
+                {!showMemberModal && showEditMemberModal == null && (
+                  <div className="buttons">
+                    <button
+                      className="save-button"
+                      type="submit"
+                      name="_action"
+                      value="editTeam">
+                      Save
+                    </button>
+                  </div>
+                  )}
               </Form>
             ) : null}
           </Modal>
@@ -829,7 +898,6 @@ export default function CompanyProfile() {
                 </h3>
 
                 <p>{newHire.email}</p>
-
                 <button
                   className={
                     newHire.survey_complete
@@ -838,7 +906,6 @@ export default function CompanyProfile() {
                   }>
                   {newHire.survey_complete ? 'Done' : 'In Progress'}
                 </button>
-
                 <div className="expanded-content">
                   <button
                     className="newhire-button"
@@ -1006,13 +1073,11 @@ export default function CompanyProfile() {
               New Hire Deadline:
               <DatePicker
                 selected={nhDate} // change to info.teams.team.survey_deadline or sth like that
-                onChange={(date) => handleNHDateChange(date)}
+                onChange={(date) => handleNHDateChange(date)} // do fetcher.submit
                 name="newhire_survey_deadline"
-              />
+              />{' '}
+              {/* TODO CSS */}
             </label>
-          </div>
-          <div
-            style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
             <button
               type="submit"
               name="_action"

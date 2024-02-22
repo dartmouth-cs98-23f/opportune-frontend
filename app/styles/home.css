@@ -1287,7 +1287,7 @@ input[type='file'] {
   width: fit-content;
   white-space: nowrap;
   padding: 0.5rem;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
   border-radius: 10px;
   background-color: white;
   border: 1px solid rgb(101, 101, 101);
