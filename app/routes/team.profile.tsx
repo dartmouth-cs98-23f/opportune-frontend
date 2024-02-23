@@ -142,7 +142,7 @@ export default function Tprofile() {
       <div className="content">
         <div className="company-banner">
           <h1> {companyInfo.company.name} </h1>
-          <h3> {teamInfo.team.name} - {teamInfo.team.location}</h3>
+          <h3> {teamInfo.team.name} — {teamInfo.team.location}</h3>
         </div>
         <div className="horiz-flex-container">
           <div className="team-info">
