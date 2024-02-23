@@ -13,7 +13,9 @@ interface Fields {
 	progress: number;
 	date: string;
 	updates: string[];
+	mode: string;
 }
+// mode in Fields props
 
 export default function TaskBubble(props:Fields) {
 	const [expand, setExpand] = useState(false);
@@ -51,18 +53,21 @@ export default function TaskBubble(props:Fields) {
 			)
 		} else {
 			return (
-				<Form action="/project" method="post" onSubmit={() => handleEditClick()}>
-				<div className={props.classLabel} style={{width: `calc(${(endScaled - startScaled) * 20}% + 60px)`, 
-															 marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
+				<Form action={props.mode === "nh" ? "/project" : "/tproject"} 
+				      method="post" onSubmit={() => handleEditClick()}>
+				<div className={props.classLabel} style={{width: `calc(${(endScaled - startScaled) * 20}%)`, marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
 				  <b> {props.task} </b> 
 				  <span className="task-desc-toggle" onClick={() => handleExpand()}>⬆</span>
-				  <p> <b> Assigned To: </b> Stephen </p>
+				  {props.mode === "nh" ? <p> <b> Assigned To: </b> Stephen </p> : null}
 				  <p> <b> Description: </b> {props.descrip} </p>
 				  <p> <b> Last Updates: </b> {props.updates.map(update  => {
 					return <li> {update} </li>
 				  })} </p>
-				  {!isEditing ? <button type="button" className="edit" 
-								 onClick={() => handleEditClick()}> + Update </button> : null}
+				  {props.mode === "nh" ? 
+				    <button type="button" className="edit" 
+							onClick={() => handleEditClick()}> + Update </button> : null}
+				  {props.mode === "team" ? 
+				    <button className="edit" name="_action" value="DeleteTask"> - Delete </button> : null}
 				  {!isEditing ? null :<div> 
 					 <textarea name="description" id="task-input"
 					 onChange={(e) => handleUpdate(e.target.value)} /> 

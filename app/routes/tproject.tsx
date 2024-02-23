@@ -66,9 +66,9 @@ export async function action({request}: ActionFunctionArgs) {
 
 		let myJson = {
 			name: body.get("description"),
-			project_id: projRes.data[body.get("projIdx")].project._id,
-			start_date: projRes.data[body.get("projIdx")].project.start_date,
-			end_date: projRes.data[body.get("projIdx")].project.end_date,
+			project_id: projRes.data[Number(body.get("projIdx"))].project._id,
+			start_date: projRes.data[Number(body.get("projIdx"))].project.start_date,
+			end_date: projRes.data[Number(body.get("projIdx"))].project.end_date,
 			assigned_newhire_ids: assigned_ids
 		};
 		console.log("AddTask myJson: ", myJson)
@@ -337,9 +337,6 @@ export default function Tproject() {
 	console.log("Start - TaskList: ", taskList);
 
 	// states
-	const [isEditing, setEditing] = useState(false);
-	const [task, setTask] = useState('');
-	const [currProj, setCurrProj] = useState(0);
 	const [pmMode, setPmMode] = useState('Team');
 
 	// create dates
@@ -352,25 +349,6 @@ export default function Tproject() {
 	const today = createDate(new Date());
 	const minDate = new Date(dates.min_date);
 	const maxDate = new Date(dates.max_date);
-
-	// todo and task bubble functions
-	function handleEditClick() {
-		setEditing(!isEditing);
-	}
-
-	function updateTask(task:string) {
-		setTask(task);
-	}
-
-	function updateProj(event:any) {
-		setCurrProj(event.target.selectedIndex);
-	}
-
-	function getProjName(task_proj_id:string) {
-		const project = projInfo.find((p) => (p.project._id === task_proj_id));
-		const projName = project ? project.project.name : null;
-		return projName
-	}
 
 	function handleModeToggle() {
 		if (pmMode === 'Team') setPmMode('Members')
@@ -467,6 +445,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]} 
+											mode={"team"}
 											key={proj.project._id} />
 								}))}
 							</div>
@@ -520,6 +499,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]}
+											mode={"team"}
 											key={proj.project._id} />
 								}) : null }
 								{pmMode === "Members" ? newHires.new_hires.map((nh) => {
@@ -543,7 +523,8 @@ export default function Tproject() {
 													proj.subtasks.length : 0}
 													taskID={proj.project._id}
 													date={today} 
-													updates={[]} />
+													updates={[]} 
+													mode={"team"} />
 												{taskList.filter((task) => (task.project_id === proj.project._id) &&
 												 						   (proj.project.assigned_newhire_ids.includes(nh._id)))
 												    .map((task) => {
@@ -557,7 +538,8 @@ export default function Tproject() {
 																progress={-1}
 																taskID={task._id}
 																date={today} 
-																updates={[]} />
+																updates={[]} 
+																mode={"team"} />
 													})}
 												</div>
 										})}

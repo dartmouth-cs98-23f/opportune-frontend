@@ -49,7 +49,6 @@ export default function AddTask(props:Field) {
 			Project: <select name="currProj" id="currProj" 
 						className="proj-dropdown" defaultValue={currProj} 
 						onChange={(e) => updateProj(e)}>
-			<input name="projIdx" type="hidden" defaultValue={currProj}/>
 			{props.projInfo.map(((proj) => {
 				return <option value={proj.project.name}> {proj.project.name} </option>
 			}))} </select>
@@ -65,6 +64,7 @@ export default function AddTask(props:Field) {
 		<input type="hidden" name="assigned_ids" 
 		       defaultValue={JSON.stringify(props.projInfo[currProj].project.assigned_newhire_ids)}/>
 		<input type="hidden" name="newhire_id" defaultValue={props.nh_id}/>
+		<input type="hidden" name="projIdx" defaultValue={currProj}/>
 	</div>
 	</Form>
   )

@@ -359,7 +359,8 @@ export default function Project() {
 											  (taskList.filter((task) => (task.project_id === proj.project._id)).length) : 0} 
 										taskID={proj.project._id}
 										date={today} 
-										updates={[]} />
+										updates={[]}
+										mode={"nh"} />
 									
 									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
 										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
@@ -370,7 +371,9 @@ export default function Project() {
 												maxDate={maxDate}
 												task={task.name} 
 												taskID={task._id}
-												progress={-1} date={today} updates={task.updates}/>
+												progress={-1} date={today} 
+												updates={task.updates}
+												mode={"nh"} />
 									})}
 								</div> 
 							})}
