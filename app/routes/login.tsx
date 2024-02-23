@@ -1,7 +1,10 @@
-import { Link, Form, useLoaderData } from '@remix-run/react';
+import { Link, Form, useLoaderData, useLocation } from '@remix-run/react';
 import { json, redirect, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import axios from 'axios';
 import { getSession, commitSession, destroySession } from "../utils/sessions";
+import {
+	InformationCircleIcon,
+  } from '@heroicons/react/24/outline';
 
 // LOADER FUNCTION
 export async function loader({
@@ -97,7 +100,7 @@ export async function action({
 		}
 	} catch(error) {
 		console.log(error)
-		return redirect('/login', {
+		return redirect('/login?failed=true', {
 			headers: {
 				"Set-Cookie": await commitSession(session),
 			}
@@ -110,6 +113,12 @@ export async function action({
 export default function Login() {
 	useLoaderData<typeof loader>();
 
+	const location = useLocation();
+
+	// Access query parameters from location.search
+	const queryParams = new URLSearchParams(location.search);
+	const failed = queryParams.get('failed');
+
     return (
     <main className="block-container">
 	  <div className="landing-box">
@@ -117,6 +126,10 @@ export default function Login() {
 		<h1>Opportune</h1>
 		<p>Tuning the opportunities you will have at your company to the maximum.</p>
 		<Form method="post" action="/login" id="login">
+			{failed ? 
+			<p style={{color: 'mediumvioletred', 'font-weight': 'bold', 'font-size': '18px'}}>
+				Incorrect Email or Password
+			</p> : null}
 			<p className="login-field">
 				<label htmlFor="email"><b>Email address</b></label>
 				<input type="email" name="email" />
