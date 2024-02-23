@@ -1,4 +1,4 @@
-import { Link, Form } from '@remix-run/react';
+import { Link, Form, useLocation } from '@remix-run/react';
 import { redirect, ActionFunctionArgs } from '@remix-run/node';
 import axios from 'axios';
 import { getSession, commitSession, destroySession } from "../utils/sessions";
@@ -42,11 +42,42 @@ export async function action({
 
 	} catch(error) {
 		console.log(error)
+
+		if(error.response.status == 400) {
+			return redirect('/team/signup?failed=1')
+		} else if(error.response.status == 409) {
+			return redirect('/team/signup?failed=2')
+		}
 		return redirect('/team/signup')
 	}
   }
 
 export default function TsignUp() {
+
+	const location = useLocation();
+
+	// Access query parameters from location.search
+	const queryParams = new URLSearchParams(location.search);
+	const email = queryParams.get('email');
+	const failstate = queryParams.get('failed');
+
+	const renderFailState = () => {
+	if(failstate == 1) {
+		return (
+			<p className='failed-auth'>
+				Please use the email associated with your account.
+			</p>
+		)
+	} else if(failstate == 2) {
+		return (
+			<p className='failed-auth'>
+				This account has already been created.
+			</p>
+		)
+	} else {
+		return null;
+	}
+	}
 
   return (
     <div className="block-container">
@@ -55,17 +86,18 @@ export default function TsignUp() {
 			<h1>Opportune</h1>
 			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			<Form method="post" action="/team/signup" id="login">
-			<p className="login-field">
-				<label id="email">Enter Email: </label>
-				<input type="text" id="email" name="email" required />
-			</p>
-			<p className="login-field">
-				<label id="password">Create a password: </label>
-				<input type="password" name="password" required />
-			</p>
-			<p className="cta">
-				<button type="submit">Sign Up</button>
-			</p>
+				{renderFailState()}
+				<p className="login-field">
+					<label id="email">Enter Email: </label>
+					<input type="email" id="email" name="email" defaultValue={email ?? ""} required />
+				</p>
+				<p className="login-field">
+					<label id="password">Create a password: </label>
+					<input type="password" name="password" required />
+				</p>
+				<p className="cta">
+					<button type="submit">Sign Up</button>
+				</p>
 			</Form>
 			<p>Already have an account? <Link to="/login">Sign in</Link></p>
 		</div>

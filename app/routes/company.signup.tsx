@@ -1,4 +1,4 @@
-import { Link, Form } from '@remix-run/react';
+import { Link, Form, useLocation } from '@remix-run/react';
 import { redirect, ActionFunctionArgs } from '@remix-run/node';
 import loginStyle from '~/styles/home.css';
 import axios from 'axios';
@@ -24,11 +24,6 @@ export async function action({
 	try {
 		var response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/register', myJson);
 
-		if (response.status == 204) {
-			alert("Username is already in use.");
-			return null
-		}
-
 		response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson, {
 			headers: {
 			"Authorization": session.get("auth"),
@@ -53,12 +48,20 @@ export async function action({
 		});
 
 	} catch(error) {
-		console.log(error)
-		return redirect('/company/signup')
+		if(error.response.status == 409) {
+			return redirect('/company/signup?failed=true');
+		}
+		return redirect('/company/signup');
 	}
   }
 
 export default function SignUp() {
+
+	const location = useLocation();
+
+	// Access query parameters from location.search
+	const queryParams = new URLSearchParams(location.search);
+	const failed = queryParams.get('failed');
 
   return (
     <div className="block-container">
@@ -68,6 +71,10 @@ export default function SignUp() {
 			<p>Find your new hires a team faster than ever before</p>
 			<Form method="post" action="/company/signup" id="login">
       <p className="login-field">
+	  	{failed ? 
+			<p className='failed-auth'>
+				The email is already in use.
+			</p> : null}
         <label id="name">Company name: </label>
         <input type="text" id="name" name="name" required />
 			</p>
@@ -77,7 +84,7 @@ export default function SignUp() {
 			</p> */}
 			<p className="login-field">
 				<label id="email">Enter Email: </label>
-				<input type="text" id="email" name="email" required />
+				<input type="email" id="email" name="email" required />
 			</p>
 			<p className="login-field">
 				<label id="password">Create a password: </label>

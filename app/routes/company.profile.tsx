@@ -189,9 +189,11 @@ export async function action({ request }: ActionFunctionArgs) {
         description: myJson['description'],
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
-        manager: myJson['manager'],
+        location: myJson['location'],
         members: JSON.parse(myJson['team_members']),
       };
+
+      console.log(myJson);
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -611,7 +613,7 @@ export default function CompanyProfile() {
                     <div key={team.name} className="company-team">
                       <div>
                         <h3>{team.name}</h3>
-                        <div>Mountain View, California</div>{' '}
+                        <div>{team.location}</div>{' '}
                         {/* TO REMOVE AT SOME POINT */}
                       </div>
                       <button
@@ -705,36 +707,42 @@ export default function CompanyProfile() {
                 label="Team Email"
                 name="email"
                 classLabel="email"
+                type="email"
               />
               <TextField
                 className="add-team"
                 label="Team Name"
                 name="name"
                 classLabel="name"
+                type="text"
               />
+              <TextField
+                  className="add-team"
+                  label="Location"
+                  name="location"
+                  classLabel="location"
+                  type="text"
+                />
               <TextField
                 className="add-team"
                 label="Description"
                 name="description"
                 classLabel="description"
+                type="text"
               />
               <TextField
                 className="add-team"
                 label="Calendly Link"
                 name="calendlyLink"
                 classLabel="calendly_link"
+                type="text"
               />
               <TextField
                 className="add-team"
                 label="New Hire Capacity"
                 name="capacity"
                 classLabel="max_capacity"
-              />
-              <TextField
-                className="add-team"
-                label="Manager"
-                name="manager"
-                classLabel="manager"
+                type="number"
               />
               <div className="field-container">
                 <label>Team Members</label>
@@ -818,6 +826,7 @@ export default function CompanyProfile() {
                   name="newemail"
                   classLabel="newemail"
                   value={info?.teams.teams[editTeam].email}
+                  type="email"
                 />
                 <TextField
                   className="add-team"
@@ -825,6 +834,15 @@ export default function CompanyProfile() {
                   name="name"
                   classLabel="name"
                   value={info?.teams.teams[editTeam].name}
+                  type="text"
+                />
+                <TextField
+                  className="add-team"
+                  label="Location"
+                  name="location"
+                  classLabel="location"
+                  value={info?.teams.teams[editTeam].location}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -832,6 +850,7 @@ export default function CompanyProfile() {
                   name="description"
                   classLabel="description"
                   value={info?.teams.teams[editTeam].description}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -839,6 +858,7 @@ export default function CompanyProfile() {
                   name="calendlyLink"
                   classLabel="calendly_link"
                   value={info?.teams.teams[editTeam].calendly_link}
+                  type="text"
                 />
                 <TextField
                   className="add-team"
@@ -846,13 +866,7 @@ export default function CompanyProfile() {
                   name="capacity"
                   classLabel="max_capacity"
                   value={info?.teams.teams[editTeam].max_capacity}
-                />
-                <TextField
-                  className="add-team"
-                  label="Manager"
-                  name="manager"
-                  classLabel="manager"
-                  value={info?.teams.teams[editTeam].manager}
+                  type="number"
                 />
                 <div className="field-container">
                   <label>Team Members</label>
@@ -993,18 +1007,21 @@ export default function CompanyProfile() {
                   name="first_name"
                   classLabel="first_name"
                   value={info?.newHires.new_hires[editHire].first_name}
+                  type="text"
                 />
                 <TextField
                   label="Last Name"
                   name="last_name"
                   classLabel="last_name"
                   value={info?.newHires.new_hires[editHire].last_name}
+                  type="text"
                 />
                 <TextField
                   label="Email"
                   name="newemail"
                   classLabel="newemail"
                   value={info?.newHires.new_hires[editHire].email}
+                  type="email"
                 />
 
                 <div
@@ -1038,13 +1055,15 @@ export default function CompanyProfile() {
                 label="First Name"
                 name="firstName"
                 classLabel="first_name"
+                type="text"
               />
               <TextField
                 label="Last Name"
                 name="lastName"
                 classLabel="last_name"
+                type="text"
               />
-              <TextField label="Email" name="email" classLabel="email" />
+              <TextField label="Email" name="email" classLabel="email" type="email" />
 
               <button
                 className="center"
