@@ -16,6 +16,7 @@ import {
 } from '@remix-run/node';
 import ReadMore from '~/components/ReadMore';
 import { destroySession, getSession } from '../utils/sessions';
+import { Collapsible } from '~/components/Collapsible';
 import { Checkbox } from '@mui/material';
 import React from 'react';
 import { parseDate, parseDatePlus1 } from '~/lib/date';
@@ -179,16 +180,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return null;
   }
 }
-const Collapsible = ({ trigger, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className={`collapsible ${isOpen && 'open'}`}>
-      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
-      {isOpen && <div style={{ marginLeft: '1rem' }}>{children}</div>}
-    </div>
-  );
-};
 
 export default function CompanyMatching() {
   const info = useLoaderData<typeof loader>();
@@ -260,18 +251,18 @@ export default function CompanyMatching() {
   };
 
   // check if survey is open yet
-	const currentDate = new Date();
-	const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
+  const currentDate = new Date();
+  const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
 
-  if(currentDate.getTime() < surveyOpen.getTime()) {
+  if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
-      <div>
+      <div style={{ height: '100vh', textAlign: 'center' }}>
         <div className="sidebar">
           <img
             className="opportune-logo-small"
             src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
-            <p className="text-logo">Opportune</p>
             <button
               className="logout-button"
               type="submit"
@@ -281,19 +272,23 @@ export default function CompanyMatching() {
             </button>
           </Form>
         </div>
-        <div>The matching page is not available yet! </div> {/* TODO CSS */}
-        <Link to="/company/profile">Back</Link>
+        <div className="unavailable-content">
+          The matching page is not available yet!
+        </div>
+        <p className="cta" style={{ textAlign: 'center' }}>
+          <Link to="/company/profile">Back</Link>
+        </p>
       </div>
-    )
+    );
   } else {
     return (
-      <div>
+      <div className="company-container">
         <div className="sidebar">
           <img
             className="opportune-logo-small"
             src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
-            <p className="text-logo">Opportune</p>
             <button
               className="logout-button"
               type="submit"
@@ -378,7 +373,7 @@ export default function CompanyMatching() {
             </div>
             <div className="teams-list">
               {info?.newHires.new_hires.map((newHire) => (
-                <div key={newHire.name} className="company-team">
+                <div key={newHire.name} className="company-hire">
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <h3>
                       {newHire.first_name} {newHire.last_name}
@@ -395,7 +390,8 @@ export default function CompanyMatching() {
                       className={
                         !newHire.matched ? 'select-active' : 'select-inactive'
                       }
-                      onChange={handleSelectChange}>
+                      onChange={handleSelectChange}
+                      disabled={newHire.matched}>
                       <option key={'None'} value={newHire.email}>
                         None
                       </option>
@@ -448,9 +444,9 @@ export default function CompanyMatching() {
             </div>
           </div>
         </div>
-
-        <p className="cta" style={{ textAlign: 'right' }}>
-          {/* {allSurveysCompleted ? (
+        <div className="row-container" style={{ marginRight: '1rem' }}>
+          <p className="cta" style={{ textAlign: 'right' }}>
+            {/* {allSurveysCompleted ? (
             <Form action="/company/matching" method="post">
               <button type="submit" name="_action" value="matchingSurvey">
                 Run matching survey
@@ -459,21 +455,39 @@ export default function CompanyMatching() {
           ) : (
             <></>
           )} */}
-          <Form action="/company/matching" method="post">
-            <button type="submit" name="_action" value="matchingSurvey">
-              Run matching survey
-            </button>
-            Enable Diversity Matching?
-            <input type="checkbox" name="diversity" />
-          </Form>
-        </p>
-        <p className="cta" style={{ textAlign: 'right' }}>
-          <Form action="/company/matching" method="post">
-            <button type="submit" name="_action" value="completeMatching">
-              Complete Team-Matching
-            </button>
-          </Form>
-        </p>
+            <Form action="/company/matching" method="post">
+              <button
+                className="match"
+                type="submit"
+                name="_action"
+                value="matchingSurvey">
+                Run matching survey
+              </button>
+              <div
+                className="row-container"
+                style={{ alignItems: 'center', marginRight: '1rem' }}>
+                <p>Enable Diversity Matching?</p>
+                <input
+                  type="checkbox"
+                  id="toggle-button"
+                  className="toggle-button"
+                />
+                <label for="toggle-button" className="toggle-label"></label>
+              </div>
+            </Form>
+          </p>
+          <p className="cta">
+            <Form action="/company/matching" method="post">
+              <button
+                className="match confirm"
+                type="submit"
+                name="_action"
+                value="completeMatching">
+                Confirm Team Matches
+              </button>
+            </Form>
+          </p>
+        </div>
       </div>
     );
   }
