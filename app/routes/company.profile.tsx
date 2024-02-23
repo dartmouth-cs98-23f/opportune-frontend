@@ -739,7 +739,7 @@ export default function CompanyProfile() {
               />
               <TextField
                 className="add-team"
-                label="Capacity"
+                label="New Hire Capacity"
                 name="capacity"
                 classLabel="max_capacity"
                 type="number"
