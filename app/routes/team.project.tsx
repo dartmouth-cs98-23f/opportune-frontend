@@ -372,7 +372,7 @@ export default function Tproject() {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
-					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 				</div>
 				<div id="content">
@@ -393,7 +393,7 @@ export default function Tproject() {
 				<div className="flex-container">
 					<div id="sidebar">
 						<img className="opportune-logo-small disable-select" 
-							 src="opportune_newlogo.svg" draggable={false}></img>
+							 src="../opportune_newlogo.svg" draggable={false}></img>
 						<p className="text-logo disable-select">Opportune</p>
 						<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 					</div>
@@ -458,7 +458,7 @@ export default function Tproject() {
 				<div className="flex-container">
 					<div id="sidebar">
 						<img className="opportune-logo-small disable-select" 
-							 src="opportune_newlogo.svg" draggable={false}></img>
+							 src="../opportune_newlogo.svg" draggable={false}></img>
 						<p className="text-logo disable-select">Opportune</p>
 						<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 					</div>
