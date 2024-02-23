@@ -18,7 +18,6 @@
     "@heroicons/react": "^2.0.18",
     "@material-icons/font": "^1.0.36",
     "@mui/icons-material": "^5.14.12",
-    "@mui/material": "^5.14.15",
     "@remix-run/css-bundle": "^2.0.1",
     "@remix-run/node": "^2.0.1",
     "@remix-run/react": "^2.0.1",
@@ -39,7 +38,7 @@
     "react-use": "^17.4.0",
     "reactstrap": "^9.2.0",
     "remix-forms": "^2.1.0",
-    "uuidv4": "^6.2.13",
+    "victory": "^36.9.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

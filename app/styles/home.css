@@ -559,6 +559,18 @@
   background-color: var(--color-primary-10);
 }
 
+.diversity {
+  background-color: var(--color-primary-20);
+  color: #fff;
+  padding: 0.3rem 1rem;
+  transition: .3s;
+}
+
+.diversity:hover {
+  background-color: var(--color-secondary-10);
+  transition: 0.3s;
+}
+
 .longer a {
   padding: 0.5rem 5rem;
 }
@@ -1128,7 +1140,47 @@ input[type="checkbox"] {
   text-align: left;
 }
 
-.modal button.right {
+.modal-large {
+  background: aliceblue;
+  width: 80%;
+  height: 80%;
+  max-width: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  position: relative;
+  text-align: left;
+}
+
+.modal-large button.off-right {
+  position: absolute;
+  top: 50%;
+  right: -8%;
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  padding: 0.5rem 1.5rem;
+  border: none;
+}
+
+.modal-large button.off-left {
+  position: absolute;
+  top: 50%;
+  left: -8%;
+  text-decoration: none;
+  background-color: var(--color-primary-20);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  transition: 0.3s;
+  padding: 0.5rem 1.5rem;
+  border: none;
+}
+
+.modal button.right,
+.modal-large button.right {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -1168,7 +1220,8 @@ input[type="checkbox"] {
   transition: 0.3s;
 }
 
-.modal button:hover {
+.modal button:hover,
+.modal-large button:hover {
   color: #06d6a0;
 }
 
@@ -1656,4 +1709,30 @@ input[type="checkbox"] {
 
 .toggle-button:checked + .toggle-label::after {
   transform: translateX(1.4rem);
+}
+
+.column {
+  float: left;
+  width: 33%;
+  margin: auto;
+  text-align: center; 
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: 90%;
+
+/* for parameter validation */
+.failed-auth {
+  color: mediumvioletred;
+  font-weight: bold;
+  font-size: 18px;
 }
