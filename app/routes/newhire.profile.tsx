@@ -169,11 +169,19 @@ export default function Profile() {
                 label="First Name"
                 classLabel="first_name"
                 value={basicInfoFields.new_hire.first_name}
+                type="text"
               />
               <TextField
                 label="Last Name"
                 classLabel="last_name"
                 value={basicInfoFields.new_hire.last_name}
+                type="text"
+              />
+              <TextField
+                label="Age"
+                classLabel="age"
+                value={basicInfoFields.new_hire.age}
+                type="number"
               />
               <SelectField
                 label="Race"
@@ -186,13 +194,14 @@ export default function Profile() {
                   'American Indian',
                   'Pacific Islander',
                   'Other',
+                  'Prefer Not to Say'
                 ]}
                 value={basicInfoFields.new_hire.race}
               />
               <SelectField
                 label="Sex"
                 classLabel="sex"
-                options={['Male', 'Female']}
+                options={['Male', 'Female', 'Nonbinary', 'Prefer Not to Say']}
                 value={basicInfoFields.new_hire.sex}
               />
 
@@ -201,6 +210,7 @@ export default function Profile() {
                 label="School"
                 classLabel="school"
                 value={basicInfoFields.new_hire.school}
+                type="text"
               />
               <SelectField
                 label="Graduation month"
@@ -225,38 +235,40 @@ export default function Profile() {
                 label="Graduation year"
                 classLabel="grad_year"
                 value={basicInfoFields.new_hire.grad_year}
+                type="number"
               />
               <TextField
                 label="Major"
                 classLabel="major"
                 value={basicInfoFields.new_hire.major}
+                type="text"
               />
 
               <h3>Address and basic info</h3>
               <TextField
-                label="Email Address"
-                classLabel="email"
-                value={basicInfoFields.email}
-              />
-              <TextField
                 label="Address"
                 classLabel="address"
                 value={basicInfoFields.new_hire.address}
+                type="text"
               />
               <TextField
                 label="City"
                 classLabel="city"
                 value={basicInfoFields.new_hire.city}
+                type="text"
               />
               <TextField
                 label="State/Province"
                 classLabel="state_province"
                 value={basicInfoFields.new_hire.state_province}
+                type="text"
               />
               <TextField
                 label="Zip Code"
                 classLabel="zip_code"
                 value={basicInfoFields.new_hire.zip_code}
+                type="text"
+
               />
               <p className="cta" style={{ textAlign: 'right' }}>
                 <button type="submit" name="_action" value="updateProfile">

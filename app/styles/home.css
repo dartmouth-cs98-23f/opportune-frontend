@@ -1444,3 +1444,10 @@ input[type='file'] {
 .toggle-button:checked + .toggle-label::after {
   transform: translateX(1.4rem);
 }
+
+/* for parameter validation */
+.failed-auth {
+  color: mediumvioletred;
+  font-weight: bold;
+  font-size: 18px;
+}
