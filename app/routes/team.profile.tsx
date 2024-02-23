@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return redirect('/login');
     }
 
-    const response = await axios.get(
+    const teamRes = await axios.get(
       process.env.BACKEND_URL + '/api/v1/team/profile',
       {
         headers: {
@@ -37,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     );
 
-    const response2 = await axios.get(
+    const newhiresRes = await axios.get(
       process.env.BACKEND_URL + '/api/v1/user/list-newhires',
       {
         headers: {
@@ -47,10 +47,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     );
 
-    if (response.status === 200 && response2.status === 200) {
-      const teamInfo = response.data;
-      const newhires = response2.data;
-      return json({ teamInfo, newhires });
+    const companyRes = await axios.get(
+      process.env.BACKEND_URL + '/api/v1/user/company-info',
+      {
+        headers: {
+          Authorization: session.get('auth'),
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (teamRes.status === 200 && newhiresRes.status === 200 && companyRes.status === 200) {
+      const teamInfo = teamRes.data;
+      const newhires = newhiresRes.data;
+      const companyInfo = companyRes.data;
+      return json({ teamInfo, newhires, companyInfo });
     }
   } catch (error) {
     console.log(error);
@@ -99,11 +110,11 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function Tprofile() {
-  const { teamInfo, newhires } = useLoaderData<typeof loader>();
+  const { teamInfo, newhires, companyInfo } = useLoaderData<typeof loader>();
 
-  let companyInfo = {
+  /*let companyInfo = {
     name: 'OP Company',
-  };
+  }; */
 
   // team description editing state
   const [isEditing, setEditing] = useState(false);
@@ -130,8 +141,8 @@ export default function Tprofile() {
       </div>
       <div className="content">
         <div className="company-banner">
-          <h1> {companyInfo.name} </h1>
-          <h3> {teamInfo.team.name} </h3>
+          <h1> {companyInfo.company.name} </h1>
+          <h3> {teamInfo.team.name} - {teamInfo.team.location}</h3>
         </div>
         <div className="horiz-flex-container">
           <div className="team-info">
