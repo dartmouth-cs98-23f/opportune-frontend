@@ -100,11 +100,11 @@ export async function action({
 		}
 	} catch(error) {
 		console.log(error)
-		return redirect('/login?failed=true', {
-			headers: {
-				"Set-Cookie": await commitSession(session),
-			}
-		})
+
+		if(error.response.status == 401) {
+			return redirect('/login?failed=true');
+		}
+		return redirect('/login');
 	}
 };
 
@@ -127,7 +127,7 @@ export default function Login() {
 		<p>Tuning the opportunities you will have at your company to the maximum.</p>
 		<Form method="post" action="/login" id="login">
 			{failed ? 
-			<p style={{color: 'mediumvioletred', 'font-weight': 'bold', 'font-size': '18px'}}>
+			<p className='failed-auth'>
 				Incorrect Email or Password
 			</p> : null}
 			<p className="login-field">
