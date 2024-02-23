@@ -45,26 +45,25 @@ function HowWeWorkPage() {
             <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet"/>
 
             {/* <!-- Vendor CSS Files --> */}
+            <link href="/assets/css/main.css" rel="stylesheet" />
             <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
             <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet"/>
             <link href="/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet"/>
             <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet"/>
-            <link href="/assets/css/main.css" rel="stylesheet" />
+            <link href="/assets/css/navbar-karina.css" rel="stylesheet" />
+
         </head>
 
         <body>
 
             {/* <!-- Navigation--> */}
-            <nav className="navbar navbar-light bg-light static-top" >
-                <div className="container">
-                    <img src="opportune_newlogo.svg"></img>
-                    <a className="navbar-brand" href="#!">OPPORTUNE</a>
-                    <div className="d-flex justify-content-start">
-                        <Link className="btn btn-primary me-2" to="/company/signup">Enroll a Company</Link>
-                        <Link className="btn btn-primary" to="/login">Login</Link>
+            <nav className="navbar1" >
+                    <img className ="navimg1" src="opportune_newlogo.svg"></img>
+                    <a className="navbar-title" href="#!">OPPORTUNE</a>
+                    <div>
+                        <Link className="navbtns" to="/company/signup">Enroll a Company</Link>
+                        <Link className="navbtns" to="/login">Login</Link>
                     </div>
-
-                </div>
             </nav>
         
         {/* // <!-- ======= Hero Section ======= --> */}
@@ -146,8 +145,8 @@ function HowWeWorkPage() {
                         <div className="col-lg-6">
                             <h3>Diverse Teams Efficiency and Innovation Research</h3>
                             <img src="/assets/img/about.jpg" className="img-fluid rounded-4 mb-4" alt=""/>
-                            <p>Ut fugiat ut sunt quia veniam. Voluptate perferendis perspiciatis quod nisi et. Placeat debitis quia recusandae odit et consequatur voluptatem. Dignissimos pariatur consectetur fugiat voluptas ea.</p>
-                            <p>Temporibus nihil enim deserunt sed ea. Provident sit expedita aut cupiditate nihil vitae quo officia vel. Blanditiis eligendi possimus et in cum. Quidem eos ut sint rem veniam qui. Ut ut repellendus nobis tempore doloribus debitis explicabo similique sit. Accusantium sed ut omnis beatae neque deleniti repellendus.</p>
+                            <p>"Diversity and inclusion is a strategic advantage that promotes innovation in organizations, better decision making and stronger workplace cultures." - Forbes</p>
+                            <p>"By correlating diversity in leadership with market outcomes as reported by respondents, we learned that companies with 2-D diversity out-innovate and out-perform others. Employees at these companies are 45% likelier to report that their firm’s market share grew over the previous year and 70% likelier to report that the firm captured a new market."- Harvard Business Review</p>
                         </div>
 
                         <div className="col-lg-6">

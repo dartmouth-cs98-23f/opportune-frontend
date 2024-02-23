@@ -3985,12 +3985,12 @@ textarea.form-control-lg {
   align-items: center;
   justify-content: space-between;
 }
-.navbar-brand {
+ {
   padding-top: var(--bs-navbar-brand-padding-y);
   padding-bottom: var(--bs-navbar-brand-padding-y);
   margin-left: var(--bs-navbar-brand-margin-end);
   font-size: var(--bs-navbar-brand-font-size);
-  color: var(--bs-navbar-brand-color);
+  color: white;
   text-decoration: none;
   white-space: nowrap;
 }
