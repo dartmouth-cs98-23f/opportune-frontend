@@ -247,15 +247,9 @@ export default function Project() {
 					<img className="opportune-logo-small" src="opportune_newlogo.svg"></img>
 					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
 				</div>
-				<div id="content">
-					<h2> Welcome Oppenheim </h2>
-					<div id="menubar">
-						<MainNavigation />
-					</div>
-					<div>
-						<p>You will be able to see your project details after you are matched on July 2.</p>
-						<p className="cta"> <Link to="/results">Back to Results </Link></p>
-					</div>
+				<div>
+					<p>You will be able to see your project details after you are matched on July 2.</p>
+					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>
 		)

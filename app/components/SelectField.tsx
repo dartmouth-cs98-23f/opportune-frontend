@@ -8,7 +8,7 @@ interface Fields {
 export default function SelectField(props:Fields) {
   return (
 	<div className="field-container">
-		<label htmlFor={props.classLabel}> {props.label} </label>
+		<label htmlFor={props.classLabel} > {props.label} </label>
 		<select name={props.classLabel} id={props.classLabel}  
 		        defaultValue={props.value ? props.value: "init"} required>
 			<option disabled value="init"> Select an Option </option>
