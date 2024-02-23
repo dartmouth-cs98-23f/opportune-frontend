@@ -114,7 +114,8 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
             </option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Prefer not to say">Prefer not to say</option>
+            <option value="Nonbinary">Nonbinary</option>
+            <option value="Prefer Not to Say">Prefer Not to Say</option>
           </select>
         </div>
 
@@ -132,7 +133,10 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
             <option value="Black">Black</option>
             <option value="Hispanic/Latino">Hispanic/Latino</option>
             <option value="Asian">Asian</option>
+            <option value="American Indian">American Indian</option>
+            <option value="Pacific Islander">Pacific Islander</option>
             <option value="Other">Other</option>
+            <option value="Prefer Not to Say">Prefer Not to Say</option>
           </select>
         </div>
 

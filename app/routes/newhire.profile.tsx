@@ -194,13 +194,14 @@ export default function Profile() {
                   'American Indian',
                   'Pacific Islander',
                   'Other',
+                  'Prefer Not to Say'
                 ]}
                 value={basicInfoFields.new_hire.race}
               />
               <SelectField
                 label="Sex"
                 classLabel="sex"
-                options={['Male', 'Female']}
+                options={['Male', 'Female', 'Nonbinary', 'Prefer Not to Say']}
                 value={basicInfoFields.new_hire.sex}
               />
 
@@ -244,12 +245,6 @@ export default function Profile() {
               />
 
               <h3>Address and basic info</h3>
-              <TextField
-                label="Email Address"
-                classLabel="email"
-                value={basicInfoFields.email}
-                type="email"
-              />
               <TextField
                 label="Address"
                 classLabel="address"
