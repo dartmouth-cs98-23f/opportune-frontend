@@ -189,9 +189,11 @@ export async function action({ request }: ActionFunctionArgs) {
         description: myJson['description'],
         calendly_link: myJson['calendly_link'],
         max_capacity: myJson['max_capacity'],
-        manager: myJson['manager'],
+        location: myJson['location'],
         members: JSON.parse(myJson['team_members']),
       };
+
+      console.log(myJson);
 
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
@@ -612,7 +614,7 @@ export default function CompanyProfile() {
                     <div key={team.name} className="company-team">
                       <div>
                         <h3>{team.name}</h3>
-                        <div>Mountain View, California</div>{' '}
+                        <div>{team.location}</div>{' '}
                         {/* TO REMOVE AT SOME POINT */}
                       </div>
                       <button
@@ -716,6 +718,13 @@ export default function CompanyProfile() {
                 type="text"
               />
               <TextField
+                  className="add-team"
+                  label="Location"
+                  name="location"
+                  classLabel="location"
+                  type="text"
+                />
+              <TextField
                 className="add-team"
                 label="Description"
                 name="description"
@@ -735,13 +744,6 @@ export default function CompanyProfile() {
                 name="capacity"
                 classLabel="max_capacity"
                 type="number"
-              />
-              <TextField
-                className="add-team"
-                label="Manager"
-                name="manager"
-                classLabel="manager"
-                type="text"
               />
               <div className="field-container">
                 <label>Team Members</label>
@@ -837,6 +839,14 @@ export default function CompanyProfile() {
                 />
                 <TextField
                   className="add-team"
+                  label="Location"
+                  name="location"
+                  classLabel="location"
+                  value={info?.teams.teams[editTeam].location}
+                  type="text"
+                />
+                <TextField
+                  className="add-team"
                   label="Description"
                   name="description"
                   classLabel="description"
@@ -858,14 +868,6 @@ export default function CompanyProfile() {
                   classLabel="max_capacity"
                   value={info?.teams.teams[editTeam].max_capacity}
                   type="number"
-                />
-                <TextField
-                  className="add-team"
-                  label="Manager"
-                  name="manager"
-                  classLabel="manager"
-                  value={info?.teams.teams[editTeam].manager}
-                  type="text"
                 />
                 <div className="field-container">
                   <label>Team Members</label>

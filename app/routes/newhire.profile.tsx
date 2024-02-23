@@ -177,6 +177,12 @@ export default function Profile() {
                 value={basicInfoFields.new_hire.last_name}
                 type="text"
               />
+              <TextField
+                label="Age"
+                classLabel="age"
+                value={basicInfoFields.new_hire.age}
+                type="number"
+              />
               <SelectField
                 label="Race"
                 classLabel="race"
