@@ -110,7 +110,7 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/project");
+	return redirect("/newhire/project");
 }
 
 
@@ -281,7 +281,7 @@ export default function Project() {
 									onClick={handleEditClick}> + </button> : null}
 							</h3>
 
-							<Form action="/project" method="post" onSubmit={() => handleEditClick()}>
+							<Form action="/newhire/project" method="post" onSubmit={() => handleEditClick()}>
 							{!isEditing ? null :<div>  
 								<textarea name="description" id="task-input" 
 								onChange={(e) => updateTask(e.target.value)}/>
@@ -305,7 +305,7 @@ export default function Project() {
 							</Form>
 
 							{taskList.filter((task) => !task.complete).map((task, i) => {
-								return <Form method="post" action="/project"> 
+								return <Form method="post" action="/newhire/project"> 
 								         <Checkbox task={task.name} classLabel="check-field"
 								                 checked={task.complete} task_id={task._id} key={task._id} 
 												 proj_name={getProjName(task.project_id)} />
@@ -317,7 +317,7 @@ export default function Project() {
 						<div className="team-box task-list">
 							<h3> Completed Tasks ({taskList.filter((task) => task.complete).length}) </h3>
 							{taskList.filter((task) => task.complete).map((task, i) => {
-								return <Form method="post" action="/project"> 
+								return <Form method="post" action="/newhire/project"> 
 									      <Checkbox task={task.name} classLabel="check-field"
 									             checked={task.complete} task_id={task._id} key={task._id}
 												 proj_name={getProjName(task.project_id)} />

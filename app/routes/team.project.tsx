@@ -152,7 +152,7 @@ export async function action({request}: ActionFunctionArgs) {
 		});
 	}
 
-	return redirect("/tproject");
+	return redirect("/team/project");
 }
 
 
