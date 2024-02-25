@@ -2,12 +2,14 @@
 
 // takes a date string as the argument of form year-month-day...
 export function parseDate(date) {
+    if(date instanceof Date) return date;
     const parsed = date.substr(0, 10).split('-');
     return new Date(parseInt(parsed[0]), parseInt(parsed[1]) - 1, parseInt(parsed[2]));
 }
 
 // takes a date string as the argument of form year-month-day...
 export function parseDatePlus1(date) {
+    if(date instanceof Date) return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
     const parsed = date.substr(0, 10).split('-');
     return new Date(parseInt(parsed[0]), parseInt(parsed[1]) - 1, parseInt(parsed[2]) + 1);
 }

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { parseDate, convertDateToAPIFormat } from '~/lib/date';
+import ReactDatePicker from 'react-datepicker';
+
+// @ts-expect-error
+const DatePicker = ReactDatePicker.default;
 
 export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => {
   const [firstName, setFirstName] = useState(member.first_name ?? '');
   const [lastName, setLastName] = useState(member.last_name ?? '');
   const [role, setRole] = useState(member.role ?? '');
-  const [age, setAge] = useState(member.age ?? '');
+  const [birthday, setBirthday] = useState(member.birthday ? parseDate(member.birthday) : null);
   const [sex, setSex] = useState(member.sex ?? '');
   const [race, setRace] = useState(member.race ?? '');
 
@@ -13,7 +18,7 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
       first_name: firstName,
       last_name: lastName,
       role: role,
-      age: age,
+      birthday: birthday,
       sex: sex,
       race: race,
     };
@@ -23,7 +28,7 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
     setFirstName('');
     setLastName('');
     setRole('');
-    setAge('');
+    setBirthday('');
     setSex('');
     setRace('');
     onClose(); // Close the modal
@@ -91,14 +96,11 @@ export const MemberModal = ({ open, member, onClose, title, addTeamMember }) => 
         </div>
 
         <div className="field-container">
-          <label htmlFor="age">Age</label>
-          <input
-            name="age"
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            required
-          />
+          <label htmlFor="birthday">Birthday</label>
+          <DatePicker selected={birthday}
+                    onChange={(date) => setBirthday(convertDateToAPIFormat(date))}
+                    name={'birthday'} 
+                    />
         </div>
 
         {/* Mimicking SelectField Structure */}

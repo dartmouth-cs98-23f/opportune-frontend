@@ -3,8 +3,7 @@ import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
-import ReactDatePicker from 'react-datepicker';
-import datepicker from 'react-datepicker/dist/react-datepicker.css';
+import DateField from '~/components/DateField';
 import axios from 'axios';
 import {
   ActionFunctionArgs,
@@ -15,10 +14,8 @@ import {
 } from '@remix-run/node';
 import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
+import { convertDateToAPIFormat } from '~/lib/date';
 import ImageUpload from '~/components/ImageUpload';
-
-// @ts-expect-error
-const DatePicker = ReactDatePicker.default;
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -40,6 +37,8 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } else {
     try {
+      myJson["birthday"] = convertDateToAPIFormat(myJson["birthday"]);
+
       const response = await axios.patch(
         process.env.BACKEND_URL + '/api/v1/newhire/profile',
         myJson,
@@ -94,7 +93,6 @@ export default function Profile() {
   const basicInfo = useLoaderData<typeof loader>();
   const basicInfoFields = basicInfo.data;
 
-  const [birthday, setBirthday] = useState(basicInfoFields.new_hire.birthday);
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
@@ -183,10 +181,10 @@ export default function Profile() {
                 value={basicInfoFields.new_hire.last_name}
                 type="text"
               />
-              <DatePicker
-                 selected={birthday}
-                 onChange={(date) => setBirthday(date)}
-                 name="birthday"
+              <DateField
+                 label="Birthday"
+                 classLabel="birthday"
+                 value={basicInfoFields.new_hire.birthday}
               />
               <SelectField
                 label="Race"
@@ -286,10 +284,4 @@ export default function Profile() {
       </div>
     </div>
   );
-}
-
-export function links() {
-  return [
-    { rel: 'stylesheet', href: datepicker },
-  ];
 }
