@@ -3,6 +3,8 @@ import MainNavigation from '~/components/MainNav';
 import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
+import ReactDatePicker from 'react-datepicker';
+import datepicker from 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import {
   ActionFunctionArgs,
@@ -14,6 +16,9 @@ import {
 import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
+
+// @ts-expect-error
+const DatePicker = ReactDatePicker.default;
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -89,6 +94,7 @@ export default function Profile() {
   const basicInfo = useLoaderData<typeof loader>();
   const basicInfoFields = basicInfo.data;
 
+  const [birthday, setBirthday] = useState(basicInfoFields.new_hire.birthday);
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
@@ -177,11 +183,10 @@ export default function Profile() {
                 value={basicInfoFields.new_hire.last_name}
                 type="text"
               />
-              <TextField
-                label="Age"
-                classLabel="age"
-                value={basicInfoFields.new_hire.age}
-                type="number"
+              <DatePicker
+                 selected={birthday}
+                 onChange={(date) => setBirthday(date)}
+                 name="birthday"
               />
               <SelectField
                 label="Race"
@@ -281,4 +286,10 @@ export default function Profile() {
       </div>
     </div>
   );
+}
+
+export function links() {
+  return [
+    { rel: 'stylesheet', href: datepicker },
+  ];
 }
