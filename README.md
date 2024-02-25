@@ -11,15 +11,30 @@ After the matching, we hope to provide a dedicated hub for the intern so that th
 Frontend: HTML/CSS/Javascript, React, Remix Run, Axios
 Backend: Express, MongoDB, 
 
-Frontend
+**Frontend**
+
+Landing
 * `/` landing page
-    * `/login` login page
-    * `/signup` signup page
-* `/profile` basic information survey for intern
-* `/teams` information about each team the intern may be matched on
-* `/matching` matching survey
-* `/results` matching results
-* `/project` (locked) - project management flow for next term
+* `/login` login page
+
+New Hire Portal
+* `newhire/signup` new hire sign-up
+* `newhire/profile` basic information survey for new hire
+* `newhire/teams` information about each team new hire may be matched on
+* `newhire/matching` matching survey
+* `newhire/results` results of matching survey
+* `newhire/project` project management tool
+
+Teams Portal
+* `teams/signup` team sign-up
+* `teams/profile` basic information of the team
+* `teams/skills` quick survey to confirm skills required for the team
+* `teams/survey` survey to define what the team is looking for (skills, work arrangement, independence, etc.)
+
+Company Portal
+* `company/signup` company sign-up
+* `company/profile` basic information of the company
+* `company/matching` for running company-wide matching survey
 
 ## Setup Local Development
 Frontend Development
@@ -46,6 +61,8 @@ Matching Engine
 *Note:* Each time you make a change to the frontend, you must rerun `docker-compose build` and `docker-compose up`
 
 ## Deployment
+[opportune.cc](https://www.opportune.cc/)
+
 We are using [render](https://render.com/) to host and run our application. It is deployed as a web service run inside a docker container.
 Use this [webhook](https://api.render.com/deploy/srv-cl78shf6e7vc739qgb7g?key=s2AUu7liU0E) to manually redeploy the frontend.
 

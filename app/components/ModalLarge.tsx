@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function Modal({ open, children, onClose, title }) {
+function ModalLarge({ open, children, onClose, title }) {
   useEffect(() => {
     function onKeyDown(e) {
       if (e.keyCode === 27) {
@@ -21,9 +21,9 @@ function Modal({ open, children, onClose, title }) {
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="modal-large">
         {/* Close icon */}
-        <h1 style={{ textAlign: 'center', marginBottom: 0 }}>{title}</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '10px' }}>{title}</h1>
         <button className="right" onClick={onClose}>
           &times;
         </button>
@@ -34,4 +34,4 @@ function Modal({ open, children, onClose, title }) {
   );
 }
 
-export default Modal;
+export default ModalLarge;
