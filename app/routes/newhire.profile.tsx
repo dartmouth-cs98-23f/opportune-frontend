@@ -16,6 +16,8 @@ import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import { convertDateToAPIFormat } from '~/lib/date';
 import ImageUpload from '~/components/ImageUpload';
+import datepicker from 'react-datepicker/dist/react-datepicker.css';
+import styles from '~/styles/home.css';
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -284,4 +286,11 @@ export default function Profile() {
       </div>
     </div>
   );
+}
+
+export function links() {
+  return [
+    { rel: 'stylesheet', href: datepicker },
+    { rel: 'stylesheet', href: styles },
+  ];
 }
