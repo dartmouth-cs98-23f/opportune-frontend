@@ -37,6 +37,19 @@
   overflow: auto;
 }
 
+.div-line {
+	border-left: 2px solid var(--color-primary-30);
+	height: 100%;
+	position: absolute;
+	left: 35%;
+	margin-top: 160px;
+	top: 0;
+}
+
+#pm-content {
+	width: 35%;
+}
+
 /* .landing-box {
 	background-color: var(--color-primary-40);
 	height: 100%;
@@ -204,6 +217,62 @@
   border-left: 20px solid darkgrey;
 }
 
+/* PM second side bar */
+#sidebar-2 {
+	display: inline;
+	text-align: left;
+	margin-left: 20px;
+}
+
+#date-bar {
+	display: inline;
+	margin-left: 20px;
+}
+
+#date-bar button {
+	margin: 10px;
+	font-family: Mulish, Roboto, Arial;
+	font-weight: bold;
+    background-repeat: no-repeat;
+  	border-radius: 15px;
+	padding: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+	transition: 0.3s;
+}
+
+.time-scale {
+	background-color: transparent;
+	border: 1px solid var(--color-primary-20);
+	color: var(--color-primary-20);
+}
+
+.curr-date {
+	background-color: transparent;
+	border: 1px solid lightgray;
+	color: grey;
+}
+
+.pm-mode.team {
+	border: 1px solid lightgray;
+	color: grey;
+}
+
+.pm-mode.members {
+	border: 1px solid lightgray;
+	background-color: var(--color-primary-30);
+	color: white;
+}
+
+#timeline {
+	width: 60%;
+}
+
+#members-timeline {
+	width: 100%;
+}
+
 /* QUESTIONS */
 
 /* scale */
@@ -364,6 +433,20 @@
   margin-top: 2rem;
 }
 
+.team-box.team-list {
+	margin: 15px;
+}
+
+.team-box.task-list {
+	margin: 20px;
+}
+
+.team-box.task-list.proj {
+	background-color: var(--color-primary-20);
+	color: white;
+	margin: 10px;
+}
+
 .team-box.skills {
   text-align: center;
   margin: 0 auto;
@@ -384,19 +467,23 @@
 }
 
 .meets-container {
-  margin-left: 25px;
-  width: 50%;
+	width: 35%;
 }
 
-.team-box:hover {
-  background-color: #22506c13;
-  /* cursor: pointer; */
-  transition: 0.3s;
+.team-box:hover,
+.task-box:hover {
+	background-color: #22506c13;
+	transition: 0.3s;
 }
 
 .team-text {
   margin: 15px;
   padding: 5px;
+}
+
+.task-desc-toggle {
+	cursor: pointer;
+	float: right;
 }
 
 /* BUTTONS */
@@ -554,10 +641,23 @@ button.edit {
   font-size: 1rem;
 }
 
+button.edit-clear {
+	background: none;
+	opacity: 0.5;
+	border: none;
+	transition: 0.3s;
+}
+
 a.edit:hover,
 button.edit:hover {
   background-color: var(--color-secondary-10);
   transition: 0.3s;
+}
+
+button.edit-clear:hover {
+	cursor: pointer;
+	opacity: 1;
+	transition: 0.3s;
 }
 
 /* FORMS */
@@ -647,6 +747,92 @@ input[type='file'] {
   margin-top: 5px;
 }
 
+textarea {
+	resize: vertical;
+	width: 90%;
+}
+
+#task-input {
+	background: transparent;
+	font-family: Mulish, Roboto, Arial;
+	color: var(--color-primary-20);
+    border: none;
+	outline: none;
+	resize: none;
+	height: 20px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+/* PM (general) */
+input[type="checkbox"] {
+	accent-color: var(--color-primary-20);
+	width: 20px;
+  	height: 20px;
+}
+
+.check-field {
+	margin: 10px;
+}
+
+.task-box,
+.task-box-v2 {
+	text-align: left;
+	justify-content: center;
+	border-radius: 10px;
+	transition: 0.3s;
+	box-shadow: 0 0 10px 5px rgba(245, 245, 245, 0.8);
+	padding: 10px;
+	cursor: default;
+	margin-bottom: 10px;
+}
+
+.task-box {
+	background-color: var(--color-primary-40);
+}
+
+.task-box-v2 {
+	color: white;
+	background-color: var(--color-primary-30);
+}
+
+.task-box.done,
+.task-box-v2.done {
+	background-color: rgb(206, 248, 240);
+	transition: 0.3s;
+}
+
+/* PM form field + confirm styling */
+.proj-dropdown {
+	margin: 10px;
+}
+
+.proj-form-field {
+	display: block;
+}
+
+.proj-progress-txt {
+	margin-bottom: 6px;
+}
+
+.team-add-task {
+	width: 50%;
+}
+
+.task-name-bar {
+	margin-top: 15px;
+	margin-left: 10px;
+}
+
+.proj-dropdown-div {
+	margin-left: 10px;
+}
+
+.proj-task-confirm {
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+
+
 /* LOGO */
 .opportune-logo-small {
   display: inline;
@@ -687,6 +873,21 @@ input[type='file'] {
 
 .text-content {
   flex: 1;
+}
+
+/* PM timeline */
+.horiz-flex-container.time {
+	height: 20px;
+	margin: 10px;
+}
+
+.flex-container.time {
+	background-size: 40px 40px;
+	background-image: radial-gradient(circle, var(--color-primary-30) 1.2px, rgba(0, 0, 0, 0) 1px);
+}
+
+.time-markers {
+	margin-right: 20%;
 }
 
 /* CALENDAR */
@@ -829,6 +1030,18 @@ input[type='file'] {
   all: unset;
 }
 
+.favorite-btn .star-icon{
+	width: 2rem;
+	height: 2rem
+}
+
+/* misc */
+.disable-select {
+	-webkit-user-select: none;  
+	-moz-user-select: none;    
+	-ms-user-select: none;      
+	user-select: none;
+}
 .favorite-btn .star-icon {
   width: 2rem;
   height: 2rem;

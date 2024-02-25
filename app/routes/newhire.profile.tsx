@@ -272,7 +272,7 @@ export default function Profile() {
               />
               <p className="cta" style={{ textAlign: 'right' }}>
                 <button type="submit" name="_action" value="updateProfile">
-                  Next
+                  {"→"}
                 </button>
               </p>
             </Form>

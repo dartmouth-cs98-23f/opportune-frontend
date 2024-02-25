@@ -216,7 +216,7 @@ export default function Teams() {
               };
 
               return (
-                <div className="team-box" key={team.name}>
+                <div className="team-box team-list" key={team.name}>
                   <div className="team-text">
                     <div
                       style={{
@@ -301,7 +301,7 @@ export default function Teams() {
             {events ? (
               events.map((event) => {
                 return (
-                  <div className="team-box">
+                  <div className="team-box team-list">
                     <div className="team-text" key={event.resource.name}>
                       <h3> {event.resource.name}</h3>
                       <p>
