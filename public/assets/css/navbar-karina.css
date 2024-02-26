@@ -1,0 +1,55 @@
+
+/*--------------------------------------------------------------
+# Desktop Navigation
+--------------------------------------------------------------*/
+/* Desktop Navigation */
+.navbar1 {
+    padding: 50px; /* Add padding for better spacing */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1E2578;
+  }
+  
+  .navbar1 img {
+    height: 100px; 
+    margin-right: 10px; 
+  }
+
+  .navimg1 {
+    height: 100px; 
+    margin-right: 10px; 
+  }
+  
+  .navbar-title {
+    color: white;
+    font-size: 1.75rem;
+    text-decoration: none;
+  }
+  
+  .navbtns {
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 10px 20px; /* Adjust padding for buttons */
+    border-radius: 25px; /* Decrease border radius for a softer look */
+    transition: 0.3s;
+    color: #fff;
+    background: orange;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Reduce box shadow */
+    border: 2px solid transparent; /* Change border color */
+    margin-left: 10px; /* Add spacing between buttons */
+  }
+  
+  .navbtns:hover {
+    background: #ff8c00; /* Change background color on hover */
+  }
+  
+  a {
+    text-decoration: none !important;
+    color: white !important;
+  }
+  
