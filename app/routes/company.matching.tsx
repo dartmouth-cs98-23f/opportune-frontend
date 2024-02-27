@@ -25,116 +25,157 @@ import ModalLarge from '~/components/ModalLarge';
 import { parseDate, parseDatePlus1 } from '~/lib/date';
 
 function getDiversityMetrics(diversity) {
-  const diversityBefore = diversity["diversity_before"];
-  const diversityAfter = diversity["diversity_after"];
+  const diversityBefore = diversity['diversity_before'];
+  const diversityAfter = diversity['diversity_after'];
 
   // age before
   var ageBefore = [];
   var i = 0;
-  if(diversityBefore["age"]) {
-    const ageRangesBefore = diversityBefore["age"]["ranges"];
-    for(var key in ageRangesBefore) {
+  if (diversityBefore['age']) {
+    const ageRangesBefore = diversityBefore['age']['ranges'];
+    for (var key in ageRangesBefore) {
       var percent = Math.floor(ageRangesBefore[key] * 100);
-      if(ageRangesBefore[key] != 0) {
-        ageBefore.push({x: i, y: ageRangesBefore[key], label: key + '\n' + percent + '%'});
+      if (ageRangesBefore[key] != 0) {
+        ageBefore.push({
+          x: i,
+          y: ageRangesBefore[key],
+          label: key + '\n' + percent + '%',
+        });
       }
       i++;
     }
   } else {
-    ageBefore = [{x: 0, y: 1, label: "No Data Available."}];
+    ageBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
-  
 
   // age after
   var ageAfter = [];
   i = 0;
-  if(diversityAfter["age"]) {
-    const ageRangesAfter = diversityAfter["age"]["ranges"];
-    for(var key in ageRangesAfter) {
+  if (diversityAfter['age']) {
+    const ageRangesAfter = diversityAfter['age']['ranges'];
+    for (var key in ageRangesAfter) {
       var percent = Math.floor(ageRangesAfter[key] * 100);
-      if(ageRangesAfter[key] != 0) {
-        ageAfter.push({x: i, y: ageRangesAfter[key], label: key + '\n' + percent + '%'});
+      if (ageRangesAfter[key] != 0) {
+        ageAfter.push({
+          x: i,
+          y: ageRangesAfter[key],
+          label: key + '\n' + percent + '%',
+        });
       }
       i++;
     }
   } else {
-    ageAfter = [{x: 0, y: 1, label: "No Data Available."}]; 
+    ageAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
-
 
   // race before
   var raceBefore = [];
   i = 0;
-  const raceDivBefore = diversityBefore["race"];
-  if(raceDivBefore) {
-    for(var key in raceDivBefore) {
+  const raceDivBefore = diversityBefore['race'];
+  if (raceDivBefore) {
+    for (var key in raceDivBefore) {
       var percent = Math.floor(raceDivBefore[key] * 100);
-      if(key == 'White') {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: "White\n" + percent + '%'}); // get period to float out of the svg
-      } else if(key == 'Black') {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: "Black\n" + percent + '%'}); // get period to float out of the svg
+      if (key == 'White') {
+        raceBefore.push({
+          x: i,
+          y: raceDivBefore[key],
+          label: 'White\n' + percent + '%',
+        }); // get period to float out of the svg
+      } else if (key == 'Black') {
+        raceBefore.push({
+          x: i,
+          y: raceDivBefore[key],
+          label: 'Black\n' + percent + '%',
+        }); // get period to float out of the svg
       } else {
-        raceBefore.push({x: i, y: raceDivBefore[key], label: key + '\n' + percent + '%'});
+        raceBefore.push({
+          x: i,
+          y: raceDivBefore[key],
+          label: key + '\n' + percent + '%',
+        });
       }
       i++;
     }
   } else {
-    raceBefore = [{x: 0, y: 1, label: "No Data Available."}];
+    raceBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // race after
   var raceAfter = [];
   i = 0;
-  const raceDivAfter = diversityAfter["race"];
-  if(raceDivAfter) {
-    for(var key in raceDivAfter) {
+  const raceDivAfter = diversityAfter['race'];
+  if (raceDivAfter) {
+    for (var key in raceDivAfter) {
       var percent = Math.floor(raceDivAfter[key] * 100);
-      if(key == 'White') {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: "White\n" + percent + '%'}); // get period to float out of the svg
-      } else if(key == 'Black') {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: "Black\n" + percent + '%'}); // get period to float out of the svg
+      if (key == 'White') {
+        raceAfter.push({
+          x: i,
+          y: raceDivAfter[key],
+          label: 'White\n' + percent + '%',
+        }); // get period to float out of the svg
+      } else if (key == 'Black') {
+        raceAfter.push({
+          x: i,
+          y: raceDivAfter[key],
+          label: 'Black\n' + percent + '%',
+        }); // get period to float out of the svg
       } else {
-        raceAfter.push({x: i, y: raceDivAfter[key], label: key + '\n' + percent + '%'});
+        raceAfter.push({
+          x: i,
+          y: raceDivAfter[key],
+          label: key + '\n' + percent + '%',
+        });
       }
       i++;
     }
   } else {
-    raceAfter = [{x: 0, y: 1, label: "No Data Available."}];
+    raceAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // sex before
   var sexBefore = [];
   i = 0;
-  const sexDivBefore = diversityBefore["sex"];
-  if(sexDivBefore) {
-    for(var key in sexDivBefore) {
+  const sexDivBefore = diversityBefore['sex'];
+  if (sexDivBefore) {
+    for (var key in sexDivBefore) {
       var percent = Math.floor(sexDivBefore[key] * 100);
-      sexBefore.push({x: i, y: sexDivBefore[key], label: key + '\n' + percent + '%'});
+      sexBefore.push({
+        x: i,
+        y: sexDivBefore[key],
+        label: key + '\n' + percent + '%',
+      });
       i++;
     }
   } else {
-    sexBefore = [{x: 0, y: 1, label: "No Data Available."}];
+    sexBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // sex after
   var sexAfter = [];
   i = 0;
-  const sexDivAfter = diversityAfter["sex"];
-  if(sexDivAfter) {
-    for(var key in sexDivAfter) {
+  const sexDivAfter = diversityAfter['sex'];
+  if (sexDivAfter) {
+    for (var key in sexDivAfter) {
       var percent = Math.floor(sexDivAfter[key] * 100);
-      sexAfter.push({x: i, y: sexDivAfter[key], label: key + '\n' + percent + '%'});
+      sexAfter.push({
+        x: i,
+        y: sexDivAfter[key],
+        label: key + '\n' + percent + '%',
+      });
       i++;
     }
   } else {
-    sexAfter = [{x: 0, y: 1, label: "No Data Available."}];
+    sexAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
-  
 
   // diversity scores
-  var diversityScoreBefore = Math.floor(diversity["diversity_before"]["score"]["score"] * 100);
-  var diversityScoreAfter = Math.floor(diversity["diversity_after"]["score"]["score"] * 100);
-  
+  var diversityScoreBefore = Math.floor(
+    diversity['diversity_before']['score']['score'] * 100
+  );
+  var diversityScoreAfter = Math.floor(
+    diversity['diversity_after']['score']['score'] * 100
+  );
+
   var change = diversityScoreAfter / diversityScoreBefore;
 
   return {
@@ -146,8 +187,8 @@ function getDiversityMetrics(diversity) {
     raceAfter,
     sexBefore,
     sexAfter,
-    change
-  }
+    change,
+  };
 }
 
 // ACTION FUNCTION
@@ -187,7 +228,7 @@ export async function action({ request }: ActionFunctionArgs) {
           params: {
             diversify: diversifyOn,
           },
-        },
+        }
       );
       return redirect('/company/matching');
     } catch (error) {
@@ -206,7 +247,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/matching');
     } catch (error) {
@@ -223,7 +264,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/matching');
     } catch (error) {
@@ -240,7 +281,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -271,7 +312,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     const newHireRes = await axios.get(
@@ -281,7 +322,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     const teamsRes = await axios.get(
@@ -291,7 +332,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     // load team diversity information
@@ -299,16 +340,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
     for (var team of teamsRes.data.teams) {
       const diversityRes = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/diversity-metrics',
-        {email: team.email},
+        { email: team.email },
         {
           headers: {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
 
-      if(diversityRes.status === 200) {
+      if (diversityRes.status === 200) {
         diversity.push(diversityRes.data);
       }
     }
@@ -422,8 +463,8 @@ export default function CompanyMatching() {
       }
     }] */
 
-  var parsedDiversity = []
-  for(var i = 0; i < diversity.length; i++) {
+  var parsedDiversity = [];
+  for (var i = 0; i < diversity.length; i++) {
     const metrics = diversity[i];
     parsedDiversity.push(getDiversityMetrics(metrics));
   }
@@ -431,18 +472,24 @@ export default function CompanyMatching() {
   const getPercentage = (scoreBefore, scoreAfter) => {
     var percentage = (scoreAfter - scoreBefore) / scoreBefore;
     return Math.floor(percentage * 1000) / 10;
-  }
+  };
 
   const getDiversityModalName = () => {
-    return (<div>
-      {'Diversity: ' + info.teams.teams[diversityModal].name}
-      <div className='stat-box'>
-        <div className='column' style={{width: '40%'}}>Before Matching </div>
-        <div className='column' style={{width: '20%'}}></div>
-        <div className='column' style={{width: '40%'}}>After Matching</div>
+    return (
+      <div>
+        {'Diversity: ' + info.teams.teams[diversityModal].name}
+        <div className="stat-box">
+          <div className="column" style={{ width: '40%' }}>
+            Before Matching{' '}
+          </div>
+          <div className="column" style={{ width: '20%' }}></div>
+          <div className="column" style={{ width: '40%' }}>
+            After Matching
+          </div>
+        </div>
       </div>
-    </div>)
-  }
+    );
+  };
 
   const [url, updateUrl] = useState();
   const [error, updateError] = useState();
@@ -478,7 +525,7 @@ export default function CompanyMatching() {
     // programmatically submit a useFetcher form in Remix
     fetcher.submit(
       { newhire_email: nhEmail, team_email: teamEmail, _action: 'matchManual' },
-      { method: 'post', action: '/company/matching' },
+      { method: 'post', action: '/company/matching' }
     );
   };
 
@@ -492,14 +539,16 @@ export default function CompanyMatching() {
         <div className="sidebar">
           <img
             className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
+            src="../opportune_newlogo.svg"
+          ></img>
           <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
             <button
               className="logout-button"
               type="submit"
               name="_action"
-              value="LogOut">
+              value="LogOut"
+            >
               <ArrowLeftOnRectangleIcon />
             </button>
           </Form>
@@ -518,14 +567,16 @@ export default function CompanyMatching() {
         <div className="sidebar">
           <img
             className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
+            src="../opportune_newlogo.svg"
+          ></img>
           <p className="text-logo">Opportune</p>
           <Form action="/company/matching" method="post">
             <button
               className="logout-button"
               type="submit"
               name="_action"
-              value="LogOut">
+              value="LogOut"
+            >
               <ArrowLeftOnRectangleIcon />
             </button>
           </Form>
@@ -533,7 +584,8 @@ export default function CompanyMatching() {
 
         <div
           className="company-preview"
-          style={{ backgroundImage: `url(${coverUrl})` }}>
+          style={{ backgroundImage: `url(${coverUrl})` }}
+        >
           {url ? (
             <img src={url} alt="Uploaded" />
           ) : (
@@ -549,7 +601,8 @@ export default function CompanyMatching() {
                     <button
                       className="custom-file-upload"
                       onClick={open}
-                      type="button">
+                      type="button"
+                    >
                       Upload Image
                     </button>
                   );
@@ -560,7 +613,8 @@ export default function CompanyMatching() {
                   <button
                     className="custom-file-upload"
                     onClick={open}
-                    style={{ marginLeft: '10px' }}>
+                    style={{ marginLeft: '10px' }}
+                  >
                     Upload Cover
                   </button>
                 )}
@@ -584,7 +638,8 @@ export default function CompanyMatching() {
                       </div>
                       <p>{team.email}</p>
                     </div>
-                  }>
+                  }
+                >
                   <div style={{ flexDirection: 'row' }}>
                     <h3>Matched Hires: </h3>
                     <div className="member-container">
@@ -597,167 +652,335 @@ export default function CompanyMatching() {
                       ))}
                     </div>
                   </div>
-                  <div style={{ flexDirection: 'row', 'margin-top': '15px', 'margin-bottom': '15px' }}>
-                    <button className='diversity' onClick={() => setDiversityModal(i)}>Diversity Metrics</button>
+                  <div style={{ flexDirection: 'row' }}>
+                    <h3>
+                      Remaining capacity:{' '}
+                      <span style={{ fontWeight: 'normal' }}>
+                        {team.max_capacity}
+                      </span>
+                    </h3>
                   </div>
+                  <p
+                    className="cta right"
+                    style={{
+                      textAlign: 'right',
+                      fontSize: '1rem',
+                      borderRadius: '0.5rem',
+                    }}
+                  >
+                    <button onClick={() => setDiversityModal(i)}>
+                      Diversity Metrics
+                    </button>
+                  </p>
                 </Collapsible>
               ))}
             </div>
 
             <ModalLarge
-            open={diversityModal != null}
-            onClose={() => setDiversityModal(null)}
-            title={(diversityModal != null) ? getDiversityModalName() : 'Diversity' }>
-              {diversityModal != null ? 
-              <div className='scrollable'>
-
-                <div className='stat-box'>
-                  <h2 className='column' style={{width: '40%'}}>{parsedDiversity[diversityModal].diversityScoreBefore + "/100"}</h2>
-                  <h2 className='column' style={{width: '20%'}}>Diversity Score</h2>
-                  <div className='column' style={{width: '40%'}}>
-                    <h2>
-                      {parsedDiversity[diversityModal].diversityScoreAfter + "/100 "}
-
-                      {getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) > 0.0 ?
-                        <span style={{color: 'green', 'font-size': '14px'}}>                        
-                          {'(+' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
-                        </span>
-                        :
-                        <span style={{color: 'red', 'font-size': '14px'}}>                        
-                          {'(' + getPercentage(parsedDiversity[diversityModal].diversityScoreBefore, parsedDiversity[diversityModal].diversityScoreAfter) + '%)'}
-                        </span>
-                      }
-
+              open={diversityModal != null}
+              onClose={() => setDiversityModal(null)}
+              title={
+                diversityModal != null ? getDiversityModalName() : 'Diversity'
+              }
+            >
+              {diversityModal != null ? (
+                <div className="scrollable">
+                  <div className="stat-box">
+                    <h2 className="column" style={{ width: '40%' }}>
+                      {parsedDiversity[diversityModal].diversityScoreBefore +
+                        '/100'}
                     </h2>
+                    <h2 className="column" style={{ width: '20%' }}>
+                      Diversity Score
+                    </h2>
+                    <div className="column" style={{ width: '40%' }}>
+                      <h2>
+                        {parsedDiversity[diversityModal].diversityScoreAfter +
+                          '/100 '}
+
+                        {getPercentage(
+                          parsedDiversity[diversityModal].diversityScoreBefore,
+                          parsedDiversity[diversityModal].diversityScoreAfter
+                        ) > 0.0 ? (
+                          <span style={{ color: 'green', 'font-size': '14px' }}>
+                            {'(+' +
+                              getPercentage(
+                                parsedDiversity[diversityModal]
+                                  .diversityScoreBefore,
+                                parsedDiversity[diversityModal]
+                                  .diversityScoreAfter
+                              ) +
+                              '%)'}
+                          </span>
+                        ) : (
+                          <span style={{ color: 'red', 'font-size': '14px' }}>
+                            {'(' +
+                              getPercentage(
+                                parsedDiversity[diversityModal]
+                                  .diversityScoreBefore,
+                                parsedDiversity[diversityModal]
+                                  .diversityScoreAfter
+                              ) +
+                              '%)'}
+                          </span>
+                        )}
+                      </h2>
+                    </div>
                   </div>
-                </div>
 
-                <div className='stat-box'> 
-                  <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].ageBefore}
-                    />
-                  </p>
-                  <h2 className='column' style={{width: '20%'}}>Age Metrics</h2>
-                  <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].ageAfter}
-                    />
-                  </p>
-                </div>
-
-                <div className='stat-box'>
-                  <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].raceBefore}
-                    />
-                  </p>
-                  <h2 className='column' style={{width: '20%'}}>Race Metrics</h2>
-                  <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].raceAfter}
-                    />
-                  </p>
-                </div>
-                
-                <div className='stat-box'>
-                  <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].sexBefore}
-                    />
+                  <div className="stat-box">
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].ageBefore}
+                      />
                     </p>
-                    <h2 className='column' style={{width: '20%'}}>Gender Identity Metrics</h2>
-                    <p className='column' style={{width: '40%'}}>
-                    <CustomPieChart
-                      data={parsedDiversity[diversityModal].sexAfter}
-                    />
-                  </p>
-                </div>
+                    <h2 className="column" style={{ width: '20%' }}>
+                      Age Metrics
+                    </h2>
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].ageAfter}
+                      />
+                    </p>
+                  </div>
 
-                {(diversityModal != null && diversityModal > 0) ? <button className='off-left' onClick={() => setDiversityModal(diversityModal - 1)}>←</button>: null} 
-                {(diversityModal != null && diversityModal < info.teams.teams.length - 1) ? <button className='off-right' onClick={() => setDiversityModal(diversityModal + 1)}>→</button> : null} 
-              </div>
-            :
-            null
-            }
-                
+                  <div className="stat-box">
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].raceBefore}
+                      />
+                    </p>
+                    <h2 className="column" style={{ width: '20%' }}>
+                      Race Metrics
+                    </h2>
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].raceAfter}
+                      />
+                    </p>
+                  </div>
+
+                  <div className="stat-box">
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].sexBefore}
+                      />
+                    </p>
+                    <h2 className="column" style={{ width: '20%' }}>
+                      Gender Identity Metrics
+                    </h2>
+                    <p className="column" style={{ width: '40%' }}>
+                      <CustomPieChart
+                        data={parsedDiversity[diversityModal].sexAfter}
+                      />
+                    </p>
+                  </div>
+
+                  {diversityModal != null && diversityModal > 0 ? (
+                    <button
+                      className="off-left"
+                      onClick={() => setDiversityModal(diversityModal - 1)}
+                    >
+                      ←
+                    </button>
+                  ) : null}
+                  {diversityModal != null &&
+                  diversityModal < info.teams.teams.length - 1 ? (
+                    <button
+                      className="off-right"
+                      onClick={() => setDiversityModal(diversityModal + 1)}
+                    >
+                      →
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
             </ModalLarge>
           </div>
 
           <div className="new-hire-container">
             <div className="company-teams-title">
-              <h2>New Hire</h2>
+              <h2>New Hires</h2>
             </div>
-            <div className="teams-list">
-              {info?.newHires.new_hires.map((newHire) => (
-                <div key={newHire.name} className="company-hire">
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <h3>
-                      {newHire.first_name} {newHire.last_name}
-                    </h3>
-                    <p>{newHire.email}</p>
-                    {/*<p>
+            <div className="newhires-list-container">
+              <div className="newhires-list unmatched">
+                <h4>Unmatched</h4>
+                {info?.newHires.new_hires.filter((newHire) => !newHire.matched)
+                  .length > 0 ? (
+                  info?.newHires.new_hires
+                    .filter((newHire) => !newHire.matched)
+                    .map((newHire) => (
+                      <div key={newHire.name} className="company-hire">
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                          <h3>
+                            {newHire.first_name} {newHire.last_name}
+                          </h3>
+                          <p>{newHire.email}</p>
+                          {/*<p>
                       {newHire.team_id
                         ? teamIdMap[newHire.team_id].name
                         : 'Unmatched'}
                       </p> */}
-                  </div>
-                  <div style={{ display: 'flex' }}>
-                    <select
-                      className={
-                        !newHire.matched ? 'select-active' : 'select-inactive'
-                      }
-                      onChange={handleSelectChange}
-                      disabled={newHire.matched}>
-                      <option key={'None'} value={newHire.email}>
-                        None
-                      </option>
-                      {info.teams.teams // first filter out the matched team from the first option
-                        .map((team) =>
-                          team._id === newHire.team_id ? (
-                            <option
-                              key={team.name}
-                              value={newHire.email + ' ' + team.email}
-                              selected>
-                              {team.name}
+                        </div>
+                        <div style={{ display: 'flex' }}>
+                          <select
+                            className={
+                              !newHire.matched
+                                ? 'select-active'
+                                : 'select-inactive'
+                            }
+                            onChange={handleSelectChange}
+                            disabled={newHire.matched}
+                          >
+                            <option key={'None'} value={newHire.email}>
+                              None
                             </option>
-                          ) : (
-                            <option
-                              key={team.name}
-                              value={newHire.email + ' ' + team.email}>
-                              {team.name}
-                            </option>
-                          ),
-                        )}
-                    </select>
+                            {info.teams.teams // first filter out the matched team from the first option
+                              .map((team) =>
+                                team._id === newHire.team_id ? (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                    selected
+                                  >
+                                    {team.name}
+                                  </option>
+                                ) : (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                  >
+                                    {team.name}
+                                  </option>
+                                )
+                              )}
+                          </select>
 
-                    <Form action="/company/matching" method="post">
-                      <input
-                        name="email"
-                        type="hidden"
-                        value={newHire.email}></input>
-                      <input
-                        name="locked"
-                        type="hidden"
-                        value={newHire.matched ? 'false' : 'true'}></input>
-                      <button
-                        className="lock-button"
-                        type="submit"
-                        name="_action"
-                        value="newHireLock">
-                        {!newHire.matched ? (
-                          <LockOpenIcon className="lock-icon" />
-                        ) : (
-                          <LockClosedIcon className="lock-icon" />
-                        )}
-                      </button>
-                      <span className="hover-message">
-                        Click to manually override
-                      </span>
-                    </Form>
-                  </div>
-                </div>
-              ))}
+                          <Form action="/company/matching" method="post">
+                            <input
+                              name="email"
+                              type="hidden"
+                              value={newHire.email}
+                            ></input>
+                            <input
+                              name="locked"
+                              type="hidden"
+                              value={newHire.matched ? 'false' : 'true'}
+                            ></input>
+                            <button
+                              className="lock-button"
+                              type="submit"
+                              name="_action"
+                              value="newHireLock"
+                            >
+                              {!newHire.matched ? (
+                                <LockOpenIcon className="lock-icon" />
+                              ) : (
+                                <LockClosedIcon className="lock-icon" />
+                              )}
+                            </button>
+                            <span className="hover-message">
+                              Click to manually override
+                            </span>
+                          </Form>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="no-matched-hires">All hires are matched.</div>
+                )}
+              </div>
+              <div className="newhires-list matched">
+                <h4>Matched</h4>
+                {info?.newHires.new_hires.filter((newHire) => newHire.matched)
+                  .length > 0 ? (
+                  info?.newHires.new_hires
+                    .filter((newHire) => newHire.matched)
+                    .map((newHire) => (
+                      <div key={newHire.name} className="company-hire">
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                          <h3>
+                            {newHire.first_name} {newHire.last_name}
+                          </h3>
+                          <p>{newHire.email}</p>
+                          {/*<p>
+                      {newHire.team_id
+                        ? teamIdMap[newHire.team_id].name
+                        : 'Unmatched'}
+                      </p> */}
+                        </div>
+                        <div style={{ display: 'flex' }}>
+                          <select
+                            className={
+                              !newHire.matched
+                                ? 'select-active'
+                                : 'select-inactive'
+                            }
+                            onChange={handleSelectChange}
+                            disabled={newHire.matched}
+                          >
+                            <option key={'None'} value={newHire.email}>
+                              None
+                            </option>
+                            {info.teams.teams // first filter out the matched team from the first option
+                              .map((team) =>
+                                team._id === newHire.team_id ? (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                    selected
+                                  >
+                                    {team.name}
+                                  </option>
+                                ) : (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                  >
+                                    {team.name}
+                                  </option>
+                                )
+                              )}
+                          </select>
+
+                          <Form action="/company/matching" method="post">
+                            <input
+                              name="email"
+                              type="hidden"
+                              value={newHire.email}
+                            ></input>
+                            <input
+                              name="locked"
+                              type="hidden"
+                              value={newHire.matched ? 'false' : 'true'}
+                            ></input>
+                            <button
+                              className="lock-button"
+                              type="submit"
+                              name="_action"
+                              value="newHireLock"
+                            >
+                              {!newHire.matched ? (
+                                <LockOpenIcon className="lock-icon" />
+                              ) : (
+                                <LockClosedIcon className="lock-icon" />
+                              )}
+                            </button>
+                            <span className="hover-message">
+                              Click to manually override
+                            </span>
+                          </Form>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="no-matched-hires">No matched hires yet.</div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -777,17 +1000,20 @@ export default function CompanyMatching() {
                 className="match"
                 type="submit"
                 name="_action"
-                value="matchingSurvey">
+                value="matchingSurvey"
+              >
                 Run Matching Survey
               </button>
               <div
                 className="row-container"
-                style={{ alignItems: 'center', marginRight: '1rem' }}>
+                style={{ alignItems: 'center', marginRight: '1rem' }}
+              >
                 <p>Enable Diversity Matching?</p>
                 <input
                   type="checkbox"
                   id="toggle-button"
                   className="toggle-button"
+                  name="diversity"
                 />
                 <label for="toggle-button" className="toggle-label"></label>
               </div>
@@ -799,7 +1025,8 @@ export default function CompanyMatching() {
                 className="match confirm"
                 type="submit"
                 name="_action"
-                value="completeMatching">
+                value="completeMatching"
+              >
                 Confirm Team Matches
               </button>
             </Form>
