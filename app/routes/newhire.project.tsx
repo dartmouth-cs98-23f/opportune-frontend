@@ -7,6 +7,7 @@ import TaskBubble from '~/components/TaskBubble';
 import { json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
+import TRDropdown from '~/components/TRDropdown';
 
 const matched = true; // check that company matching is complete
 const createProjMode = false;
@@ -177,6 +178,44 @@ export async function loader({request}: LoaderFunctionArgs) {
 export default function Project() {
 	// load project info + start/end dates
 	const { projInfo, dates } = useLoaderData<typeof loader>();
+
+	/* const projInfo = [{
+		project: {
+			_id: '65d5715f1c7cf2404e060451',
+			name: 'Authorization',
+			description: 'A necessary evil of backend',
+			start_date: '2023-12-01T00:00:00.000Z',
+			end_date: '2024-01-01T00:00:00.000Z',
+			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
+			assigned_newhire_ids: ['65aebd6dd9dce799b35646cd'],
+			__v: 0 
+		},
+		subtasks: []
+	}, {
+		project: {
+			_id: '65d5715f1c7cf2404e060452',
+			name: 'UI/UX',
+			description: 'A necessary evil of frontend',
+			start_date: '2023-12-01T00:00:00.000Z',
+			end_date: '2024-01-01T00:00:00.000Z',
+			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
+			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
+			__v: 0 
+		},
+		subtasks: [{
+			id: 'abcd',
+			name: 'Pick Color Scheme',
+			description: '',
+			project_id: '65d5715f1c7cf2404e060452',
+			start_date: '2023-12-01T00:00:00.000Z',
+			end_date: '2024-01-01T00:00:00.000Z',
+			updates: [], 
+			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
+			complete: false,
+		}]
+	}] 
+	
+	const dates = { min_date: '2023-12-01', max_date: '2024-02-01' }; */
 	
 	// build upcoming task lists
 	const taskList = [];
@@ -259,8 +298,8 @@ export default function Project() {
 				<div id="sidebar">
 					<img className="opportune-logo-small disable-select" 
 					     src="../opportune_newlogo.svg" draggable={false}></img>
-					<p className="text-logo disable-select">Opportune</p>
-					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+					<p className="text-logo disable-select"> Opportune </p>
+					<TRDropdown skipLabel="Profile" route="/newhire/project" />
 				</div>
 				<div id="sidebar-2">
 					<h3> Timeline: Stephen 

@@ -20,6 +20,7 @@ import {
 } from '@remix-run/node';
 import { getSession, destroySession } from '~/utils/sessions';
 import axios from 'axios';
+import TRDropdown from '~/components/TRDropdown';
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -170,26 +171,15 @@ export default function Teams() {
   return (
     <div id="portal-root" className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <Form action="/newhire/teams" method="post">
-          <p className="text-logo">Opportune</p>
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+        <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+        <p className="text-logo"> Opportune </p>
+        <TRDropdown skipLabel="Project" route="/newhire/teams" />
       </div>
       <div id="content">
         <h2>
           Welcome{' '}
           {teamInfo.profile.new_hire.first_name
-            ? teamInfo.profile.new_hire.first_name
-            : 'New Hire'}{' '}
+            ? teamInfo.profile.new_hire.first_name : 'New Hire'}{' '}
         </h2>
         <div id="menubar">
           <MainNavigation />

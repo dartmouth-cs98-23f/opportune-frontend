@@ -1,6 +1,6 @@
 import { Link, Form, useLoaderData } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import axios from 'axios';
@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
+import TRDropdown from '~/components/TRDropdown';
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -105,19 +106,9 @@ export default function Profile() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <Form action="/newhire/profile" method="post">
-          <p className="text-logo">Opportune</p>
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		<p className="text-logo">Opportune</p>
+		<TRDropdown skipLabel="Project" route="/newhire/profile" />
       </div>
       <div id="content">
         <h2>

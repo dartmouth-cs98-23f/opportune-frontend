@@ -89,13 +89,7 @@
 }
 
 #sidebar a {
-  color: var(--color-primary-10);
-  transition: 0.3s;
-}
-
-#sidebar a:hover,
-#sidebar a.active {
-  color: var(--color-secondary-200);
+  color: white;
   transition: 0.3s;
 }
 
@@ -598,33 +592,55 @@ button[type='submit'] {
 
 /* logout button */
 
-.logout-button {
+.tr-button {
   display: inline;
   background-color: var(--color-primary-10);
+  color: white;
   width: 50px;
   height: 50px;
   float: right;
   margin-right: 10px;
   cursor: pointer;
+  border: none;
 }
 
-.logout-button svg {
-  color: var(--color-primary-30);
-  transition: 0.3s;
+.tr-form {
+	border-top: solid white 2px;
+	position: absolute;
+	text-align: right;
+	top: 50px;
+	right: 0;
+	background-color: var(--color-primary-10);
 }
 
-.logout-button svg:hover {
-  color: var(--color-secondary-10);
-  transition: 0.3s;
+.tr-form a, .tr-form button {
+	display: block;
 }
 
-/* profile button */
+.logout-button, .profile-button {
+	margin: 5px;
+	color: white;
+	cursor: pointer;
+	background-color: var(--color-primary-10);
+	border: none;
+	font-size: 12px;
+	font-family: Mulish, Roboto, Arial;
+	transition: 0.3s;
+	text-align: center;
+}
+
 .profile-button {
-  display: inline;
-  width: 50px;
-  height: 50px;
-  float: right;
+	padding: 2px;
+	text-decoration: none;
 }
+
+.logout-button:hover,
+.profile-button:hover {
+  background-color: var(--color-secondary-10);
+  transition: 0.3s;
+}
+
+
 
 /* edit button */
 a.edit,

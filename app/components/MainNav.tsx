@@ -1,6 +1,5 @@
 import { NavData } from '~/components/NavData';
 import { NavLink } from 'react-router-dom';
-import styles from '~/styles/home.css'
 
 export default function MainNavigation() {
   return (
@@ -9,11 +8,10 @@ export default function MainNavigation() {
 			{NavData.map((val, key) => {
 				return (
 					<li className="nav-row" key={key}>
-						<NavLink to={val.link}>
+						<NavLink to={"/newhire" + val.link}>
 							<div className={val.class ? val.class : ''}>
 								<p className="icon-title">{val.title}</p>
 							</div>
-							
 						</NavLink>
 					</li>
 				)
@@ -21,10 +19,4 @@ export default function MainNavigation() {
 		</ul>
 	</nav>
   );
-}
-
-// {val.icon}
-
-export function links() {
-	return [{ rel: 'stylesheet', href: styles }];
 }

@@ -20,6 +20,7 @@ import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import { parseDatePlus1, parseDate, formatDate } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
@@ -322,19 +323,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -355,19 +346,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-          <Form action="/newhire/survey" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -388,19 +369,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -458,19 +429,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>

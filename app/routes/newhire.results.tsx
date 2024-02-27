@@ -18,6 +18,7 @@ import {
 import { destroySession, getSession } from '~/utils/sessions';
 // import { useWindowSize } from 'react-use';
 import Confetti from 'react-confetti';
+import TRDropdown from '~/components/TRDropdown';
 // import { motion } from 'framer-motion';
 
 // ACTION FUNCTION
@@ -98,19 +99,9 @@ export default function Results() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
+        <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
         <p className="text-logo">Opportune</p>
-        <Form action="/newhire/results" method="post">
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+        <TRDropdown skipLabel="Project" route="/newhire/results" />
       </div>
       <div id="content">
         <h2>
