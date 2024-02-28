@@ -26,7 +26,7 @@ export default function TRDropdown(props:Field) {
 				 <Link className="profile-button" to={`/${props.userType}/${props.skipLabel.toLowerCase()}`}> 
 					{props.skipLabel} 
 				 </Link> : null}
-				<Link className="profile-button" to="/newhire/project"> Settings </Link>
+				<Link className="profile-button" to="/login"> Settings </Link> {/* Change to settings page once ready */}
 				<button className="logout-button" name="_action" value="LogOut">
 					Log out
 				</button>
