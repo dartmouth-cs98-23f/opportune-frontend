@@ -59,7 +59,7 @@ function HowWeWorkPage() {
             {/* <!-- Navigation--> */}
             <nav className="navbar1" >
                     <img className ="navimg1" src="opportune_newlogo.svg"></img>
-                    <a className="navbar-title" href="#!">OPPORTUNE</a>
+                    <a className="navbar-title" style={{ 'margin-left': '10%' }} href="#!">OPPORTUNE</a>
                     <div>
                         <Link className="navbtns" to="/company/signup">Enroll a Company</Link>
                         <Link className="navbtns" to="/login">Login</Link>
@@ -203,7 +203,7 @@ function HowWeWorkPage() {
                                     </h3>
                                     <div id="faq-content-1" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.
+                                            Our cutting-edge matching algorithm is dedicated to aligning new hires with their prospective teams at your company. Through our comprehensive team-matching survey, stakeholders on both ends provide invaluable insights: teams designate their preferred skill sets in prospective recruits, while new hires designate their current proficiencies and working-style preferences. Leveraging this data, our refined algorithm seamlessly identifies optimal pairings that reflect mutual preferences with the click of a button. However, administrators have the option to intervene and designate team assignments manually according to their discretion should the need arise.
                                         </div>
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@ function HowWeWorkPage() {
                                     </h3>
                                     <div id="faq-content-2" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.
+                                            You can onboard a company with a single click! Simply select <a className='a-link' href="/company/signup">Enroll a Company</a>, create your account, and unlock the array of offerings Opportune has in store for you!
                                         </div>
                                     </div>
                                 </div>
@@ -226,12 +226,12 @@ function HowWeWorkPage() {
                                     <h3 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-3">
                                             <span className="num">3.</span>
-                                            What is the Diversity Matching Metric and how does it work?
+                                            What is the Diversity Score and how does diversity-based team matching work?
                                         </button>
                                     </h3>
                                     <div id="faq-content-3" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis
+                                            For every team, the amalgamation of team members and new hire demographics contributes to forming our 'diversity score,' serving as a benchmark to gauge the degree of diversity within a team based on the variance in demographic attributes among its members. Our diversity-based team matching aims to increase this score by assigning additional weight to the matching algorithm whenever a new hire introduces diversity to a team.
                                         </div>
                                     </div>
                                 </div>
@@ -245,26 +245,7 @@ function HowWeWorkPage() {
                                     </h3>
                                     <div id="faq-content-4" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="accordion-item">
-                                    <h3 className="accordion-header">
-                                        <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-content-5">
-                                            <span className="num">5.</span>
-                                            What are the pricing plans?
-                                        </button>
-                                    </h3>
-                                    <div id="faq-content-5" className="accordion-collapse collapse" data-bs-parent="#faqlist">
-                                        <div className="accordion-body">
-                                            <ul>
-                                                <li> Demo Beta Tester Package: </li>
-                                                <li> Plan A: </li>
-                                                <li> Plan B: </li>
-                                                <li> Plan C: </li>
-                                            </ul>
+                                            To stay informed about beta testing opportunities, kindly subscribe to our newsletter by providing your details below. We will ensure you receive the latest updates and information!
                                         </div>
                                     </div>
                                 </div>
@@ -314,7 +295,7 @@ function HowWeWorkPage() {
                 <div className="container">
                     <div className="row gy-4">
                         <div className="col-lg-5 col-md-12 footer-info">
-                            <a href="index.html" className="logo d-flex align-items-center">
+                            <a href="/" className="logo d-flex align-items-center">
                                 <span>Opportune</span>
                             </a>
                         </div>
