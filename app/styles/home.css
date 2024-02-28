@@ -1814,3 +1814,8 @@ input[type='checkbox'] {
   font-weight: bold;
   font-size: 18px;
 }
+
+.a-link {
+  color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1)) !important;
+  text-decoration: underline;
+}
