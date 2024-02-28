@@ -718,7 +718,7 @@ export default function CompanyProfile() {
                           </button>
                           <Form action="/company/profile" method="post">
                             <button
-                              className="edit-button"
+                              className="edit-button trash"
                               type="submit"
                               name="_action"
                               value="deleteTeam"
@@ -849,7 +849,7 @@ export default function CompanyProfile() {
                         }}
                       />
                       <TrashIcon
-                        className="trash-icon"
+                        className="edit-icon trash"
                         onClick={() => handleMemberDelete(index)}
                       />
                     </div>
@@ -970,7 +970,7 @@ export default function CompanyProfile() {
                           }}
                         />
                         <TrashIcon
-                          className="edit-icon"
+                          className="edit-icon trash"
                           onClick={() => handleMemberDelete(index)}
                         />
                       </div>
