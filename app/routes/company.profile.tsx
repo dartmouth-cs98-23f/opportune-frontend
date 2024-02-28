@@ -662,7 +662,6 @@ export default function CompanyProfile() {
                       <div>
                         <h3>{team.name}</h3>
                         <div>{team.location}</div>{' '}
-                        {/* TO REMOVE AT SOME POINT */}
                       </div>
                       <button
                         className={
@@ -953,10 +952,7 @@ export default function CompanyProfile() {
                         <PencilIcon
                           className="edit-icon"
                           onClick={() => {
-                            setShowEditMemberModal(index);
-                            console.log(index);
-                            console.log(teamMembers);
-                            console.log(teamMembers[index]);
+                            setShowEditMemberModal(index)
                           }}
                         />
                         <TrashIcon

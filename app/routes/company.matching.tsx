@@ -1,28 +1,28 @@
-import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
+import { Link, Form, useLoaderData, useFetcher } from "@remix-run/react";
 import {
   ArrowLeftOnRectangleIcon,
   LockClosedIcon,
   LockOpenIcon,
-} from '@heroicons/react/24/outline';
-import styles from '~/styles/home.css';
-import { useState } from 'react';
-import axios from 'axios';
-import ImageUpload from '~/components/ImageUpload';
+} from "@heroicons/react/24/outline";
+import styles from "~/styles/home.css";
+import { useState } from "react";
+import axios from "axios";
+import ImageUpload from "~/components/ImageUpload";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   redirect,
   json,
-} from '@remix-run/node';
-import ReadMore from '~/components/ReadMore';
-import { destroySession, getSession } from '../utils/sessions';
-import { Collapsible } from '~/components/Collapsible';
-import { Checkbox } from '@mui/material';
-import CustomPieChart from '~/components/CustomPieChart';
-import React from 'react';
-import Modal from '~/components/Modal';
-import ModalLarge from '~/components/ModalLarge';
-import { parseDate, parseDatePlus1 } from '~/lib/date';
+} from "@remix-run/node";
+import ReadMore from "~/components/ReadMore";
+import { destroySession, getSession } from "../utils/sessions";
+import { Collapsible } from "~/components/Collapsible";
+import { Checkbox } from "@mui/material";
+import CustomPieChart from "~/components/CustomPieChart";
+import React from "react";
+import Modal from "~/components/Modal";
+import ModalLarge from "~/components/ModalLarge";
+import { parseDate, parseDatePlus1 } from "~/lib/date";
 
 function getDiversityMetrics(diversity) {
   const diversityBefore = diversity['diversity_before'];
@@ -194,10 +194,10 @@ function getDiversityMetrics(diversity) {
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
-  const _action = body.get('_action');
+  const _action = body.get("_action");
   console.log(_action);
 
-  const session = await getSession(request.headers.get('Cookie'));
+  const session = await getSession(request.headers.get("Cookie"));
 
   var myJson = {};
   for (const [key, value] of body.entries()) {
@@ -207,83 +207,83 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log(JSON.stringify(myJson));
 
   // Actions
-  if (_action === 'LogOut') {
-    return redirect('/login', {
+  if (_action === "LogOut") {
+    return redirect("/login", {
       headers: {
-        'Set-Cookie': await destroySession(session),
+        "Set-Cookie": await destroySession(session),
       },
     });
-  } else if (_action === 'matchingSurvey') {
-    const diversifyOn = myJson['diversify'] == 'on';
+  } else if (_action === "matchingSurvey") {
+    const diversifyOn = myJson["diversify"] == "on";
 
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/match',
+        process.env.BACKEND_URL + "/api/v1/company/match",
         {},
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
           params: {
             diversify: diversifyOn,
           },
         }
       );
-      return redirect('/company/matching');
+      return redirect("/company/matching");
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === 'newHireLock') {
-    myJson['locked'] = myJson['locked'] == 'true';
+  } else if (_action === "newHireLock") {
+    myJson["locked"] = myJson["locked"] == "true";
 
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/newhire-lock',
+        process.env.BACKEND_URL + "/api/v1/company/newhire-lock",
         myJson,
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
         }
       );
-      return redirect('/company/matching');
+      return redirect("/company/matching");
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === 'matchManual') {
+  } else if (_action === "matchManual") {
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/match-manual',
+        process.env.BACKEND_URL + "/api/v1/company/match-manual",
         myJson,
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
         }
       );
-      return redirect('/company/matching');
+      return redirect("/company/matching");
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === 'completeMatching') {
+  } else if (_action === "completeMatching") {
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + '/api/v1/company/confirm-matches',
+        process.env.BACKEND_URL + "/api/v1/company/confirm-matches",
         myJson,
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
         }
       );
-      return redirect('/company/profile');
+      return redirect("/company/profile");
     } catch (error) {
       console.log(error);
       return null;
@@ -296,41 +296,41 @@ export async function action({ request }: ActionFunctionArgs) {
 // LOADER FUNCTION
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    const session = await getSession(request.headers.get('Cookie'));
+    const session = await getSession(request.headers.get("Cookie"));
 
     if (
-      !session.has('auth') ||
-      (session.has('user_type') && session.get('user_type') !== 'company')
+      !session.has("auth") ||
+      (session.has("user_type") && session.get("user_type") !== "company")
     ) {
-      return redirect('/login');
+      return redirect("/login");
     }
 
     const companyRes = await axios.get(
-      process.env.BACKEND_URL + '/api/v1/company/profile',
+      process.env.BACKEND_URL + "/api/v1/company/profile",
       {
         headers: {
-          Authorization: session.get('auth'),
-          'Content-Type': 'application/json',
+          Authorization: session.get("auth"),
+          "Content-Type": "application/json",
         },
       }
     );
 
     const newHireRes = await axios.get(
-      process.env.BACKEND_URL + '/api/v1/user/list-newhires',
+      process.env.BACKEND_URL + "/api/v1/user/list-newhires",
       {
         headers: {
-          Authorization: session.get('auth'),
-          'Content-Type': 'application/json',
+          Authorization: session.get("auth"),
+          "Content-Type": "application/json",
         },
       }
     );
 
     const teamsRes = await axios.get(
-      process.env.BACKEND_URL + '/api/v1/user/list-teams',
+      process.env.BACKEND_URL + "/api/v1/user/list-teams",
       {
         headers: {
-          Authorization: session.get('auth'),
-          'Content-Type': 'application/json',
+          Authorization: session.get("auth"),
+          "Content-Type": "application/json",
         },
       }
     );
@@ -343,8 +343,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         { email: team.email },
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
         }
       );
@@ -475,20 +475,7 @@ export default function CompanyMatching() {
   };
 
   const getDiversityModalName = () => {
-    return (
-      <div>
-        {'Diversity: ' + info.teams.teams[diversityModal].name}
-        <div className="stat-box">
-          <div className="column" style={{ width: '40%' }}>
-            Before Matching{' '}
-          </div>
-          <div className="column" style={{ width: '20%' }}></div>
-          <div className="column" style={{ width: '40%' }}>
-            After Matching
-          </div>
-        </div>
-      </div>
-    );
+    return <div>{"Diversity: " + info.teams.teams[diversityModal].name}</div>;
   };
 
   const [url, updateUrl] = useState();
@@ -504,7 +491,7 @@ export default function CompanyMatching() {
     updateUrl(result?.info?.secure_url);
   };
 
-  const [coverUrl, setCoverUrl] = useState('../defaultCover.png');
+  const [coverUrl, setCoverUrl] = useState("../defaultCover.png");
 
   const handleCoverUpload = (error: any, result: any, widget: any) => {
     if (error) {
@@ -518,9 +505,9 @@ export default function CompanyMatching() {
   };
 
   const handleSelectChange = (event) => {
-    const value = event.target.value.split(' ');
+    const value = event.target.value.split(" ");
     const nhEmail = value[0];
-    const teamEmail = value[1] ?? '';
+    const teamEmail = value[1] ?? "";
 
     // programmatically submit a useFetcher form in Remix
     fetcher.submit(
@@ -535,7 +522,7 @@ export default function CompanyMatching() {
 
   if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
-      <div style={{ height: '100vh', textAlign: 'center' }}>
+      <div style={{ height: "100vh", textAlign: "center" }}>
         <div className="sidebar">
           <img
             className="opportune-logo-small"
@@ -556,7 +543,7 @@ export default function CompanyMatching() {
         <div className="unavailable-content">
           The matching page is not available yet!
         </div>
-        <p className="cta" style={{ textAlign: 'center' }}>
+        <p className="cta" style={{ textAlign: "center" }}>
           <Link to="/company/profile">Back</Link>
         </p>
       </div>
@@ -623,7 +610,7 @@ export default function CompanyMatching() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ display: "flex", flexDirection: "row" }}>
           <div className="company-teams-container">
             <div className="company-teams-title">
               <h2>Teams</h2>
@@ -640,7 +627,7 @@ export default function CompanyMatching() {
                     </div>
                   }
                 >
-                  <div style={{ flexDirection: 'row' }}>
+                  <div style={{ flexDirection: "row" }}>
                     <h3>Matched Hires: </h3>
                     <div className="member-container">
                       {teamNewHires[team._id]?.map((matchedHire) => (
@@ -683,100 +670,119 @@ export default function CompanyMatching() {
               open={diversityModal != null}
               onClose={() => setDiversityModal(null)}
               title={
-                diversityModal != null ? getDiversityModalName() : 'Diversity'
+                diversityModal != null ? getDiversityModalName() : "Diversity"
               }
             >
+              <div className="stat-box">
+                <h2 className="column" style={{ width: "40%" }}>
+                  Before Matching{" "}
+                </h2>
+                <div className="column" style={{ width: "20%" }}></div>
+                <h2 className="column" style={{ width: "40%" }}>
+                  After Matching
+                </h2>
+              </div>
               {diversityModal != null ? (
                 <div className="scrollable">
                   <div className="stat-box">
-                    <h2 className="column" style={{ width: '40%' }}>
+                    <h3 className="column" style={{ width: "40%" }}>
                       {parsedDiversity[diversityModal].diversityScoreBefore +
-                        '/100'}
-                    </h2>
-                    <h2 className="column" style={{ width: '20%' }}>
+                        "/100"}
+                    </h3>
+                    <h3 className="column" style={{ width: "20%" }}>
                       Diversity Score
-                    </h2>
-                    <div className="column" style={{ width: '40%' }}>
-                      <h2>
+                    </h3>
+                    <div className="column" style={{ width: "40%" }}>
+                      <h3>
                         {parsedDiversity[diversityModal].diversityScoreAfter +
-                          '/100 '}
+                          "/100 "}
 
                         {getPercentage(
                           parsedDiversity[diversityModal].diversityScoreBefore,
                           parsedDiversity[diversityModal].diversityScoreAfter
                         ) > 0.0 ? (
-                          <span style={{ color: 'green', 'font-size': '14px' }}>
-                            {'(+' +
+                          <span style={{ color: "green", "font-size": "14px" }}>
+                            {"(+" +
                               getPercentage(
                                 parsedDiversity[diversityModal]
                                   .diversityScoreBefore,
                                 parsedDiversity[diversityModal]
                                   .diversityScoreAfter
                               ) +
-                              '%)'}
+                              "%)"}
                           </span>
                         ) : (
-                          <span style={{ color: 'red', 'font-size': '14px' }}>
-                            {'(' +
+                          <span style={{ color: "red", "font-size": "14px" }}>
+                            {"(" +
                               getPercentage(
                                 parsedDiversity[diversityModal]
                                   .diversityScoreBefore,
                                 parsedDiversity[diversityModal]
                                   .diversityScoreAfter
                               ) +
-                              '%)'}
+                              "%)"}
                           </span>
                         )}
-                      </h2>
+                      </h3>
                     </div>
                   </div>
 
-                  <div className="stat-box">
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].ageBefore}
-                      />
-                    </p>
-                    <h2 className="column" style={{ width: '20%' }}>
-                      Age Metrics
-                    </h2>
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].ageAfter}
-                      />
-                    </p>
+                  <div className="metric-box">
+                    <div className="row-container">
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].ageBefore}
+                        />
+                      </p>
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].ageAfter}
+                        />
+                      </p>
+                    </div>
+
+                    <h2 style={{ textAlign: "center" }}>Age Metrics</h2>
                   </div>
 
-                  <div className="stat-box">
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].raceBefore}
-                      />
-                    </p>
-                    <h2 className="column" style={{ width: '20%' }}>
+                  <div className="metric-box">
+                    <div className="row-container">
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].raceBefore}
+                        />
+                      </p>
+
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].raceAfter}
+                        />
+                      </p>
+                    </div>
+                    <h2 className="column" style={{ width: "20%" }}>
                       Race Metrics
                     </h2>
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].raceAfter}
-                      />
-                    </p>
                   </div>
 
-                  <div className="stat-box">
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].sexBefore}
-                      />
-                    </p>
-                    <h2 className="column" style={{ width: '20%' }}>
+                  <div className="metric-box">
+                    <div className="row-container">
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].sexBefore}
+                        />
+                      </p>
+                      <p className="column" style={{ width: "40%" }}>
+                        <CustomPieChart
+                          data={parsedDiversity[diversityModal].sexAfter}
+                        />
+                      </p>
+                    </div>
+
+                    <h2
+                      className="column"
+                      style={{ width: "40%", marginBottom: "1.5rem" }}
+                    >
                       Gender Identity Metrics
                     </h2>
-                    <p className="column" style={{ width: '40%' }}>
-                      <CustomPieChart
-                        data={parsedDiversity[diversityModal].sexAfter}
-                      />
-                    </p>
                   </div>
 
                   {diversityModal != null && diversityModal > 0 ? (
@@ -987,6 +993,9 @@ export default function CompanyMatching() {
             </div>
           </div>
         </div>
+        <p className="cta" style={{ marginLeft: "1rem" }}>
+          <Link to="/company/profile">Back</Link>
+        </p>
         <div className="row-container" style={{ marginRight: '1rem' }}>
           <p className="cta" style={{ textAlign: 'right' }}>
             {/* {allSurveysCompleted ? (
@@ -1041,5 +1050,5 @@ export default function CompanyMatching() {
 }
 
 export function links() {
-  return [{ rel: 'stylesheet', href: styles }];
+  return [{ rel: "stylesheet", href: styles }];
 }

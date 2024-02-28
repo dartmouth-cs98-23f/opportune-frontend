@@ -1180,13 +1180,14 @@ input[type='checkbox'] {
 
 .modal-large {
   background: aliceblue;
-  width: 80%;
+  width: 65%;
   height: 80%;
   max-width: 100%;
   padding: 1rem;
   border-radius: 1rem;
   position: relative;
   text-align: left;
+  overflow: hidden;
 }
 
 .modal-large button.off-right {
@@ -1768,6 +1769,13 @@ input[type='checkbox'] {
 .stat-box {
   display: flex;
   align-items: center;
+  width: 100%;
+  padding: 1rem 3rem 0;
+}
+
+.metric-box {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
