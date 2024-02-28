@@ -101,7 +101,7 @@ export default function Results() {
       <div id="sidebar">
         <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
         <p className="text-logo">Opportune</p>
-        <TRDropdown skipLabel="Project" route="/newhire/results" />
+        <TRDropdown skipLabel="Project" route="/newhire/results" userType="newhire" />
       </div>
       <div id="content">
         <h2>

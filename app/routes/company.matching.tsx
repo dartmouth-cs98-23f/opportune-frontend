@@ -23,6 +23,7 @@ import React from 'react';
 import Modal from '~/components/Modal';
 import ModalLarge from '~/components/ModalLarge';
 import { parseDate, parseDatePlus1 } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 function getDiversityMetrics(diversity) {
   const diversityBefore = diversity["diversity_before"];
@@ -489,21 +490,11 @@ export default function CompanyMatching() {
   if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
       <div style={{ height: '100vh', textAlign: 'center' }}>
-        <div className="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <p className="text-logo">Opportune</p>
-          <Form action="/company/matching" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
+        <div id="sidebar">
+		  <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		  <p className="text-logo">Opportune</p>
+		  <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	  	</div>
         <div className="unavailable-content">
           The matching page is not available yet!
         </div>
@@ -515,22 +506,11 @@ export default function CompanyMatching() {
   } else {
     return (
       <div className="company-container">
-        <div className="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <p className="text-logo">Opportune</p>
-          <Form action="/company/matching" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
-
+        <div id="sidebar">
+		  <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		  <p className="text-logo">Opportune</p>
+		  <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	  	</div>
         <div
           className="company-preview"
           style={{ backgroundImage: `url(${coverUrl})` }}>

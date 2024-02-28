@@ -4,6 +4,7 @@ import { useState } from "react";
 interface Field {
 	route: string;
 	skipLabel: string;
+	userType: string;
 }
 
 export default function TRDropdown(props:Field) {
@@ -21,9 +22,10 @@ export default function TRDropdown(props:Field) {
 		
 		{trToggle ? 
 			<Form className="tr-form" action={props.route} method="post">
-				<Link className="profile-button" to={`/newhire/${props.skipLabel.toLowerCase()}`}> 
+				{(props.userType !== "company") ?
+				 <Link className="profile-button" to={`/${props.userType}/${props.skipLabel.toLowerCase()}`}> 
 					{props.skipLabel} 
-				</Link>
+				 </Link> : null}
 				<Link className="profile-button" to="/newhire/project"> Settings </Link>
 				<button className="logout-button" name="_action" value="LogOut">
 					Log out

@@ -173,7 +173,7 @@ export default function Teams() {
       <div id="sidebar">
         <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
         <p className="text-logo"> Opportune </p>
-        <TRDropdown skipLabel="Project" route="/newhire/teams" />
+        <TRDropdown skipLabel="Project" route="/newhire/teams" userType="newhire" />
       </div>
       <div id="content">
         <h2>

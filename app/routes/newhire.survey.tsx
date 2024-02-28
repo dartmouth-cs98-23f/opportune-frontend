@@ -371,7 +371,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -431,7 +431,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		  <TRDropdown skipLabel="Project" route="/newhire/survey"/>
+		  <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>

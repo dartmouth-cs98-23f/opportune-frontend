@@ -20,6 +20,7 @@ import PlainText from '~/components/survey_qs/PlainText';
 import { Select } from '@mui/material';
 import ScaleT from '~/components/survey_qs/ScaleT';
 import { parseDate, parseDatePlus1, formatDate } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
@@ -205,20 +206,10 @@ export default function Tprefs() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/team/profile" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
+			<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+			<p className="text-logo">Opportune</p>
+			<TRDropdown skipLabel="Project" route="/team/survey" userType="team" />
+		</div>
         <div className="unavailable-content">The skills survey is closed. </div>
         <p className="cta" style={{ textAlign: 'center' }}>
           <Link to="/team/profile">Back</Link>
@@ -229,20 +220,10 @@ export default function Tprefs() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/team/profile" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
+			<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+			<p className="text-logo">Opportune</p>
+			<TRDropdown skipLabel="Project" route="/team/survey" userType="team" />
+		</div>
         <div className="content">
           <div className="company-banner">
             <h1> {companyInfo.name} </h1>

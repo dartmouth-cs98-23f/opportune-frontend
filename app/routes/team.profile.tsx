@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
+import TRDropdown from '~/components/TRDropdown';
 
 // LOADER FUNCTION
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -125,19 +126,9 @@ export default function Tprofile() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <Form action="/team/profile" method="post">
-          <p className="text-logo">Opportune</p>
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		<p className="text-logo">Opportune</p>
+		<TRDropdown skipLabel="Project" route="/team/profile" userType="team" />
       </div>
       <div className="content">
         <div className="company-banner">

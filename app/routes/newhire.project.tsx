@@ -299,7 +299,7 @@ export default function Project() {
 					<img className="opportune-logo-small disable-select" 
 					     src="../opportune_newlogo.svg" draggable={false}></img>
 					<p className="text-logo disable-select"> Opportune </p>
-					<TRDropdown skipLabel="Profile" route="/newhire/project" />
+					<TRDropdown skipLabel="Profile" route="/newhire/project" userType="newhire" />
 				</div>
 				<div id="sidebar-2">
 					<h3> Timeline: Stephen 
