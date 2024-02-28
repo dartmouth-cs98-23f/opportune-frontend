@@ -457,6 +457,37 @@
   width: 65%;
 }
 
+.newhires-list-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.newhires-list {
+  flex: 1;
+}
+
+.newhires-list.unmatched {
+  border-right: 1px solid gray;
+  padding-right: 1rem;
+}
+
+.newhires-list.matched {
+  padding-left: 1rem;
+}
+
+.newhires-list h4 {
+  margin-top: 0;
+  margin-left: 1rem;
+  font-size: 1.3rem;
+}
+
+.no-matched-hires {
+  font-size: 1.3rem;
+  color: gray;
+  text-align: center;
+  margin-top: 50%;
+}
+
 .teams-list img {
   display: block;
   width: 6rem;
@@ -560,10 +591,14 @@
 }
 
 .diversity {
+  border: none;
+  text-decoration: none;
   background-color: var(--color-primary-20);
   color: #fff;
+  font-family: Mulish, Roboto;
   padding: 0.3rem 1rem;
   transition: 0.3s;
+  border-radius: 0.5rem;
 }
 
 .diversity:hover {
@@ -1248,8 +1283,12 @@ input[type='checkbox'] {
   transition: 0.3s;
   text-align: center;
   white-space: nowrap;
-  /* margin: 1rem 1rem 0 1rem; */
   margin-top: 1rem;
+}
+
+.newhire-button:hover {
+  cursor: pointer;
+  background-color: var(--color-secondary-10);
 }
 
 .company-save {
@@ -1261,7 +1300,12 @@ input[type='checkbox'] {
   border-radius: 4px;
   font-size: 1rem;
   transition: 0.3s;
+}
+
+.company-save:hover {
+  background-color: var(--color-secondary-10);
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .new-hire-container {

@@ -25,155 +25,155 @@ import ModalLarge from "~/components/ModalLarge";
 import { parseDate, parseDatePlus1 } from "~/lib/date";
 
 function getDiversityMetrics(diversity) {
-  const diversityBefore = diversity["diversity_before"];
-  const diversityAfter = diversity["diversity_after"];
+  const diversityBefore = diversity['diversity_before'];
+  const diversityAfter = diversity['diversity_after'];
 
   // age before
   var ageBefore = [];
   var i = 0;
-  if (diversityBefore["age"]) {
-    const ageRangesBefore = diversityBefore["age"]["ranges"];
+  if (diversityBefore['age']) {
+    const ageRangesBefore = diversityBefore['age']['ranges'];
     for (var key in ageRangesBefore) {
       var percent = Math.floor(ageRangesBefore[key] * 100);
       if (ageRangesBefore[key] != 0) {
         ageBefore.push({
           x: i,
           y: ageRangesBefore[key],
-          label: key + "\n" + percent + "%",
+          label: key + '\n' + percent + '%',
         });
       }
       i++;
     }
   } else {
-    ageBefore = [{ x: 0, y: 1, label: "No Data Available." }];
+    ageBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // age after
   var ageAfter = [];
   i = 0;
-  if (diversityAfter["age"]) {
-    const ageRangesAfter = diversityAfter["age"]["ranges"];
+  if (diversityAfter['age']) {
+    const ageRangesAfter = diversityAfter['age']['ranges'];
     for (var key in ageRangesAfter) {
       var percent = Math.floor(ageRangesAfter[key] * 100);
       if (ageRangesAfter[key] != 0) {
         ageAfter.push({
           x: i,
           y: ageRangesAfter[key],
-          label: key + "\n" + percent + "%",
+          label: key + '\n' + percent + '%',
         });
       }
       i++;
     }
   } else {
-    ageAfter = [{ x: 0, y: 1, label: "No Data Available." }];
+    ageAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // race before
   var raceBefore = [];
   i = 0;
-  const raceDivBefore = diversityBefore["race"];
+  const raceDivBefore = diversityBefore['race'];
   if (raceDivBefore) {
     for (var key in raceDivBefore) {
       var percent = Math.floor(raceDivBefore[key] * 100);
-      if (key == "White") {
+      if (key == 'White') {
         raceBefore.push({
           x: i,
           y: raceDivBefore[key],
-          label: "White\n" + percent + "%",
+          label: 'White\n' + percent + '%',
         }); // get period to float out of the svg
-      } else if (key == "Black") {
+      } else if (key == 'Black') {
         raceBefore.push({
           x: i,
           y: raceDivBefore[key],
-          label: "Black\n" + percent + "%",
+          label: 'Black\n' + percent + '%',
         }); // get period to float out of the svg
       } else {
         raceBefore.push({
           x: i,
           y: raceDivBefore[key],
-          label: key + "\n" + percent + "%",
+          label: key + '\n' + percent + '%',
         });
       }
       i++;
     }
   } else {
-    raceBefore = [{ x: 0, y: 1, label: "No Data Available." }];
+    raceBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // race after
   var raceAfter = [];
   i = 0;
-  const raceDivAfter = diversityAfter["race"];
+  const raceDivAfter = diversityAfter['race'];
   if (raceDivAfter) {
     for (var key in raceDivAfter) {
       var percent = Math.floor(raceDivAfter[key] * 100);
-      if (key == "White") {
+      if (key == 'White') {
         raceAfter.push({
           x: i,
           y: raceDivAfter[key],
-          label: "White\n" + percent + "%",
+          label: 'White\n' + percent + '%',
         }); // get period to float out of the svg
-      } else if (key == "Black") {
+      } else if (key == 'Black') {
         raceAfter.push({
           x: i,
           y: raceDivAfter[key],
-          label: "Black\n" + percent + "%",
+          label: 'Black\n' + percent + '%',
         }); // get period to float out of the svg
       } else {
         raceAfter.push({
           x: i,
           y: raceDivAfter[key],
-          label: key + "\n" + percent + "%",
+          label: key + '\n' + percent + '%',
         });
       }
       i++;
     }
   } else {
-    raceAfter = [{ x: 0, y: 1, label: "No Data Available." }];
+    raceAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // sex before
   var sexBefore = [];
   i = 0;
-  const sexDivBefore = diversityBefore["sex"];
+  const sexDivBefore = diversityBefore['sex'];
   if (sexDivBefore) {
     for (var key in sexDivBefore) {
       var percent = Math.floor(sexDivBefore[key] * 100);
       sexBefore.push({
         x: i,
         y: sexDivBefore[key],
-        label: key + "\n" + percent + "%",
+        label: key + '\n' + percent + '%',
       });
       i++;
     }
   } else {
-    sexBefore = [{ x: 0, y: 1, label: "No Data Available." }];
+    sexBefore = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // sex after
   var sexAfter = [];
   i = 0;
-  const sexDivAfter = diversityAfter["sex"];
+  const sexDivAfter = diversityAfter['sex'];
   if (sexDivAfter) {
     for (var key in sexDivAfter) {
       var percent = Math.floor(sexDivAfter[key] * 100);
       sexAfter.push({
         x: i,
         y: sexDivAfter[key],
-        label: key + "\n" + percent + "%",
+        label: key + '\n' + percent + '%',
       });
       i++;
     }
   } else {
-    sexAfter = [{ x: 0, y: 1, label: "No Data Available." }];
+    sexAfter = [{ x: 0, y: 1, label: 'No Data Available.' }];
   }
 
   // diversity scores
   var diversityScoreBefore = Math.floor(
-    diversity["diversity_before"]["score"]["score"] * 100
+    diversity['diversity_before']['score']['score'] * 100
   );
   var diversityScoreAfter = Math.floor(
-    diversity["diversity_after"]["score"]["score"] * 100
+    diversity['diversity_after']['score']['score'] * 100
   );
 
   var change = diversityScoreAfter / diversityScoreBefore;
@@ -339,7 +339,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     var diversity = [];
     for (var team of teamsRes.data.teams) {
       const diversityRes = await axios.post(
-        process.env.BACKEND_URL + "/api/v1/company/diversity-metrics",
+        process.env.BACKEND_URL + '/api/v1/company/diversity-metrics',
         { email: team.email },
         {
           headers: {
@@ -511,8 +511,8 @@ export default function CompanyMatching() {
 
     // programmatically submit a useFetcher form in Remix
     fetcher.submit(
-      { newhire_email: nhEmail, team_email: teamEmail, _action: "matchManual" },
-      { method: "post", action: "/company/matching" }
+      { newhire_email: nhEmail, team_email: teamEmail, _action: 'matchManual' },
+      { method: 'post', action: '/company/matching' }
     );
   };
 
@@ -600,7 +600,7 @@ export default function CompanyMatching() {
                   <button
                     className="custom-file-upload"
                     onClick={open}
-                    style={{ marginLeft: "10px" }}
+                    style={{ marginLeft: '10px' }}
                   >
                     Upload Cover
                   </button>
@@ -639,20 +639,29 @@ export default function CompanyMatching() {
                       ))}
                     </div>
                   </div>
-                  <div
+                  <div style={{ flexDirection: 'row' }}>
+                    <h3>
+                      Remaining capacity:{' '}
+                      <span style={{ fontWeight: 'normal' }}>
+                        {team.max_capacity}
+                      </span>
+                    </h3>
+                  </div>
+                  <p
+                    className="cta right"
                     style={{
-                      flexDirection: "row",
-                      "margin-top": "15px",
-                      "margin-bottom": "15px",
+                      textAlign: 'right',
+                      fontSize: '1rem',
+                      borderRadius: '0.5rem',
                     }}
                   >
                     <button
-                      className="diversity"
                       onClick={() => setDiversityModal(i)}
+                      style={{ fontSize: '1rem', borderRadius: '0.5rem' }}
                     >
                       Diversity Metrics
                     </button>
-                  </div>
+                  </p>
                 </Collapsible>
               ))}
             </div>
@@ -800,132 +809,240 @@ export default function CompanyMatching() {
 
           <div className="new-hire-container">
             <div className="company-teams-title">
-              <h2>New Hire</h2>
+              <h2>New Hires</h2>
             </div>
-            <div className="teams-list">
-              {info?.newHires.new_hires.map((newHire) => (
-                <div key={newHire.name} className="company-hire">
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <h3>
-                      {newHire.first_name} {newHire.last_name}
-                    </h3>
-                    <p>{newHire.email}</p>
-                    {/*<p>
+            <div className="newhires-list-container">
+              <div className="newhires-list unmatched">
+                <h4>Unmatched</h4>
+                {info?.newHires.new_hires.filter((newHire) => !newHire.matched)
+                  .length > 0 ? (
+                  info?.newHires.new_hires
+                    .filter((newHire) => !newHire.matched)
+                    .map((newHire) => (
+                      <div key={newHire.name} className="company-hire">
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                          <h3>
+                            {newHire.first_name} {newHire.last_name}
+                          </h3>
+                          <p>{newHire.email}</p>
+                          {/*<p>
                       {newHire.team_id
                         ? teamIdMap[newHire.team_id].name
                         : 'Unmatched'}
                       </p> */}
-                  </div>
-                  <div style={{ display: "flex" }}>
-                    <select
-                      className={
-                        !newHire.matched ? "select-active" : "select-inactive"
-                      }
-                      onChange={handleSelectChange}
-                      disabled={newHire.matched}
-                    >
-                      <option key={"None"} value={newHire.email}>
-                        None
-                      </option>
-                      {info.teams.teams // first filter out the matched team from the first option
-                        .map((team) =>
-                          team._id === newHire.team_id ? (
-                            <option
-                              key={team.name}
-                              value={newHire.email + " " + team.email}
-                              selected
-                            >
-                              {team.name}
+                        </div>
+                        <div style={{ display: 'flex' }}>
+                          <select
+                            className={
+                              !newHire.matched
+                                ? 'select-active'
+                                : 'select-inactive'
+                            }
+                            onChange={handleSelectChange}
+                            disabled={newHire.matched}
+                          >
+                            <option key={'None'} value={newHire.email}>
+                              None
                             </option>
-                          ) : (
-                            <option
-                              key={team.name}
-                              value={newHire.email + " " + team.email}
-                            >
-                              {team.name}
-                            </option>
-                          )
-                        )}
-                    </select>
+                            {info.teams.teams // first filter out the matched team from the first option
+                              .map((team) =>
+                                team._id === newHire.team_id ? (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                    selected
+                                  >
+                                    {team.name}
+                                  </option>
+                                ) : (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                  >
+                                    {team.name}
+                                  </option>
+                                )
+                              )}
+                          </select>
 
-                    <Form action="/company/matching" method="post">
-                      <input
-                        name="email"
-                        type="hidden"
-                        value={newHire.email}
-                      ></input>
-                      <input
-                        name="locked"
-                        type="hidden"
-                        value={newHire.matched ? "false" : "true"}
-                      ></input>
-                      <button
-                        className="lock-button"
-                        type="submit"
-                        name="_action"
-                        value="newHireLock"
-                      >
-                        {!newHire.matched ? (
-                          <LockOpenIcon className="lock-icon" />
-                        ) : (
-                          <LockClosedIcon className="lock-icon" />
-                        )}
-                      </button>
-                      <span className="hover-message">
-                        Click to manually override
-                      </span>
-                    </Form>
-                  </div>
-                </div>
-              ))}
+                          <Form action="/company/matching" method="post">
+                            <input
+                              name="email"
+                              type="hidden"
+                              value={newHire.email}
+                            ></input>
+                            <input
+                              name="locked"
+                              type="hidden"
+                              value={newHire.matched ? 'false' : 'true'}
+                            ></input>
+                            <button
+                              className="lock-button"
+                              type="submit"
+                              name="_action"
+                              value="newHireLock"
+                            >
+                              {!newHire.matched ? (
+                                <LockOpenIcon className="lock-icon" />
+                              ) : (
+                                <LockClosedIcon className="lock-icon" />
+                              )}
+                            </button>
+                            <span className="hover-message">
+                              Click to manually override
+                            </span>
+                          </Form>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="no-matched-hires">All hires are matched.</div>
+                )}
+              </div>
+              <div className="newhires-list matched">
+                <h4>Matched</h4>
+                {info?.newHires.new_hires.filter((newHire) => newHire.matched)
+                  .length > 0 ? (
+                  info?.newHires.new_hires
+                    .filter((newHire) => newHire.matched)
+                    .map((newHire) => (
+                      <div key={newHire.name} className="company-hire">
+                        <div
+                          style={{ display: 'flex', flexDirection: 'column' }}
+                        >
+                          <h3>
+                            {newHire.first_name} {newHire.last_name}
+                          </h3>
+                          <p>{newHire.email}</p>
+                          {/*<p>
+                      {newHire.team_id
+                        ? teamIdMap[newHire.team_id].name
+                        : 'Unmatched'}
+                      </p> */}
+                        </div>
+                        <div style={{ display: 'flex' }}>
+                          <select
+                            className={
+                              !newHire.matched
+                                ? 'select-active'
+                                : 'select-inactive'
+                            }
+                            onChange={handleSelectChange}
+                            disabled={newHire.matched}
+                          >
+                            <option key={'None'} value={newHire.email}>
+                              None
+                            </option>
+                            {info.teams.teams // first filter out the matched team from the first option
+                              .map((team) =>
+                                team._id === newHire.team_id ? (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                    selected
+                                  >
+                                    {team.name}
+                                  </option>
+                                ) : (
+                                  <option
+                                    key={team.name}
+                                    value={newHire.email + ' ' + team.email}
+                                  >
+                                    {team.name}
+                                  </option>
+                                )
+                              )}
+                          </select>
+
+                          <Form action="/company/matching" method="post">
+                            <input
+                              name="email"
+                              type="hidden"
+                              value={newHire.email}
+                            ></input>
+                            <input
+                              name="locked"
+                              type="hidden"
+                              value={newHire.matched ? 'false' : 'true'}
+                            ></input>
+                            <button
+                              className="lock-button"
+                              type="submit"
+                              name="_action"
+                              value="newHireLock"
+                            >
+                              {!newHire.matched ? (
+                                <LockOpenIcon className="lock-icon" />
+                              ) : (
+                                <LockClosedIcon className="lock-icon" />
+                              )}
+                            </button>
+                            <span className="hover-message">
+                              Click to manually override
+                            </span>
+                          </Form>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="no-matched-hires">No matched hires yet.</div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div
-          className="row-container"
-          style={{ marginRight: "1rem", justifyContent: "space-between" }}
-        >
-          <p className="cta" style={{ marginLeft: "1rem" }}>
-            <Link to="/company/profile">Back</Link>
+        <p className="cta" style={{ marginLeft: "1rem" }}>
+          <Link to="/company/profile">Back</Link>
+        </p>
+        <div className="row-container" style={{ marginRight: '1rem' }}>
+          <p className="cta" style={{ textAlign: 'right' }}>
+            {/* {allSurveysCompleted ? (
+            <Form action="/company/matching" method="post">
+              <button type="submit" name="_action" value="matchingSurvey">
+                Run matching survey
+              </button>
+            </Form>
+          ) : (
+            <></>
+          )} */}
+            <Form action="/company/matching" method="post">
+              <button
+                className="match"
+                type="submit"
+                name="_action"
+                value="matchingSurvey"
+              >
+                Run Matching Survey
+              </button>
+              <div
+                className="row-container"
+                style={{ alignItems: 'center', marginRight: '1rem' }}
+              >
+                <p>Enable Diversity Matching?</p>
+                <input
+                  type="checkbox"
+                  id="toggle-button"
+                  className="toggle-button"
+                  name="diversity"
+                />
+                <label for="toggle-button" className="toggle-label"></label>
+              </div>
+            </Form>
           </p>
-          <div className="row-container">
-            <p className="cta" style={{ textAlign: "right" }}>
-              <Form action="/company/matching" method="post">
-                <button
-                  className="match"
-                  type="submit"
-                  name="_action"
-                  value="matchingSurvey"
-                >
-                  Run Matching Survey
-                </button>
-                <div
-                  className="row-container"
-                  style={{ alignItems: "center", marginRight: "1rem" }}
-                >
-                  <p>Enable Diversity Matching?</p>
-                  <input
-                    type="checkbox"
-                    id="toggle-button"
-                    className="toggle-button"
-                  />
-                  <label for="toggle-button" className="toggle-label"></label>
-                </div>
-              </Form>
-            </p>
-            <p className="cta">
-              <Form action="/company/matching" method="post">
-                <button
-                  className="match confirm"
-                  type="submit"
-                  name="_action"
-                  value="completeMatching"
-                >
-                  Confirm Team Matches
-                </button>
-              </Form>
-            </p>
-          </div>
+          <p className="cta">
+            <Form action="/company/matching" method="post">
+              <button
+                className="match confirm"
+                type="submit"
+                name="_action"
+                value="completeMatching"
+              >
+                Confirm Team Matches
+              </button>
+            </Form>
+          </p>
         </div>
       </div>
     );
