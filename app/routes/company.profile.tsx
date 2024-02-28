@@ -201,6 +201,20 @@ export async function action({ request }: ActionFunctionArgs) {
           },
         }
       );
+
+      // reinvite if changed email
+      if(myJson['newemail'] != myJson['email']) {
+        const response2 = await axios.post(
+          process.env.BACKEND_URL + '/api/v1/company/invite-newhire',
+          {email: myJson['newemail']},
+          {
+            headers: {
+              Authorization: session.get('auth'),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      }
       return redirect('/company/profile');
     } catch (error) {
       console.log(error);
@@ -235,8 +249,6 @@ export async function action({ request }: ActionFunctionArgs) {
         members: JSON.parse(myJson['team_members']),
       };
 
-      console.log(myJson);
-
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
         myJson,
@@ -247,6 +259,20 @@ export async function action({ request }: ActionFunctionArgs) {
           },
         }
       );
+
+      // reinvite if changed email
+      if(myJson['newemail'] != myJson['email']) {
+        const response2 = await axios.post(
+          process.env.BACKEND_URL + '/api/v1/company/invite-team',
+          {email: myJson['newemail']},
+          {
+            headers: {
+              Authorization: session.get('auth'),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      }
       return redirect('/company/profile');
     } catch (error) {
       console.log(error);
