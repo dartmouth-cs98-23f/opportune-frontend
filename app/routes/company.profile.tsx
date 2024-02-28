@@ -1290,7 +1290,7 @@ export default function CompanyProfile() {
 
       <p className="cta" style={{ textAlign: 'right', marginRight: '2rem' }}>
         {' '}
-        {allSurveysComplete || date.getTime() > surveysClosedDate.getTime() ? (
+        {allSurveysComplete && date.getTime() > surveysClosedDate.getTime() ? (
           <Link to="/company/matching">Next</Link>
         ) : (
           <div className="matching-unavailable">
