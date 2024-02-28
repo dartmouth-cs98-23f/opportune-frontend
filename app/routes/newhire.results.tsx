@@ -204,10 +204,12 @@ export function matchingResults(resultsData: json) {
     );
   } else {
     return (
-      <div>
-        <p>Matching results are not out yet.</p>
+      <div className="flex-container">
+		<div className="unavailable-content">
+		  Matching results are not out yet.
+          <img src="../survey-unavailable.gif"></img>
+        </div>
         <p className="cta">
-          {' '}
           <Link to="/newhire/survey">Edit Responses </Link>
         </p>
       </div>

@@ -614,8 +614,7 @@ export default function CompanyProfile() {
 	    </div>
       <div
         className="company-preview"
-        style={{ backgroundImage: `url(${coverUrl})` }}
-      >
+        style={{ backgroundImage: `url(${coverUrl})` }}>
         {url ? (
           <img src={url} alt="Uploaded" />
         ) : (

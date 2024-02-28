@@ -70,6 +70,8 @@
 .company-banner {
   text-align: left;
   background-image: url(public/landing.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
   margin: 0px;
   padding: 30px;
 }
@@ -1341,6 +1343,8 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   padding: 2em;
 }
 

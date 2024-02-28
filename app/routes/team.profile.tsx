@@ -113,10 +113,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Tprofile() {
   const { teamInfo, newhires, companyInfo } = useLoaderData<typeof loader>();
 
-  /*let companyInfo = {
-    name: 'OP Company',
-  }; */
-
   // team description editing state
   const [isEditing, setEditing] = useState(false);
   const handleEditClick = () => {
@@ -223,8 +219,8 @@ export default function Tprofile() {
             <h3> Team Members </h3>
             <div className="team-box">
               {teamInfo.team.members.length > 0 ? (
-                teamInfo.team.members.map((member: { first_name: string; last_name: string }, i: number) => {
-                  return <p key={i}> {member.first_name + ' ' + member.last_name} </p>;
+                teamInfo.team.members.map((member, i: number) => {
+                  return <p key={i}> {`${member.first_name} ${member.last_name}`} </p>;
                 })
               ) : (
                 <img src="../empty.svg"></img>
