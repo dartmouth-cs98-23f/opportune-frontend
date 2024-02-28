@@ -101,7 +101,7 @@ export async function action({ request }: ActionFunctionArgs) {
       myJson['subject'] = 'Urgent: Complete Your Team Preferences Survey';
       myJson[
         'content'
-      ] = `Dear ${myJson['name']}, \n\nI wanted to gently remind you about the importance of completing our team preferences survey. Your insights are invaluable in helping us understand your team's needs and preferences, which in turn allows us to match you with the most suitable new hires.\n\nBy filling out the survey, you're not only helping us enhance your recruitment experience but also ensuring that we provide you with the best possible candidates for your team.\n\nIf you haven't already, please take a few moments to log in to your team portal and complete the survey. Should you have any questions or need assistance, don't hesitate to reach out to us!\n\nWarm regards,\nEthan Chen\nFounder, CEO\nOpportune`;
+      ] = `Dear ${myJson['name']}, \n\nI wanted to gently remind you about the importance of completing our team preferences survey. Your insights are invaluable in helping us understand your team's needs and preferences, which in turn allows us to match you with the most suitable new hires.\n\nBy filling out the survey, you're not only helping us enhance your recruitment experience but also ensuring that we provide you with the best possible candidates for your team.\n\nIf you haven't already, please take a few moments to log in to your team portal and complete the survey. Should you have any questions or need assistance, don't hesitate to reach out to us!\n\nWarm regards,\nOpportune Team`;
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/mail',
         myJson,
@@ -122,7 +122,7 @@ export async function action({ request }: ActionFunctionArgs) {
       myJson['subject'] = 'Please fill out your New Hire Preferences Survey';
       myJson[
         'content'
-      ] = `Dear ${myJson['name']}, \n\nWe wanted to remind you about the importance of completing your new hire preferences survey. Your input is crucial in helping us match you with the most suitable team and projects, ensuring a seamless integration into the company culture.\n\nBy sharing your preferences, you're not only helping us understand your needs better but also ensuring that your experience is tailored to your preferences and aspirations.\n\nIf you haven't already, please take a few moments to fill out the survey. Your feedback is highly valued.\n\nShould you encounter any difficulties or have any questions, feel free to reach out to us. Thank you for your cooperation and support.\n\nWarm regards,\nEthan Chen\nFounder, CEO\nOpportune`;
+      ] = `Dear ${myJson['name']}, \n\nWe wanted to remind you about the importance of completing your new hire preferences survey. Your input is crucial in helping us match you with the most suitable team and projects, ensuring a seamless integration into the company culture.\n\nBy sharing your preferences, you're not only helping us understand your needs better but also ensuring that your experience is tailored to your preferences and aspirations.\n\nIf you haven't already, please take a few moments to fill out the survey. Your feedback is highly valued.\n\nShould you encounter any difficulties or have any questions, feel free to reach out to us. Thank you for your cooperation and support.\n\nWarm regards,\nOpportune Team`;
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/mail',
         myJson,
