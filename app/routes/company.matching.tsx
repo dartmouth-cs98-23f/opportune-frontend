@@ -1047,7 +1047,7 @@ export default function CompanyMatching() {
                   type="checkbox"
                   id="toggle-button"
                   className="toggle-button"
-                  name="diversity"
+                  name="diversify"
                 />
                 <label for="toggle-button" className="toggle-label"></label>
               </div>
