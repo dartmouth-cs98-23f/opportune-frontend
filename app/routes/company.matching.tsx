@@ -13,16 +13,17 @@ import {
   LoaderFunctionArgs,
   redirect,
   json,
-} from "@remix-run/node";
-import ReadMore from "~/components/ReadMore";
-import { destroySession, getSession } from "../utils/sessions";
-import { Collapsible } from "~/components/Collapsible";
-import { Checkbox } from "@mui/material";
-import CustomPieChart from "~/components/CustomPieChart";
-import React from "react";
-import Modal from "~/components/Modal";
-import ModalLarge from "~/components/ModalLarge";
-import { parseDate, parseDatePlus1 } from "~/lib/date";
+} from '@remix-run/node';
+import ReadMore from '~/components/ReadMore';
+import { destroySession, getSession } from '../utils/sessions';
+import { Collapsible } from '~/components/Collapsible';
+import { Checkbox } from '@mui/material';
+import CustomPieChart from '~/components/CustomPieChart';
+import React from 'react';
+import Modal from '~/components/Modal';
+import ModalLarge from '~/components/ModalLarge';
+import { parseDate, parseDatePlus1 } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 function getDiversityMetrics(diversity) {
   const diversityBefore = diversity['diversity_before'];
@@ -522,53 +523,28 @@ export default function CompanyMatching() {
 
   if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
-      <div style={{ height: "100vh", textAlign: "center" }}>
-        <div className="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <p className="text-logo">Opportune</p>
-          <Form action="/company/matching" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
-        <div className="unavailable-content">
-          The matching page is not available yet!
-        </div>
-        <p className="cta" style={{ textAlign: "center" }}>
-          <Link to="/company/profile">Back</Link>
-        </p>
+      <div style={{ height: '100vh', textAlign: 'center' }}>
+         <div id="sidebar">
+		       <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		       <p className="text-logo">Opportune</p>
+		       <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	  	   </div>
+         <div className="unavailable-content">
+           The matching page is not available yet!
+         </div>
+         <p className="cta" style={{ textAlign: "center" }}>
+           <Link to="/company/profile">Back</Link>
+         </p>
       </div>
     );
   } else {
     return (
       <div className="company-container">
-        <div className="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <p className="text-logo">Opportune</p>
-          <Form action="/company/matching" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
-        </div>
-
+        <div id="sidebar">
+		      <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		      <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	  	  </div>
         <div
           className="company-preview"
           style={{ backgroundImage: `url(${coverUrl})` }}

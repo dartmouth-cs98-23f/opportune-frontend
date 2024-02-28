@@ -41,7 +41,7 @@ export async function action({
 		});
 
 	} catch(error) {
-		console.log(error)
+		console.log(error.response)
 
 		if(error.response.status == 400) {
 			return redirect('/team/signup?failed=1')

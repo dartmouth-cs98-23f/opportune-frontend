@@ -12,14 +12,15 @@ import MainNavigation from "~/components/MainNav";
 import {
   ArrowLeftOnRectangleIcon,
   InformationCircleIcon,
-} from "@heroicons/react/24/outline";
-import SurveyUtil from "~/components/survey_qs/SurveyUtil";
-import Progress from "~/components/survey_qs/Progress";
-import Scale from "~/components/survey_qs/Scale";
-import Ranking from "~/components/survey_qs/Ranking";
-import Textbox from "~/components/survey_qs/Textbox";
-import PlainText from "~/components/survey_qs/PlainText";
-import { parseDatePlus1, parseDate, formatDate } from "~/lib/date";
+} from '@heroicons/react/24/outline';
+import SurveyUtil from '~/components/survey_qs/SurveyUtil';
+import Progress from '~/components/survey_qs/Progress';
+import Scale from '~/components/survey_qs/Scale';
+import Ranking from '~/components/survey_qs/Ranking';
+import Textbox from '~/components/survey_qs/Textbox';
+import PlainText from '~/components/survey_qs/PlainText';
+import { parseDatePlus1, parseDate, formatDate } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
@@ -322,21 +323,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -357,21 +346,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -392,21 +369,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -467,21 +432,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"
-          ></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut"
-            >
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>

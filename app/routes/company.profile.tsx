@@ -24,6 +24,7 @@ import datepicker from 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateToAPIFormat } from '~/lib/date';
 import { MemberModal } from '~/components/MemberModal';
 import { Collapsible } from '~/components/Collapsible';
+import TRDropdown from '~/components/TRDropdown';
 
 // @ts-expect-error
 const DatePicker = ReactDatePicker.default;
@@ -580,24 +581,11 @@ export default function CompanyProfile() {
 
   return (
     <div className="company-container">
-      <div className="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"
-        ></img>
-        <p className="text-logo">Opportune</p>
-        <Form action="/company/profile" method="post">
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut"
-          >
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
-      </div>
-
+      <div id="sidebar">
+		    <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		    <p className="text-logo">Opportune</p>
+		    <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	    </div>
       <div
         className="company-preview"
         style={{ backgroundImage: `url(${coverUrl})` }}

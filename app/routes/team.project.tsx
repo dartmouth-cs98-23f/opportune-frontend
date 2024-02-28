@@ -10,6 +10,7 @@ import axios from 'axios';
 import ProjElem from '~/components/ProjElem';
 import AddTask from '~/components/AddTask';
 import AddProj from '~/components/AddProj';
+import TRDropdown from '~/components/TRDropdown';
 
 const matched = true; // check that company matching is complete
 
@@ -392,10 +393,9 @@ export default function Tproject() {
 			return (
 				<div className="flex-container">
 					<div id="sidebar">
-						<img className="opportune-logo-small disable-select" 
-							 src="../opportune_newlogo.svg" draggable={false}></img>
-						<p className="text-logo disable-select">Opportune</p>
-						<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+						<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+						<p className="text-logo">Opportune</p>
+						<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
 					</div>
 					<div id="sidebar-2">
 						<h3> Timeline: {teamInfo.team.name}
@@ -457,10 +457,9 @@ export default function Tproject() {
 			return (
 				<div className="flex-container">
 					<div id="sidebar">
-						<img className="opportune-logo-small disable-select" 
-							 src="../opportune_newlogo.svg" draggable={false}></img>
-						<p className="text-logo disable-select">Opportune</p>
-						<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+						<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+						<p className="text-logo">Opportune</p>
+						<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
 					</div>
 					<div id="sidebar-2">
 						<h3> Timeline: {teamInfo.team.name}
