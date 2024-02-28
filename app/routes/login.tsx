@@ -124,7 +124,7 @@ export default function Login() {
 	  <div className="landing-box">
 		<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 		<h1>Opportune</h1>
-		<p>Tuning the opportunities you will have at your company to the maximum.</p>
+		<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
 		<Form method="post" action="/login" id="login">
 			{failed ? 
 			<p className='failed-auth'>
