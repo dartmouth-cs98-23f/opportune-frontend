@@ -379,7 +379,8 @@ export default function CompanyMatching() {
   var allSurveysCompleted = true;
   var teamIdMap = {};
   var nhIdMap = {};
-  var teamNewHires = {};
+  var teamStagedNewHires = {};
+  var teamMatchedNewHires = {};
   for (var team of info.teams.teams) {
     teamIdMap[team._id] = team;
     if (team.survey_complete == false) {
@@ -390,10 +391,19 @@ export default function CompanyMatching() {
     nhIdMap[nh._id] = nh;
 
     var teamId = nh.team_id;
-    if (!teamNewHires[teamId]) {
-      teamNewHires[teamId] = [];
-    }
-    teamNewHires[teamId].push(nh);
+
+    // accumulate matched and staged new hires
+    if(nh.matched) {
+      if (!teamMatchedNewHires[teamId]) {
+        teamMatchedNewHires[teamId] = [];
+      }
+      teamMatchedNewHires[teamId].push(nh);
+    } else {
+      if (!teamStagedNewHires[teamId]) {
+        teamStagedNewHires[teamId] = [];
+      }
+      teamStagedNewHires[teamId].push(nh);
+    }    
   }
 
   for (var nh of info.newHires.new_hires) {
@@ -521,7 +531,7 @@ export default function CompanyMatching() {
   const currentDate = new Date();
   const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
 
-  if (currentDate.getTime() < surveyOpen.getTime()) {
+  if (currentDate.getTime() < surveyOpen.getTime() || !allSurveysCompleted) {
     return (
       <div style={{ height: '100vh', textAlign: 'center' }}>
          <div id="sidebar">
@@ -604,9 +614,21 @@ export default function CompanyMatching() {
                   }
                 >
                   <div style={{ flexDirection: "row" }}>
+                    <h3>Staged Hires: </h3>
+                    <div className="member-container">
+                      {teamStagedNewHires[team._id]?.map((matchedHire) => (
+                        <div className="row-container team-member-card1">
+                          <div>
+                            {matchedHire.first_name} {matchedHire.last_name}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ flexDirection: "row" }}>
                     <h3>Matched Hires: </h3>
                     <div className="member-container">
-                      {teamNewHires[team._id]?.map((matchedHire) => (
+                      {teamMatchedNewHires[team._id]?.map((matchedHire) => (
                         <div className="row-container team-member-card1">
                           <div>
                             {matchedHire.first_name} {matchedHire.last_name}
@@ -1001,7 +1023,7 @@ export default function CompanyMatching() {
                   type="checkbox"
                   id="toggle-button"
                   className="toggle-button"
-                  name="diversity"
+                  name="diversify"
                 />
                 <label for="toggle-button" className="toggle-label"></label>
               </div>
