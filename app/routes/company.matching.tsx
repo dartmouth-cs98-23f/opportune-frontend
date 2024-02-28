@@ -668,7 +668,10 @@ export default function CompanyMatching() {
                       borderRadius: '0.5rem',
                     }}
                   >
-                    <button onClick={() => setDiversityModal(i)}>
+                    <button
+                      onClick={() => setDiversityModal(i)}
+                      style={{ fontSize: '1rem', borderRadius: '0.5rem' }}
+                    >
                       Diversity Metrics
                     </button>
                   </p>
