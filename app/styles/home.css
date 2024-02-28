@@ -1536,6 +1536,18 @@ input[type='checkbox'] {
   color: var(--color-primary-20);
 }
 
+.edit-icon {
+  border: none;
+  position: relative;
+  background: none;
+  width: 1rem;
+  font-size: 1rem;
+}
+
+.edit-icon:hover {
+  color: var(--color-primary-20);
+}
+
 .trash:hover {
   color: red;
 }
@@ -1631,26 +1643,6 @@ input[type='checkbox'] {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-}
-
-.edit-icon {
-  border: none;
-  position: relative;
-  background: none;
-  width: 1rem;
-  font-size: 1rem;
-}
-
-.trash-icon {
-  border: none;
-  position: relative;
-  background: none;
-  width: 1rem;
-  font-size: 1rem;
-}
-
-.trash-icon:hover {
-  color: red;
 }
 
 .team-member-card {
