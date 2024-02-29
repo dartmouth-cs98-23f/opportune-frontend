@@ -9,7 +9,7 @@ import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 import TRDropdown from '~/components/TRDropdown';
 
-const matched = true; // check that company matching is complete
+var matched = true; // check that company matching is complete
 const createProjMode = false;
 
 export async function action({request}: ActionFunctionArgs) {
@@ -162,10 +162,21 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json"
 		}});
 
+		const companyRes = await axios.get(
+			process.env.BACKEND_URL + "/api/v1/user/company-info",
+			{
+			  headers: {
+				Authorization: session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			}
+		  );
+
 		console.log("Loader projres: ", projRes.config.params.min_date);
 		return {
 			projInfo: projRes.data,
-			dates: projRes.config.params
+			dates: projRes.config.params,
+			company: companyRes.data
 		};
 	
 	} catch (error) {
@@ -177,7 +188,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Project() {
 	// load project info + start/end dates
-	const { projInfo, dates } = useLoaderData<typeof loader>();
+	const { projInfo, dates, company } = useLoaderData<typeof loader>();
+
+	matched = company.company.matching_complete;
 
 	/* const projInfo = [{
 		project: {
@@ -284,10 +297,10 @@ export default function Project() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+					<TRDropdown skipLabel="Profile" route="/newhire/project" userType="newhire" />
 				</div>
 				<div>
-					<p>You will be able to see your project details after you are matched on July 2.</p>
+					<p>You will be able to see your project details after you are matched.</p>
 					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>

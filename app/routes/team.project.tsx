@@ -12,7 +12,7 @@ import AddTask from '~/components/AddTask';
 import AddProj from '~/components/AddProj';
 import TRDropdown from '~/components/TRDropdown';
 
-const matched = true; // check that company matching is complete
+var matched = true; // check that company matching is complete
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -190,11 +190,22 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json",
 		}});
 
+		const companyRes = await axios.get(
+			process.env.BACKEND_URL + "/api/v1/user/company-info",
+			{
+			  headers: {
+				Authorization: session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			}
+		  );
+
 		return {
 			projInfo: projRes.data,
 			teamInfo: teamProfile.data,
 			newHires: nhRes.data,
 			dates: projRes.config.params,
+			company: companyRes.data
 		};
 	
 	} catch (error) {
@@ -206,7 +217,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Tproject() {
 	// load project info + start/end dates
-	const { projInfo, teamInfo, newHires, dates } = useLoaderData<typeof loader>();
+	const { projInfo, teamInfo, newHires, dates, company } = useLoaderData<typeof loader>();
+
+	matched = company.company.matching_complete;
 
 	/* const projInfo = [{
 		project: {
@@ -374,15 +387,11 @@ export default function Tproject() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+					<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
 				</div>
 				<div id="content">
-					<h2> Welcome Oppenheim </h2>
-					<div id="menubar">
-						<MainNavigation />
-					</div>
 					<div>
-						<p>You will be able to see your project details after you are matched on July 2.</p>
+						<p>You will be able to see the project details after team matching is complete.</p>
 						<p className="cta"> <Link to="/results">Back to Results </Link></p>
 					</div>
 				</div>
