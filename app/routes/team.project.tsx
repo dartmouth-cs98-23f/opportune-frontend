@@ -369,20 +369,18 @@ export default function Tproject() {
 		return dateArray;
 	}
 
+	const navLabels = ["Profile", "Project", "Settings"]
+
 	if (!matched) {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+					<TRDropdown labels={navLabels} route="/team/project" userType="team" />
 				</div>
 				<div id="content">
-					<h2> Welcome Oppenheim </h2>
-					<div id="menubar">
-						<MainNavigation />
-					</div>
 					<div>
-						<p>You will be able to see your project details after you are matched on July 2.</p>
+						<p>You will be able to see the PM tool after team matching is complete!</p>
 						<p className="cta"> <Link to="/results">Back to Results </Link></p>
 					</div>
 				</div>
@@ -395,7 +393,7 @@ export default function Tproject() {
 					<div id="sidebar">
 						<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 						<p className="text-logo">Opportune</p>
-						<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
+						<TRDropdown labels={navLabels} route="/team/project" userType="team" />
 					</div>
 					<div id="sidebar-2">
 						<h3> Timeline: {teamInfo.team.name}
@@ -459,7 +457,7 @@ export default function Tproject() {
 					<div id="sidebar">
 						<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 						<p className="text-logo">Opportune</p>
-						<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
+						<TRDropdown labels={navLabels} route="/team/project" userType="team" />
 					</div>
 					<div id="sidebar-2">
 						<h3> Timeline: {teamInfo.team.name}

@@ -605,12 +605,14 @@ export default function CompanyProfile() {
     setTeamMembers(editedMembers);
   };
 
+  const navLabels = ["Profile", "Matching", "Settings"]
+
   return (
     <div className="company-container">
       <div id="sidebar">
 		    <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 		    <p className="text-logo">Opportune</p>
-		    <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+		    <TRDropdown labels={navLabels} route="/company/profile" userType="company" />
 	    </div>
       <div
         className="company-preview"

@@ -109,12 +109,14 @@ export default function Profile() {
     updateUrl(result?.info?.secure_url);
   };
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   return (
     <div className="flex-container">
       <div id="sidebar">
 		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 		<p className="text-logo">Opportune</p>
-		<TRDropdown skipLabel="Project" route="/newhire/profile" userType="newhire"/>
+		<TRDropdown labels={navLabels} route="/newhire/profile" userType="newhire"/>
       </div>
       <div id="content">
         <h2>

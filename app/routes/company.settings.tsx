@@ -100,6 +100,8 @@ export async function action({
     }
 }
 
+const navLabels = ["Profile", "Matching", "Settings"]
+
 export default function CompanySettings() {
     const info = useLoaderData<typeof loader>();
 
@@ -108,7 +110,7 @@ export default function CompanySettings() {
             <div id="sidebar">
                 <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
                 <p className="text-logo">Opportune</p>
-                <TRDropdown skipLabel="Settings" route="/company/profile" userType="company" />
+                <TRDropdown labels={navLabels} route="/company/profile" userType="company" />
             </div>
             <div>Change Email: </div>
                 <Form method="post" action="/company/settings">

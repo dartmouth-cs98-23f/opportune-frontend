@@ -119,12 +119,14 @@ export default function Tprofile() {
     setEditing(!isEditing);
   };
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   return (
     <div className="flex-container">
       <div id="sidebar">
 		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 		<p className="text-logo">Opportune</p>
-		<TRDropdown skipLabel="Project" route="/team/profile" userType="team" />
+		<TRDropdown labels={navLabels} route="/team/profile" userType="team" />
       </div>
       <div className="content">
         <div className="company-banner">
