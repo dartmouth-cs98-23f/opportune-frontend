@@ -49,7 +49,7 @@ export async function loader({
 }
 
 
-// ACTION FUNCTIOn
+// ACTION FUNCTION
 export async function action({
 	request,
   }: ActionFunctionArgs) {
@@ -67,44 +67,11 @@ export async function action({
 	console.log(JSON.stringify(myJson));
 
 	try {
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
-		const userType = response.data.user_type;
-		session.set("auth", response.data.token);
-		session.set("user_type", response.data.user_type);
-
-		// redirect based on user type
-		if (userType == 'new_hire') {
-		 	return redirect(`/newhire/profile`, {
-		 		headers: {
-		 			"Set-Cookie": await commitSession(session),
-		 		}
-		 	})
-		} else if (userType == 'team') {
-		 	return redirect(`/team/profile`, {
-		 		headers: {
-		 			"Set-Cookie": await commitSession(session),
-		 		}
-		 	}) 
-		} else if (userType == 'company') {
-			return redirect(`/company/profile`, {
-				headers: {
-					"Set-Cookie": await commitSession(session),
-				}
-			})
-		} else {
-			return redirect('/login', {
-				headers: {
-					"Set-Cookie": await destroySession(session),
-				}
-			})
-		}
+		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/reset-password', myJson);
+		return redirect('/login');
 	} catch(error) {
 		console.log(error)
-
-		if(error.response.status == 401) {
-			return redirect('/login?failed=true');
-		}
-		return redirect('/login');
+		return redirect('/reset-password');
 	}
 };
 
@@ -125,7 +92,7 @@ export default function ResetPassword() {
 	  <div className="landing-box">
 		<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 		<h1>Opportune</h1>
-		<p>Tuning the opportunities you will have at your company to the maximum.</p>
+		<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
 		<Form method="post" action="/reset-password" id="login">
             {key != null ? 
                 <input
@@ -140,13 +107,13 @@ export default function ResetPassword() {
                     value={email}
                     style={{ display: 'none' }}
 				/> : null}
-                
+
 			<p className="login-field">
-				<label htmlFor="newpassword"><b>New Password</b></label>
+				<label htmlFor="password"><b>New Password</b></label>
 				<input type="password" name="password" />
 			</p>
 			<div className="form-actions">
-				<button type="submit"> {'Login'} </button>
+				<button type="submit"> {'Reset Password'} </button>
 			</div>
 		</Form>
 		<p>Remembered your password? <Link to="/login">Sign in</Link></p>
