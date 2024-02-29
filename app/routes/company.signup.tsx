@@ -68,7 +68,7 @@ export default function SignUp() {
 		<div className="landing-box">
 			<img className="opportune-logo-large" src="../opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
-			<p>Find your new hires a team faster than ever before</p>
+			<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
 			<Form method="post" action="/company/signup" id="login">
       <p className="login-field">
 	  	{failed ? 

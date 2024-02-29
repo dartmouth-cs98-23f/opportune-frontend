@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import { destroySession, getSession } from '../utils/sessions';
 import ImageUpload from '~/components/ImageUpload';
+import TRDropdown from '~/components/TRDropdown';
 
 // LOADER FUNCTION
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -112,10 +113,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Tprofile() {
   const { teamInfo, newhires, companyInfo } = useLoaderData<typeof loader>();
 
-  /*let companyInfo = {
-    name: 'OP Company',
-  }; */
-
   // team description editing state
   const [isEditing, setEditing] = useState(false);
   const handleEditClick = () => {
@@ -125,19 +122,9 @@ export default function Tprofile() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <Form action="/team/profile" method="post">
-          <p className="text-logo">Opportune</p>
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
+		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		<p className="text-logo">Opportune</p>
+		<TRDropdown skipLabel="Project" route="/team/profile" userType="team" />
       </div>
       <div className="content">
         <div className="company-banner">
@@ -232,8 +219,8 @@ export default function Tprofile() {
             <h3> Team Members </h3>
             <div className="team-box">
               {teamInfo.team.members.length > 0 ? (
-                teamInfo.team.members.map((member: { first_name: string; last_name: string }, i: number) => {
-                  return <p key={i}> {member.first_name + ' ' + member.last_name} </p>;
+                teamInfo.team.members.map((member, i: number) => {
+                  return <p key={i}> {`${member.first_name} ${member.last_name}`} </p>;
                 })
               ) : (
                 <img src="../empty.svg"></img>

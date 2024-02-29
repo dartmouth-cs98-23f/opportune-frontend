@@ -24,6 +24,7 @@ import datepicker from 'react-datepicker/dist/react-datepicker.css';
 import { parseDate, convertDateToAPIFormat } from '~/lib/date';
 import { MemberModal } from '~/components/MemberModal';
 import { Collapsible } from '~/components/Collapsible';
+import TRDropdown from '~/components/TRDropdown';
 
 // @ts-expect-error
 const DatePicker = ReactDatePicker.default;
@@ -59,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -79,7 +80,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       const response2 = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/invite-team',
@@ -89,7 +90,49 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'teamNudge') {
+    try {
+      myJson['subject'] = 'Urgent: Complete Your Team Preferences Survey';
+      myJson[
+        'content'
+      ] = `Dear ${myJson['name']}, \n\nI wanted to gently remind you about the importance of completing our team preferences survey. Your insights are invaluable in helping us understand your team's needs and preferences, which in turn allows us to match you with the most suitable new hires.\n\nBy filling out the survey, you're not only helping us enhance your recruitment experience but also ensuring that we provide you with the best possible candidates for your team.\n\nIf you haven't already, please take a few moments to log in to your team portal and complete the survey. Should you have any questions or need assistance, don't hesitate to reach out to us!\n\nWarm regards,\nOpportune Team`;
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/mail',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return redirect('/company/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  } else if (_action === 'newHireNudge') {
+    try {
+      myJson['subject'] = 'Please fill out your New Hire Preferences Survey';
+      myJson[
+        'content'
+      ] = `Dear ${myJson['name']}, \n\nWe wanted to remind you about the importance of completing your new hire preferences survey. Your input is crucial in helping us match you with the most suitable team and projects, ensuring a seamless integration into the company culture.\n\nBy sharing your preferences, you're not only helping us understand your needs better but also ensuring that your experience is tailored to your preferences and aspirations.\n\nIf you haven't already, please take a few moments to fill out the survey. Your feedback is highly valued.\n\nShould you encounter any difficulties or have any questions, feel free to reach out to us. Thank you for your cooperation and support.\n\nWarm regards,\nOpportune Team`;
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/company/mail',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -106,7 +149,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       const response2 = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/invite-newhire',
@@ -116,7 +159,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -133,7 +176,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
 
       return redirect('/company/profile');
@@ -157,8 +200,22 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
+
+      // reinvite if changed email
+      if(myJson['newemail'] != myJson['email']) {
+        const response2 = await axios.post(
+          process.env.BACKEND_URL + '/api/v1/company/invite-newhire',
+          {email: myJson['newemail']},
+          {
+            headers: {
+              Authorization: session.get('auth'),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      }
       return redirect('/company/profile');
     } catch (error) {
       console.log(error);
@@ -174,7 +231,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -193,8 +250,6 @@ export async function action({ request }: ActionFunctionArgs) {
         members: JSON.parse(myJson['team_members']),
       };
 
-      console.log(myJson);
-
       const response = await axios.post(
         process.env.BACKEND_URL + '/api/v1/company/edit-team',
         myJson,
@@ -203,8 +258,22 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
+
+      // reinvite if changed email
+      if(myJson['newemail'] != myJson['email']) {
+        const response2 = await axios.post(
+          process.env.BACKEND_URL + '/api/v1/company/invite-team',
+          {email: myJson['newemail']},
+          {
+            headers: {
+              Authorization: session.get('auth'),
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      }
       return redirect('/company/profile');
     } catch (error) {
       console.log(error);
@@ -220,7 +289,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -230,10 +299,10 @@ export async function action({ request }: ActionFunctionArgs) {
   } else if (_action === 'dateSave') {
     // update json to correct format
     myJson['team_survey_deadline'] = convertDateToAPIFormat(
-      myJson['team_survey_deadline'],
+      myJson['team_survey_deadline']
     );
     myJson['newhire_survey_deadline'] = convertDateToAPIFormat(
-      myJson['newhire_survey_deadline'],
+      myJson['newhire_survey_deadline']
     );
 
     try {
@@ -245,7 +314,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/company/profile');
     } catch (error) {
@@ -276,7 +345,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     const newHireRes = await axios.get(
@@ -286,7 +355,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     const teamsRes = await axios.get(
@@ -296,7 +365,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     if (
@@ -461,13 +530,13 @@ export default function CompanyProfile() {
   };
 
   const [nhDate, setNHDate] = useState(
-    parseDate(info?.data.company.newhire_survey_deadline),
+    parseDate(info?.data.company.newhire_survey_deadline)
   );
   const [teamDate, setTeamDate] = useState(
-    parseDate(info?.data.company.team_survey_deadline),
+    parseDate(info?.data.company.team_survey_deadline)
   );
   const [dateButtonDisabled, setDateButtonDisabled] = useState(
-    !validateDates(nhDate, teamDate),
+    !validateDates(nhDate, teamDate)
   );
 
   const handleNHDateChange = (date) => {
@@ -492,7 +561,7 @@ export default function CompanyProfile() {
 
   const date = new Date();
   const surveysClosedDate = parseDate(
-    info?.data.company.newhire_survey_deadline,
+    info?.data.company.newhire_survey_deadline
   );
 
   const [showMemberModal, setShowMemberModal] = useState(false);
@@ -538,22 +607,11 @@ export default function CompanyProfile() {
 
   return (
     <div className="company-container">
-      <div className="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"></img>
-        <p className="text-logo">Opportune</p>
-        <Form action="/company/profile" method="post">
-          <button
-            className="logout-button"
-            type="submit"
-            name="_action"
-            value="LogOut">
-            <ArrowLeftOnRectangleIcon />
-          </button>
-        </Form>
-      </div>
-
+      <div id="sidebar">
+		    <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		    <p className="text-logo">Opportune</p>
+		    <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
+	    </div>
       <div
         className="company-preview"
         style={{ backgroundImage: `url(${coverUrl})` }}>
@@ -572,7 +630,8 @@ export default function CompanyProfile() {
                   <button
                     className="custom-file-upload"
                     onClick={open}
-                    type="button">
+                    type="button"
+                  >
                     Upload Image
                   </button>
                 );
@@ -583,7 +642,8 @@ export default function CompanyProfile() {
                 <button
                   className="custom-file-upload"
                   onClick={open}
-                  style={{ marginLeft: '10px' }}>
+                  style={{ marginLeft: '10px' }}
+                >
                   Upload Cover
                 </button>
               )}
@@ -597,7 +657,8 @@ export default function CompanyProfile() {
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
-        }}>
+        }}
+      >
         <div className="company-teams-container">
           <div className="company-teams-title">
             <h2>Teams</h2>
@@ -606,7 +667,7 @@ export default function CompanyProfile() {
             {info?.teams.teams.map(
               (
                 team,
-                i, // DISPLAY TEAMS HERE
+                i // DISPLAY TEAMS HERE
               ) => (
                 <Collapsible
                   trigger={
@@ -614,37 +675,53 @@ export default function CompanyProfile() {
                       <div>
                         <h3>{team.name}</h3>
                         <div>{team.location}</div>{' '}
-                        {/* TO REMOVE AT SOME POINT */}
                       </div>
                       <button
                         className={
                           team.survey_complete
                             ? 'done-button'
                             : 'in-progress-button'
-                        }>
+                        }
+                      >
                         {team.survey_complete ? 'Done' : 'In Progress'}
                       </button>
                       <div className="expanded-content">
-                        <button
-                          className="newhire-button"
-                          name="_action"
-                          value="teamNudge">
-                          Email nudge
-                        </button>
+                        <Form action="/company/profile" method="post">
+                          <button
+                            className="newhire-button"
+                            type="submit"
+                            name="_action"
+                            value="teamNudge"
+                          >
+                            Email nudge
+                          </button>
+                          <input
+                            name="email"
+                            value={team.email}
+                            style={{ display: 'none' }}
+                          />
+                          <input
+                            name="name"
+                            value={team.name}
+                            style={{ display: 'none' }}
+                          />
+                        </Form>
 
                         <div className="row-container">
                           <button
                             className="edit-button"
                             type="button"
-                            onClick={() => handleSetEditTeam(i)}>
+                            onClick={() => handleSetEditTeam(i)}
+                          >
                             <PencilIcon />
                           </button>
                           <Form action="/company/profile" method="post">
                             <button
-                              className="edit-button"
+                              className="edit-button trash"
                               type="submit"
                               name="_action"
-                              value="deleteTeam">
+                              value="deleteTeam"
+                            >
                               <TrashIcon />
                             </button>
                             <input
@@ -656,7 +733,8 @@ export default function CompanyProfile() {
                         </div>
                       </div>
                     </div>
-                  }>
+                  }
+                >
                   <div>
                     <h3>Team Description: </h3>
                     {team.description}
@@ -688,7 +766,7 @@ export default function CompanyProfile() {
                     </span>
                   </div>
                 </Collapsible>
-              ),
+              )
             )}
           </div>
           <p className="cta" style={{ textAlign: 'center' }}>
@@ -697,11 +775,13 @@ export default function CompanyProfile() {
           <Modal
             open={showTeamModal}
             onClose={closeTeamModal}
-            title={'Add a team'}>
+            title={'Add a team'}
+          >
             <Form
               action="/company/profile"
               method="post"
-              onSubmit={handleCreateTeamSubmit}>
+              onSubmit={handleCreateTeamSubmit}
+            >
               <TextField
                 className="add-team"
                 label="Team Email"
@@ -717,12 +797,12 @@ export default function CompanyProfile() {
                 type="text"
               />
               <TextField
-                  className="add-team"
-                  label="Location"
-                  name="location"
-                  classLabel="location"
-                  type="text"
-                />
+                className="add-team"
+                label="Location"
+                name="location"
+                classLabel="location"
+                type="text"
+              />
               <TextField
                 className="add-team"
                 label="Description"
@@ -751,7 +831,8 @@ export default function CompanyProfile() {
                   style={{
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                  }}>
+                  }}
+                >
                   {teamMembers.map((member, index) => (
                     <div key={index} className="team-member-card">
                       <span>
@@ -767,7 +848,7 @@ export default function CompanyProfile() {
                         }}
                       />
                       <TrashIcon
-                        className="trash-icon"
+                        className="edit-icon trash"
                         onClick={() => handleMemberDelete(index)}
                       />
                     </div>
@@ -782,7 +863,8 @@ export default function CompanyProfile() {
                 member={{}}
                 onClose={closeMemberModal}
                 addTeamMember={addTeamMember}
-                title="Add team member"></MemberModal>
+                title="Add team member"
+              ></MemberModal>
               {showEditMemberModal != null ? (
                 <MemberModal
                   open={showEditMemberModal != null}
@@ -791,7 +873,8 @@ export default function CompanyProfile() {
                   addTeamMember={(m) =>
                     handleMemberEdit(m, showEditMemberModal)
                   }
-                  title="Add team member"></MemberModal>
+                  title="Add team member"
+                ></MemberModal>
               ) : null}
 
               {!showMemberModal && showEditMemberModal == null && (
@@ -799,7 +882,8 @@ export default function CompanyProfile() {
                   className="center"
                   type="submit"
                   name="_action"
-                  value="createTeam">
+                  value="createTeam"
+                >
                   Add Team
                 </button>
               )}
@@ -808,12 +892,14 @@ export default function CompanyProfile() {
           <Modal
             open={editTeam != null}
             onClose={() => setEditTeam(null)}
-            title={'Edit Team'}>
+            title={'Edit Team'}
+          >
             {editTeam != null ? (
               <Form
                 action="/company/profile"
                 method="post"
-                onSubmit={handleEditTeamSubmit}>
+                onSubmit={handleEditTeamSubmit}
+              >
                 <input
                   name="email"
                   classLabel="email"
@@ -879,21 +965,19 @@ export default function CompanyProfile() {
                         <PencilIcon
                           className="edit-icon"
                           onClick={() => {
-                            setShowEditMemberModal(index);
-                            console.log(index);
-                            console.log(teamMembers);
-                            console.log(teamMembers[index]);
+                            setShowEditMemberModal(index)
                           }}
                         />
                         <TrashIcon
-                          className="edit-icon"
+                          className="edit-icon trash"
                           onClick={() => handleMemberDelete(index)}
                         />
                       </div>
                     ))}
                     <button
                       className="add-member-btn"
-                      onClick={openMemberModal}>
+                      onClick={openMemberModal}
+                    >
                       Add Member
                     </button>
                   </div>
@@ -903,7 +987,8 @@ export default function CompanyProfile() {
                   member={{}}
                   onClose={closeMemberModal}
                   addTeamMember={addTeamMember}
-                  title="Add team member"></MemberModal>
+                  title="Add team member"
+                ></MemberModal>
                 {showEditMemberModal != null ? (
                   <MemberModal
                     open={showEditMemberModal != null}
@@ -912,7 +997,8 @@ export default function CompanyProfile() {
                     addTeamMember={(m) =>
                       handleMemberEdit(m, showEditMemberModal)
                     }
-                    title="Add team member"></MemberModal>
+                    title="Add team member"
+                  ></MemberModal>
                 ) : null}
 
                 {!showMemberModal && showEditMemberModal == null && (
@@ -921,7 +1007,8 @@ export default function CompanyProfile() {
                       className="save-button"
                       type="submit"
                       name="_action"
-                      value="editTeam">
+                      value="editTeam"
+                    >
                       Save
                     </button>
                   </div>
@@ -948,21 +1035,37 @@ export default function CompanyProfile() {
                     newHire.survey_complete
                       ? 'done-button'
                       : 'in-progress-button'
-                  }>
+                  }
+                >
                   {newHire.survey_complete ? 'Done' : 'In Progress'}
                 </button>
                 <div className="expanded-content">
-                  <button
-                    className="newhire-button"
-                    name="_action"
-                    value="newHireNudge">
-                    Email nudge
-                  </button>
+                  <Form action="/company/profile" method="post">
+                    <button
+                      className="newhire-button"
+                      type="submit"
+                      name="_action"
+                      value="newHireNudge"
+                    >
+                      Email nudge
+                    </button>
+                    <input
+                      name="email"
+                      value={newHire.email}
+                      style={{ display: 'none' }}
+                    />
+                    <input
+                      name="name"
+                      value={newHire.first_name}
+                      style={{ display: 'none' }}
+                    />
+                  </Form>
                   <div className="row-container">
                     <button
                       className="edit-button"
                       type="button"
-                      onClick={() => setEditHire(i)}>
+                      onClick={() => setEditHire(i)}
+                    >
                       <PencilIcon />
                     </button>
                     <Form action="/company/profile" method="post">
@@ -970,7 +1073,8 @@ export default function CompanyProfile() {
                         className="edit-button trash"
                         type="submit"
                         name="_action"
-                        value="deleteNewHire">
+                        value="deleteNewHire"
+                      >
                         <TrashIcon />
                       </button>
                       <input
@@ -990,12 +1094,14 @@ export default function CompanyProfile() {
           <Modal
             open={editHire != null}
             onClose={() => setEditHire(null)}
-            title={'Edit New Hire'}>
+            title={'Edit New Hire'}
+          >
             {editHire != null ? (
               <Form
                 action="/company/profile"
                 method="post"
-                onSubmit={handleEditHireSubmit}>
+                onSubmit={handleEditHireSubmit}
+              >
                 <input
                   name="email"
                   classLabel="email"
@@ -1029,13 +1135,15 @@ export default function CompanyProfile() {
                     display: 'flex',
                     width: '100%',
                     justifyContent: 'flex-end',
-                  }}>
+                  }}
+                >
                   <div className="buttons">
                     <button
                       className="save-button"
                       type="submit"
                       name="_action"
-                      value="editNewHire">
+                      value="editNewHire"
+                    >
                       Save
                     </button>
                   </div>
@@ -1046,11 +1154,13 @@ export default function CompanyProfile() {
           <Modal
             open={showHireModal}
             onClose={closeHireModal}
-            title={'Add new hire'}>
+            title={'Add new hire'}
+          >
             <Form
               action="/company/profile"
               method="post"
-              onSubmit={handleCreateHireSubmit}>
+              onSubmit={handleCreateHireSubmit}
+            >
               <TextField
                 label="First Name"
                 name="firstName"
@@ -1063,13 +1173,19 @@ export default function CompanyProfile() {
                 classLabel="last_name"
                 type="text"
               />
-              <TextField label="Email" name="email" classLabel="email" type="email" />
+              <TextField
+                label="Email"
+                name="email"
+                classLabel="email"
+                type="email"
+              />
 
               <button
                 className="center"
                 type="submit"
                 name="_action"
-                value="createNewhire">
+                value="createNewhire"
+              >
                 Add New Hire
               </button>
             </Form>
@@ -1080,7 +1196,8 @@ export default function CompanyProfile() {
         <Form
           action="/company/profile"
           method="post"
-          className="company-description">
+          className="company-description"
+        >
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div className="company-teams-title">
               <h2>Description:</h2>
@@ -1089,15 +1206,18 @@ export default function CompanyProfile() {
             <textarea
               cols={60}
               name="description"
-              defaultValue={info?.data?.company.description}></textarea>
+              defaultValue={info?.data?.company.description}
+            ></textarea>
 
             <div
-              style={{ display: 'flex', width: '100%', justifyContent: 'end' }}>
+              style={{ display: 'flex', width: '100%', justifyContent: 'end' }}
+            >
               <button
                 type="submit"
                 className="company-save"
                 name="_action"
-                value="companySave">
+                value="companySave"
+              >
                 Save
               </button>
             </div>
@@ -1106,7 +1226,8 @@ export default function CompanyProfile() {
         <Form
           action="/company/profile"
           method="post"
-          className="company-deadlines">
+          className="company-deadlines"
+        >
           <div className="company-teams-title">
             <h2>Deadlines:</h2>
           </div>
@@ -1128,34 +1249,35 @@ export default function CompanyProfile() {
               />{' '}
               {/* TODO CSS */}
             </label>
-            {
-              dateButtonDisabled ? 
+            {dateButtonDisabled ? (
               <button
                 type="submit"
                 name="_action"
                 className="company-save"
-                style={{'background-color': 'gray', cursor: 'auto'}}
+                style={{ 'background-color': 'gray', cursor: 'auto' }}
                 value="dateSave"
-                disabled={true}>
+                disabled={true}
+              >
                 Save
-            </button>
-              :
+              </button>
+            ) : (
               <button
                 type="submit"
                 name="_action"
                 className="company-save"
                 value="dateSave"
-                disabled={false}>
+                disabled={false}
+              >
                 Save
-            </button>
-            }
+              </button>
+            )}
           </div>
         </Form>
       </div>
 
       <p className="cta" style={{ textAlign: 'right', marginRight: '2rem' }}>
         {' '}
-        {allSurveysComplete || date.getTime() > surveysClosedDate.getTime() ? (
+        {allSurveysComplete && date.getTime() > surveysClosedDate.getTime() ? (
           <Link to="/company/matching">Next</Link>
         ) : (
           <div className="matching-unavailable">

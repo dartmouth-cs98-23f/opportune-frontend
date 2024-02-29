@@ -1,14 +1,14 @@
-import { Form, Link, useLoaderData } from '@remix-run/react';
-import { useState } from 'react';
+import { Form, Link, useLoaderData } from "@remix-run/react";
+import { useState } from "react";
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   json,
   redirect,
-} from '@remix-run/node';
-import axios from 'axios';
-import { destroySession, getSession } from '../utils/sessions';
-import MainNavigation from '~/components/MainNav';
+} from "@remix-run/node";
+import axios from "axios";
+import { destroySession, getSession } from "../utils/sessions";
+import MainNavigation from "~/components/MainNav";
 import {
   ArrowLeftOnRectangleIcon,
   InformationCircleIcon,
@@ -20,31 +20,32 @@ import Ranking from '~/components/survey_qs/Ranking';
 import Textbox from '~/components/survey_qs/Textbox';
 import PlainText from '~/components/survey_qs/PlainText';
 import { parseDatePlus1, parseDate, formatDate } from '~/lib/date';
+import TRDropdown from '~/components/TRDropdown';
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
-  const _action = body.get('_action');
+  const _action = body.get("_action");
 
-  const session = await getSession(request.headers.get('Cookie'));
+  const session = await getSession(request.headers.get("Cookie"));
 
   const profile = await axios.get(
-    process.env.BACKEND_URL + '/api/v1/newhire/profile',
+    process.env.BACKEND_URL + "/api/v1/newhire/profile",
     {
       headers: {
-        Authorization: session.get('auth'),
-        'Content-Type': 'application/json',
+        Authorization: session.get("auth"),
+        "Content-Type": "application/json",
       },
-    },
+    }
   );
 
   // 1-5 slider
-  if (_action === 'Scale') {
+  if (_action === "Scale") {
     // get the tech stack and score
     var myJson = {};
     for (const [key, value] of body.entries()) {
-      if (key !== '_action') {
-        myJson['name'] = key;
-        myJson['score'] = parseInt(value, 10);
+      if (key !== "_action") {
+        myJson["name"] = key;
+        myJson["score"] = parseInt(value, 10);
       }
     }
 
@@ -52,10 +53,10 @@ export async function action({ request }: ActionFunctionArgs) {
       // update/add to skill list
       const skillList = profile.data.new_hire.skills;
       const skillIdx = skillList.findIndex(
-        (skill) => skill.name === myJson['name'],
+        (skill) => skill.name === myJson["name"]
       );
       if (skillIdx !== -1) {
-        skillList[skillIdx].score = myJson['score'];
+        skillList[skillIdx].score = myJson["score"];
       } else {
         skillList.push(myJson);
       }
@@ -63,14 +64,14 @@ export async function action({ request }: ActionFunctionArgs) {
       // send new skills
       const newSkills = JSON.stringify({ skills: skillList });
       const response = await axios.patch(
-        process.env.BACKEND_URL + '/api/v1/newhire/profile',
+        process.env.BACKEND_URL + "/api/v1/newhire/profile",
         newSkills,
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
     } catch (error) {
       console.log(error);
@@ -79,14 +80,14 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   // team preferences
-  if (_action === 'Ranking') {
+  if (_action === "Ranking") {
     // get the rankings
     let prefJsons = [];
     for (const [key, value] of body.entries()) {
-      if (key !== '_action') {
+      if (key !== "_action") {
         let prefJson = {};
-        prefJson['name'] = key;
-        prefJson['score'] = parseInt(value, 10);
+        prefJson["name"] = key;
+        prefJson["score"] = parseInt(value, 10);
         prefJsons.push(prefJson);
       }
     }
@@ -99,14 +100,14 @@ export async function action({ request }: ActionFunctionArgs) {
       // send new preferences
       const newPrefs = JSON.stringify({ team_prefs: prefList });
       const response = await axios.patch(
-        process.env.BACKEND_URL + '/api/v1/newhire/profile',
+        process.env.BACKEND_URL + "/api/v1/newhire/profile",
         newPrefs,
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
     } catch (error) {
       console.log(error);
@@ -114,76 +115,76 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  if (_action === 'LogOut') {
-    return redirect('/login', {
+  if (_action === "LogOut") {
+    return redirect("/login", {
       headers: {
-        'Set-Cookie': await destroySession(session),
+        "Set-Cookie": await destroySession(session),
       },
     });
   }
 
-  return redirect('/newhire/survey');
+  return redirect("/newhire/survey");
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    const session = await getSession(request.headers.get('Cookie'));
+    const session = await getSession(request.headers.get("Cookie"));
 
     if (
-      !session.has('auth') ||
-      (session.has('user_type') && session.get('user_type') !== 'new_hire')
+      !session.has("auth") ||
+      (session.has("user_type") && session.get("user_type") !== "new_hire")
     ) {
-      return redirect('/login');
+      return redirect("/login");
     }
 
     async function getProfileRes() {
       const profileRes = await axios.get(
-        process.env.BACKEND_URL + '/api/v1/newhire/profile',
+        process.env.BACKEND_URL + "/api/v1/newhire/profile",
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
       return profileRes.data;
     }
 
     async function getSkillRes() {
       const skillRes = await axios.get(
-        process.env.BACKEND_URL + '/api/v1/user/list-company-skills',
+        process.env.BACKEND_URL + "/api/v1/user/list-company-skills",
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
       return skillRes.data;
     }
 
     async function getTeamsRes() {
       const teamRes = await axios.get(
-        process.env.BACKEND_URL + '/api/v1/user/list-teams',
+        process.env.BACKEND_URL + "/api/v1/user/list-teams",
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
       return teamRes.data;
     }
 
     async function getCompanyRes() {
       const companyRes = await axios.get(
-        process.env.BACKEND_URL + '/api/v1/user/company-info',
+        process.env.BACKEND_URL + "/api/v1/user/company-info",
         {
           headers: {
-            Authorization: session.get('auth'),
-            'Content-Type': 'application/json',
+            Authorization: session.get("auth"),
+            "Content-Type": "application/json",
           },
-        },
+        }
       );
       return companyRes.data;
     }
@@ -221,7 +222,7 @@ export default function Matching() {
 
   // generate list of teams and slots
   const questionList = [];
-  if (basicInfo.profile.new_hire.team_id === '') {
+  if (basicInfo.profile.new_hire.team_id === "") {
     let teamList: { name: string; score: number; _id: string }[] = [];
 
     if (favoriteTeams) {
@@ -278,8 +279,8 @@ export default function Matching() {
         <Scale
           question={`How comfortable are you with ${skill}?`}
           existingSkills={newHireSkills}
-          labels={['1', '2', '3', '4', '5']}
-        />,
+          labels={["1", "2", "3", "4", "5"]}
+        />
       );
     }
 
@@ -289,15 +290,15 @@ export default function Matching() {
         question="Rank the following teams (best to worst)"
         teams={teamList}
         favoriteTeams={favoriteTeams}
-      />,
+      />
     );
     questionList.push(
-      <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />,
+      <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
     );
   } else {
     // push results message if new hire already has team
     questionList.push(
-      <PlainText text="Matching results are out already! Click the button below to view your match." />,
+      <PlainText text="Matching results are out already! Click the button below to view your match." />
     );
   }
 
@@ -310,7 +311,7 @@ export default function Matching() {
     next,
     getProgress,
   } = SurveyUtil(questionList);
-  const [triggered, setTriggered] = useState('next-q');
+  const [triggered, setTriggered] = useState("next-q");
 
   // check if survey is open yet
   const currentDate = new Date();
@@ -322,19 +323,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -346,7 +337,7 @@ export default function Matching() {
           The survey will be released soon!
           <img src="../survey-unavailable.gif"></img>
         </div>
-        <p className="cta" style={{ textAlign: 'center' }}>
+        <p className="cta" style={{ textAlign: "center" }}>
           <Link to="/newhire/teams">Back</Link>
         </p>
       </div>
@@ -355,19 +346,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-          <Form action="/newhire/survey" method="post">
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -384,23 +365,13 @@ export default function Matching() {
         </p>
       </div>
     );
-  } else if (basicInfo.profile.new_hire.team_id === '') {
+  } else if (basicInfo.profile.new_hire.team_id === "") {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -416,7 +387,8 @@ export default function Matching() {
             <Form
               action="/newhire/survey"
               method="post"
-              onSubmit={triggered === 'next-q' ? next : previous}>
+              onSubmit={triggered === "next-q" ? next : previous}
+            >
               {stepComp}
               <p className="cta">
                 {!isFirstStep && !isLastStep ? (
@@ -426,7 +398,8 @@ export default function Matching() {
                     value={stepComp.type.name}
                     className="prev-button"
                     onClick={(e) => setTriggered(e.currentTarget.id)}
-                    id="prev-q">
+                    id="prev-q"
+                  >
                     Previous
                   </button>
                 ) : null}
@@ -436,7 +409,8 @@ export default function Matching() {
                     name="_action"
                     value={stepComp.type.name}
                     id="next-q"
-                    onClick={(e) => setTriggered(e.currentTarget.id)}>
+                    onClick={(e) => setTriggered(e.currentTarget.id)}
+                  >
                     Next
                   </button>
                 ) : null}
@@ -458,19 +432,9 @@ export default function Matching() {
     return (
       <div className="flex-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <Form action="/newhire/survey" method="post">
-            <p className="text-logo">Opportune</p>
-            <button
-              className="logout-button"
-              type="submit"
-              name="_action"
-              value="LogOut">
-              <ArrowLeftOnRectangleIcon />
-            </button>
-          </Form>
+          <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>

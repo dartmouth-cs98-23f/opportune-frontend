@@ -41,7 +41,7 @@ export async function action({
 		});
 
 	} catch(error) {
-		console.log(error)
+		console.log(error.response)
 
 		if(error.response.status == 400) {
 			return redirect('/team/signup?failed=1')
@@ -85,8 +85,8 @@ export default function TsignUp() {
 		<div className="landing-box">
 			<img className="opportune-logo-large" src="../opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
-			<p>Tuning the opportunities you will have at your company to the maximum.</p>
 			{renderFailState()}
+			<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
 			<Form method="post" action="/team/signup" id="login">
 				{key != null ? 
 					<input
