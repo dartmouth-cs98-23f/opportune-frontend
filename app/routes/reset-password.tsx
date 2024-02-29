@@ -49,7 +49,7 @@ export async function loader({
 }
 
 
-// ACTION FUNCTIOn
+// ACTION FUNCTION
 export async function action({
 	request,
   }: ActionFunctionArgs) {
@@ -67,57 +67,25 @@ export async function action({
 	console.log(JSON.stringify(myJson));
 
 	try {
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/login', myJson);
-		const userType = response.data.user_type;
-		session.set("auth", response.data.token);
-		session.set("user_type", response.data.user_type);
-
-		// redirect based on user type
-		if (userType == 'new_hire') {
-		 	return redirect(`/newhire/profile`, {
-		 		headers: {
-		 			"Set-Cookie": await commitSession(session),
-		 		}
-		 	})
-		} else if (userType == 'team') {
-		 	return redirect(`/team/profile`, {
-		 		headers: {
-		 			"Set-Cookie": await commitSession(session),
-		 		}
-		 	}) 
-		} else if (userType == 'company') {
-			return redirect(`/company/profile`, {
-				headers: {
-					"Set-Cookie": await commitSession(session),
-				}
-			})
-		} else {
-			return redirect('/login', {
-				headers: {
-					"Set-Cookie": await destroySession(session),
-				}
-			})
-		}
+		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/auth/reset-password', myJson);
+		return redirect('/login');
 	} catch(error) {
 		console.log(error)
-
-		if(error.response.status == 401) {
-			return redirect('/login?failed=true');
-		}
-		return redirect('/login');
+		return redirect('/reset-password');
 	}
 };
 
 
 // Components
-export default function Login() {
+export default function ResetPassword() {
 	useLoaderData<typeof loader>();
 
 	const location = useLocation();
 
 	// Access query parameters from location.search
 	const queryParams = new URLSearchParams(location.search);
-	const failed = queryParams.get('failed');
+	const email = queryParams.get('email');
+    const key = queryParams.get('key');
 
     return (
     <main className="block-container">
@@ -125,26 +93,30 @@ export default function Login() {
 		<img className="opportune-logo-large" src="opportune_newlogo.svg"></img>
 		<h1>Opportune</h1>
 		<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
-		<Form method="post" action="/login" id="login">
-			{failed ? 
-			<p className='failed-auth'>
-				Incorrect Email or Password
-			</p> : null}
-			<p className="login-field">
-				<label htmlFor="email"><b>Email Address</b></label>
-				<input type="email" name="email" />
-			</p>
+		<Form method="post" action="/reset-password" id="login">
+            {key != null ? 
+                <input
+                    name="key"
+                    value={key}
+                    style={{ display: 'none' }}
+				/> : null}
+
+            {email != null ? 
+                <input
+                    name="email"
+                    value={email}
+                    style={{ display: 'none' }}
+				/> : null}
 
 			<p className="login-field">
-				<label htmlFor="password"><b>Password</b></label>
+				<label htmlFor="password"><b>New Password</b></label>
 				<input type="password" name="password" />
 			</p>
 			<div className="form-actions">
-				<button type="submit"> {'Login'} </button>
+				<button type="submit"> {'Reset Password'} </button>
 			</div>
 		</Form>
-		<p>Forgot your password? <Link to="/forgot-password">Reset Password</Link></p>
-		<p>Are you a company trying to signup? <Link to="/company/signup">Enroll Your Company</Link></p>
+		<p>Remembered your password? <Link to="/login">Sign in</Link></p>
 	  </div>
     </main>
   );
