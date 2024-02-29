@@ -77,7 +77,7 @@ export async function action({
 
 
 // Components
-export default function ResetPassword() {
+export default function ForgotPassword() {
 	useLoaderData<typeof loader>();
 
 	const location = useLocation();
