@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return profileRes.data;
     }
@@ -76,7 +76,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return teamInfoRes.data;
     }
@@ -99,9 +99,15 @@ export default function Results() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+        <img
+          className="opportune-logo-small"
+          src="../opportune_newlogo.svg"></img>
         <p className="text-logo">Opportune</p>
-        <TRDropdown skipLabel="Project" route="/newhire/results" userType="newhire" />
+        <TRDropdown
+          skipLabel="Project"
+          route="/newhire/results"
+          userType="newhire"
+        />
       </div>
       <div id="content">
         <h2>
@@ -179,7 +185,7 @@ export function matchingResults(resultsData: json) {
                     <div className="calendly-popup">
                       <div className="calendly-popup-content">
                         <InlineWidget
-                          url="https://calendly.com/ryanl23"
+                          url="https://calendly.com/opportune-contact-now"
                           prefill={prefill}
                         />
                       </div>
@@ -205,12 +211,12 @@ export function matchingResults(resultsData: json) {
   } else {
     return (
       <div className="flex-container">
-		<div className="unavailable-content">
-		  Matching results are not out yet.
+        <div className="unavailable-content">
+          Matching results are not out yet.
           <img src="../survey-unavailable.gif"></img>
         </div>
         <p className="cta">
-          <Link to="/newhire/survey">Edit Responses </Link>
+          <Link to="/newhire/survey"> Edit Responses </Link>
         </p>
       </div>
     );

@@ -1,6 +1,10 @@
-import { Link, Form, useLoaderData } from '@remix-run/react';
+import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import DateField from '~/components/DateField';
@@ -38,9 +42,26 @@ export async function action({ request }: ActionFunctionArgs) {
         'Set-Cookie': await destroySession(session),
       },
     });
+  } else if (_action === 'postProfilePic') {
+    try {
+      const response = await axios.post(
+        process.env.BACKEND_URL + '/api/v1/user/profile-picture',
+        myJson,
+        {
+          headers: {
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return redirect('/newhire/profile');
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   } else {
     try {
-      myJson["birthday"] = convertDateToAPIFormat(myJson["birthday"]);
+      myJson['birthday'] = convertDateToAPIFormat(myJson['birthday']);
 
       const response = await axios.patch(
         process.env.BACKEND_URL + '/api/v1/newhire/profile',
@@ -50,7 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return redirect('/newhire/teams');
     } catch (error) {
@@ -79,7 +100,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           Authorization: session.get('auth'),
           'Content-Type': 'application/json',
         },
-      },
+      }
     );
 
     if (response.status === 200) {
@@ -95,8 +116,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Profile() {
   const basicInfo = useLoaderData<typeof loader>();
   const basicInfoFields = basicInfo.data;
+  const fetcher = useFetcher();
 
-  const [url, updateUrl] = useState();
+  // const [url, updateUrl] = useState();
   const [error, updateError] = useState();
   const handleOnUpload = (error: any, result: any, widget: any) => {
     if (error) {
@@ -106,15 +128,28 @@ export default function Profile() {
       });
       return;
     }
-    updateUrl(result?.info?.secure_url);
+    // updateUrl(result?.info?.secure_url);
+    const formData = new FormData(); // Extract form data
+    formData.append('_action', 'postProfilePic');
+    formData.append('url', result?.info?.secure_url);
+
+    // Submit form data to the server
+    fetcher.submit(formData, { method: 'post', action: '/newhire/profile' });
   };
 
   return (
     <div className="flex-container">
       <div id="sidebar">
-		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-		<p className="text-logo">Opportune</p>
-		<TRDropdown skipLabel="Project" route="/newhire/profile" userType="newhire"/>
+        <img
+          className="opportune-logo-small"
+          src="../opportune_newlogo.svg"
+        ></img>
+        <p className="text-logo">Opportune</p>
+        <TRDropdown
+          skipLabel="Project"
+          route="/newhire/profile"
+          userType="newhire"
+        />
       </div>
       <div id="content">
         <h2>
@@ -130,8 +165,11 @@ export default function Profile() {
           <div>
             <Form action="/newhire/profile" method="post" className="info-form">
               <div className="preview">
-                {url ? (
-                  <img src={url} alt="Uploaded" />
+                {basicInfoFields.new_hire.image_url ? (
+                  <img
+                    src={basicInfoFields.new_hire.image_url}
+                    alt="Uploaded"
+                  />
                 ) : (
                   <img src="../defaultAvatar.png" alt="Placeholder" />
                 )}
@@ -152,7 +190,8 @@ export default function Profile() {
                         <button
                           className="custom-file-upload"
                           onClick={open}
-                          type="button">
+                          type="button"
+                        >
                           Upload Image
                         </button>
                       );
@@ -175,9 +214,9 @@ export default function Profile() {
                 type="text"
               />
               <DateField
-                 label="Birthday"
-                 classLabel="birthday"
-                 value={basicInfoFields.new_hire.birthday}
+                label="Birthday"
+                classLabel="birthday"
+                value={basicInfoFields.new_hire.birthday}
               />
               <SelectField
                 label="Race"
@@ -190,7 +229,7 @@ export default function Profile() {
                   'American Indian',
                   'Pacific Islander',
                   'Other',
-                  'Prefer Not to Say'
+                  'Prefer Not to Say',
                 ]}
                 value={basicInfoFields.new_hire.race}
               />
@@ -264,11 +303,10 @@ export default function Profile() {
                 classLabel="zip_code"
                 value={basicInfoFields.new_hire.zip_code}
                 type="text"
-
               />
               <p className="cta" style={{ textAlign: 'right' }}>
                 <button type="submit" name="_action" value="updateProfile">
-                  {"→"}
+                  {'→'}
                 </button>
               </p>
             </Form>
