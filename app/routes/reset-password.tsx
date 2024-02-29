@@ -127,6 +127,20 @@ export default function ResetPassword() {
 		<h1>Opportune</h1>
 		<p>Tuning the opportunities you will have at your company to the maximum.</p>
 		<Form method="post" action="/reset-password" id="login">
+            {key != null ? 
+                <input
+                    name="key"
+                    value={key}
+                    style={{ display: 'none' }}
+				/> : null}
+
+            {email != null ? 
+                <input
+                    name="email"
+                    value={email}
+                    style={{ display: 'none' }}
+				/> : null}
+                
 			<p className="login-field">
 				<label htmlFor="newpassword"><b>New Password</b></label>
 				<input type="password" name="password" />
