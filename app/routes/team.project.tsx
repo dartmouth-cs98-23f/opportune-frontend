@@ -374,7 +374,8 @@ export default function Tproject() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-					<Link className='logout-button' to="/login"> <ArrowLeftOnRectangleIcon /> </Link>
+					<p className="text-logo">Opportune</p>
+					<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
 				</div>
 				<div id="content">
 					<h2> Welcome Oppenheim </h2>
