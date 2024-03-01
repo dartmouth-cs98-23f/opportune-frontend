@@ -16,7 +16,7 @@ export default function AddProj(props:Field) {
 	}
 
   return (
-	<Form action="/tproject" method="post" onSubmit={() => handleEditClick()}>
+	<Form action="/team/project" method="post" onSubmit={() => handleEditClick()}>
 	<div>
 		<h3> {props.header}
 		{!isEditing ? 

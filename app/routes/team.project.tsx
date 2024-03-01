@@ -1,8 +1,6 @@
 import { Form, Link, useLoaderData, useFetcher } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
-import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
 import { json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
@@ -60,26 +58,29 @@ export async function action({request}: ActionFunctionArgs) {
 
 	if (_action === "AddTask") {
 		// construct subtask post request params
-		let assigned_ids = JSON.parse(body.get("assigned_ids"));
-		if (!assigned_ids.includes(body.get("newhire_id"))) {
-			assigned_ids.push(body.get("newhire_id"));
-		}
+		if (projRes.data.length !== 0) {
+			let assigned_ids = JSON.parse(body.get("assigned_ids"));
+			if (!assigned_ids.includes(body.get("newhire_id"))) {
+				assigned_ids.push(body.get("newhire_id"));
+			}
 
-		let myJson = {
-			name: body.get("description"),
-			project_id: projRes.data[Number(body.get("projIdx"))].project._id,
-			start_date: projRes.data[Number(body.get("projIdx"))].project.start_date,
-			end_date: projRes.data[Number(body.get("projIdx"))].project.end_date,
-			assigned_newhire_ids: assigned_ids
-		};
-		console.log("AddTask myJson: ", myJson)
-		
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
-			headers: {
-				"Authorization": session.get("auth"),
-				"Content-Type": "application/json",
-			},
-		})
+			let myJson = {
+				name: body.get("description"),
+				project_id: projRes.data[Number(body.get("projIdx"))].project._id,
+				start_date: projRes.data[Number(body.get("projIdx"))].project.start_date,
+				end_date: projRes.data[Number(body.get("projIdx"))].project.end_date,
+				assigned_newhire_ids: assigned_ids
+			};
+			console.log("AddTask myJson: ", myJson)
+			console.log("projIdx: ", body.get("projIdx"));
+			
+			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			})
+		}
 	}
 
 	if (_action === "AddUpdate") {
@@ -446,7 +447,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]} 
-											mode={"team"}
+											route={"/team/project"}
 											key={proj.project._id} />
 								}))}
 							</div>
@@ -499,14 +500,14 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]}
-											mode={"team"}
+											route={"/team/project"}
 											key={proj.project._id} />
 								}) : null }
 								{pmMode === "Members" ? newHires.new_hires.map((nh) => {
 									return <div className="team-box task-list" key={nh._id}>
 										<b> 
 											<AddTask label={"+"} header={`${nh.first_name} ${nh.last_name}`} 
-											 projInfo={projInfo} nh_id={nh._id} />
+											 projInfo={projInfo} nh_id={nh._id} route="/team/project" />
 										</b>
 										{projInfo.filter((proj) => proj.project.assigned_newhire_ids.includes(nh._id))
 										    .map((proj) => {
@@ -524,7 +525,7 @@ export default function Tproject() {
 													taskID={proj.project._id}
 													date={today} 
 													updates={[]} 
-													mode={"team"} />
+													route={"/team/project"} />
 												{taskList.filter((task) => (task.project_id === proj.project._id) &&
 												 						   (proj.project.assigned_newhire_ids.includes(nh._id)))
 												    .map((task) => {
@@ -539,7 +540,7 @@ export default function Tproject() {
 																taskID={task._id}
 																date={today} 
 																updates={[]} 
-																mode={"team"} />
+																route={"/team/project"} />
 													})}
 												</div>
 										})}

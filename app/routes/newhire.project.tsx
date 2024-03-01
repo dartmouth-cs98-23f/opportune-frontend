@@ -36,20 +36,24 @@ export async function action({request}: ActionFunctionArgs) {
 
 	if (_action === "AddTask") {
 		// construct subtask post request params
-		let myJson = {
-			name: body.get("description"),
-			project_id: projRes.data[body.get("projIdx")].project._id,
-			start_date: projRes.data[body.get("projIdx")].project.start_date,
-			end_date: projRes.data[body.get("projIdx")].project.end_date,
-		};
-		console.log("AddTask myJson: ", myJson)
-		
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
-			headers: {
-				"Authorization": session.get("auth"),
-				"Content-Type": "application/json",
-			},
-		})
+		if (projRes.data.length !== 0) {
+			let myJson = {
+				name: body.get("description"),
+				project_id: projRes.data[body.get("projIdx")].project._id,
+				start_date: projRes.data[body.get("projIdx")].project.start_date,
+				end_date: projRes.data[body.get("projIdx")].project.end_date,
+			};
+			console.log("AddTask myJson: ", myJson);
+			console.log("projIdx: ", body.get("projIdx"));
+
+			
+			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			})
+		}
 	}
 
 	if (_action === "AddUpdate") {
@@ -299,7 +303,8 @@ export default function Project() {
 								return <Form method="post" action="/newhire/project"> 
 								         <Checkbox task={task.name} classLabel="check-field"
 								                 checked={task.complete} task_id={task._id} key={task._id} 
-												 proj_name={getProjName(task.project_id)} />
+												 proj_name={getProjName(task.project_id)}
+												 route="/newhire/project" />
 										 <input name="_id" type="hidden" value={task._id}/>
 										 <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -311,7 +316,8 @@ export default function Project() {
 								return <Form method="post" action="/newhire/project"> 
 									      <Checkbox task={task.name} classLabel="check-field"
 									             checked={task.complete} task_id={task._id} key={task._id}
-												 proj_name={getProjName(task.project_id)} />
+												 proj_name={getProjName(task.project_id)}
+												 route="/newhire/project" />
 										  <input name="_id" type="hidden" value={task._id}/>
 										  <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -345,7 +351,7 @@ export default function Project() {
 										taskID={proj.project._id}
 										date={today} 
 										updates={[]}
-										mode={"nh"} />
+										route={"/newhire/project"} />
 									
 									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
 										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
@@ -358,7 +364,7 @@ export default function Project() {
 												taskID={task._id}
 												progress={-1} date={today} 
 												updates={task.updates}
-												mode={"nh"} />
+												route={"/newhire/project"} />
 									})}
 								</div> 
 							})}

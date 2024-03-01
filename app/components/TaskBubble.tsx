@@ -13,7 +13,7 @@ interface Fields {
 	progress: number;
 	date: string;
 	updates: string[];
-	mode: string;
+	route: string;
 }
 // mode in Fields props
 
@@ -53,7 +53,7 @@ export default function TaskBubble(props:Fields) {
 			)
 		} else {
 			return (
-				<Form action={props.mode === "nh" ? "/project" : "/tproject"} 
+				<Form action={props.route} 
 				      method="post" onSubmit={() => handleEditClick()}>
 				<div className={props.classLabel} style={{width: `calc(${(endScaled - startScaled) * 20}%)`, marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
 				  <b> {props.task} </b> 

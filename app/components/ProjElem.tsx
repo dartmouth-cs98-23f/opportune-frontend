@@ -9,7 +9,7 @@ interface Fields {
 export default function ProjElem(props:Fields) {
   return (
 	<div>
-		<Form method="post" action="/tproject">
+		<Form method="post" action="/team/project">
 		    <label> {props.proj_name} </label>
 			{props.mode === "Team" ?
 			<button className="edit-clear" name="_action" value="DeleteProj"> ❌ </button>: null}
