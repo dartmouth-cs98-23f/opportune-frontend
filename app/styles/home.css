@@ -1210,7 +1210,6 @@ input[type='checkbox'] {
   border-radius: 1rem;
   position: relative;
   text-align: left;
-  overflow: hidden;
 }
 
 .modal-large button.off-right {

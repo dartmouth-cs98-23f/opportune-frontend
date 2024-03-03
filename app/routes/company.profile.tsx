@@ -539,6 +539,11 @@ export default function CompanyProfile() {
     setTeamMembers(teams[i].members);
   };
 
+  const handleCloseEditTeam = () => {
+    setEditTeam(null);
+    setTeamMembers([]);
+  }
+
   // return the state to null before sending the server-side request
   const handleEditHireSubmit = async (event) => {
     event.preventDefault();
@@ -558,6 +563,8 @@ export default function CompanyProfile() {
     const formData = new FormData(event.target); // Extract form data
     formData.append('_action', 'editTeam');
     formData.append('team_members', JSON.stringify(teamMembers));
+
+    setTeamMembers([]);
     fetcher.submit(formData, { method: 'post', action: '/company/profile' });
 
     // Submit form data to the server
@@ -938,8 +945,9 @@ export default function CompanyProfile() {
           </Modal>
           <Modal
             open={editTeam != null}
-            onClose={() => setEditTeam(null)}
-            title={'Edit Team'}>
+            onClose={handleCloseEditTeam}
+            title={'Edit Team'}
+          >
             {editTeam != null ? (
               <Form
                 action="/company/profile"
@@ -1266,7 +1274,7 @@ export default function CompanyProfile() {
               />
             </label>
             <label className="date-container">
-              New Hire Deadline:
+              New Hire Survey Deadline:
               <DatePicker
                 selected={nhDate} // change to info.teams.team.survey_deadline or sth like that
                 onChange={(date) => handleNHDateChange(date)} // do fetcher.submit

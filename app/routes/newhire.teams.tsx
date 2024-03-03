@@ -243,6 +243,7 @@ export default function Teams() {
                       )}
                     </div>
 
+                    <h4>Location: {team.location}</h4>
                     <p>
                       <b>Tools and Technologies: </b>
                       {team.skills.map((skills) => skills.name).join(', ')}

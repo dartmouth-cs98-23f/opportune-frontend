@@ -792,24 +792,23 @@ export default function CompanyMatching() {
                       Gender Identity Metrics
                     </h2>
                   </div>
-
-                  {diversityModal != null && diversityModal > 0 ? (
+                </div>
+              ) : null}
+              {(diversityModal != null && diversityModal > 0) ? (
                     <button
                       className="off-left"
                       onClick={() => setDiversityModal(diversityModal - 1)}>
                       ←
                     </button>
                   ) : null}
-                  {diversityModal != null &&
-                  diversityModal < info.teams.teams.length - 1 ? (
+                  {(diversityModal != null &&
+                  diversityModal < info.teams.teams.length - 1) ? (
                     <button
                       className="off-right"
                       onClick={() => setDiversityModal(diversityModal + 1)}>
                       →
                     </button>
                   ) : null}
-                </div>
-              ) : null}
             </ModalLarge>
           </div>
 

@@ -81,12 +81,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
       return teamInfoRes.data;
     }
 
-    const [profileRes, teamInfoRes] = await Promise.all([
+    async function getCompanyInfoRes() {
+      const companyRes = await axios.get(
+        process.env.BACKEND_URL + "/api/v1/user/company-info",
+        {
+          headers: {
+          Authorization: session.get("auth"),
+          "Content-Type": "application/json",
+          },
+        }
+        );
+      return companyRes.data;
+    }
+
+    const [profileRes, teamInfoRes, companyRes] = await Promise.all([
       getProfileRes(),
       getTeamInfoRes(),
+      getCompanyInfoRes()
     ]);
 
-    return json({ profile: profileRes, teamInfo: teamInfoRes });
+    return json({ profile: profileRes, teamInfo: teamInfoRes, companyInfo: companyRes });
   } catch (error) {
     console.log(error);
     return null;
@@ -126,7 +140,7 @@ export default function Results() {
 }
 
 export function matchingResults(resultsData: json) {
-  if (resultsData.teamInfo) {
+  if (resultsData.teamInfo && resultsData.companyInfo.company.matching_complete) {
     const team = resultsData.teamInfo.team;
     const [expanded, setExpanded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);

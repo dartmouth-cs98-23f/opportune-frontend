@@ -227,7 +227,7 @@ export default function Tprefs() {
         <div className="content">
           <div className="company-banner">
             <h1> {companyInfo.name} </h1>
-            <h3> {teamInfo.team.name} </h3>
+            <h3> {teamInfo.team.name} — {teamInfo.team.location}</h3>
           </div>
           <div className="survey-will-close">
             <InformationCircleIcon className="lock-icon" />

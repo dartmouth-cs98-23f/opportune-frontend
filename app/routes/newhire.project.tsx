@@ -7,7 +7,8 @@ import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 import TRDropdown from '~/components/TRDropdown';
 
-const matched = true; // check that company matching is complete
+var matched = true; // check that company matching is complete
+const createProjMode = false;
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -144,6 +145,16 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json"
 		}});
 
+		const companyRes = await axios.get(
+			process.env.BACKEND_URL + "/api/v1/user/company-info",
+			{
+			  headers: {
+				Authorization: session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			}
+		  );
+
 		const nhRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
 			headers: {
 			  "Authorization": session.get("auth"),
@@ -154,7 +165,8 @@ export async function loader({request}: LoaderFunctionArgs) {
 		return {
 			projInfo: projRes.data,
 			dates: projRes.config.params,
-			profile: nhRes.data
+			profile: nhRes.data,
+			company: companyRes.data
 		};
 	
 	} catch (error) {
@@ -166,7 +178,10 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Project() {
 	// load project info + start/end dates
-	const { projInfo, dates, profile } = useLoaderData<typeof loader>();
+	const { projInfo, dates, profile, company } = useLoaderData<typeof loader>();
+
+	matched = company.company.matching_complete;
+	
 	console.log("Newhire project PROJINFO: ", projInfo);
 	console.log("Newhire project PROFILE: ", profile);
 	
@@ -243,7 +258,7 @@ export default function Project() {
 					<TRDropdown skipLabel="Profile" route="/newhire/project" userType="newhire" />
 				</div>
 				<div>
-					<p>You will be able to see your project details after you are matched on July 2.</p>
+					<p>You will be able to see your project details after you are matched.</p>
 					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>
