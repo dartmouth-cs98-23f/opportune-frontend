@@ -1,6 +1,4 @@
 import { Form, Link, useLoaderData, useFetcher } from '@remix-run/react';
-import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
 import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
@@ -9,7 +7,7 @@ import { destroySession, getSession } from '~/utils/sessions';
 import axios from 'axios';
 import TRDropdown from '~/components/TRDropdown';
 
-const matched = true; // check that company matching is complete
+var matched = true; // check that company matching is complete
 const createProjMode = false;
 
 export async function action({request}: ActionFunctionArgs) {
@@ -37,20 +35,22 @@ export async function action({request}: ActionFunctionArgs) {
 
 	if (_action === "AddTask") {
 		// construct subtask post request params
-		let myJson = {
-			name: body.get("description"),
-			project_id: projRes.data[body.get("projIdx")].project._id,
-			start_date: projRes.data[body.get("projIdx")].project.start_date,
-			end_date: projRes.data[body.get("projIdx")].project.end_date,
-		};
-		console.log("AddTask myJson: ", myJson)
-		
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
-			headers: {
-				"Authorization": session.get("auth"),
-				"Content-Type": "application/json",
-			},
-		})
+		if (projRes.data.length !== 0 && body.get("description")) {
+			let myJson = {
+				name: body.get("description"),
+				project_id: projRes.data[body.get("projIdx")].project._id,
+				start_date: projRes.data[body.get("projIdx")].project.start_date,
+				end_date: projRes.data[body.get("projIdx")].project.end_date,
+			};
+			console.log("AddTask myJson: ", myJson);
+			
+			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			})
+		}
 	}
 
 	if (_action === "AddUpdate") {
@@ -135,23 +135,6 @@ export async function loader({request}: LoaderFunctionArgs) {
 		console.log("Project user profile: ", profile.data.new_hire._id)
 		console.log("Project Session Auth: ", session.get("auth"));
 
-		if (createProjMode) {
-			const createProjs = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/project', {
-				"name": "Authorization",
-				"description": "The project where each task feels like arguing over a petty color scheme.",
-				"start_date": "2023-12-01",
-				"end_date": "2024-01-16",
-				"assigned_team_id": "e9f01044-0d52-465d-b1fc-a26c90c79211",
-				"assigned_newhire_ids": [profile.data.new_hire._id]
-			}, {
-			headers: {
-			  "Authorization": session.get("auth"),
-			  "Content-Type": "application/json",
-			}});
-
-			console.log("Created project: ", createProjs.data)
-		}
-
 		const projRes = await axios.get(process.env.BACKEND_URL + '/api/v1/pm/newhire-view', {
 			params: {
 			  min_date: "2023-12-01",
@@ -162,10 +145,28 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json"
 		}});
 
-		console.log("Loader projres: ", projRes.config.params.min_date);
+		const companyRes = await axios.get(
+			process.env.BACKEND_URL + "/api/v1/user/company-info",
+			{
+			  headers: {
+				Authorization: session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			}
+		  );
+
+		const nhRes = await axios.get(process.env.BACKEND_URL + '/api/v1/newhire/profile', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json"
+		}});
+
+
 		return {
 			projInfo: projRes.data,
-			dates: projRes.config.params
+			dates: projRes.config.params,
+			profile: nhRes.data,
+			company: companyRes.data
 		};
 	
 	} catch (error) {
@@ -177,45 +178,12 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Project() {
 	// load project info + start/end dates
-	const { projInfo, dates } = useLoaderData<typeof loader>();
+	const { projInfo, dates, profile, company } = useLoaderData<typeof loader>();
 
-	/* const projInfo = [{
-		project: {
-			_id: '65d5715f1c7cf2404e060451',
-			name: 'Authorization',
-			description: 'A necessary evil of backend',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646cd'],
-			__v: 0 
-		},
-		subtasks: []
-	}, {
-		project: {
-			_id: '65d5715f1c7cf2404e060452',
-			name: 'UI/UX',
-			description: 'A necessary evil of frontend',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
-			__v: 0 
-		},
-		subtasks: [{
-			id: 'abcd',
-			name: 'Pick Color Scheme',
-			description: '',
-			project_id: '65d5715f1c7cf2404e060452',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			updates: [], 
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
-			complete: false,
-		}]
-	}] 
+	matched = company.company.matching_complete;
 	
-	const dates = { min_date: '2023-12-01', max_date: '2024-02-01' }; */
+	console.log("Newhire project PROJINFO: ", projInfo);
+	console.log("Newhire project PROFILE: ", profile);
 	
 	// build upcoming task lists
 	const taskList = [];
@@ -250,14 +218,15 @@ export default function Project() {
 	// todo and task bubble functions
 	function handleEditClick() {
 		setEditing(!isEditing);
+		updateProj(0);
 	}
 
 	function updateTask(task:string) {
 		setTask(task);
 	}
 
-	function updateProj(event:any) {
-		setCurrProj(event.target.selectedIndex);
+	function updateProj(i:number) {
+		setCurrProj(i);
 	}
 
 	function getProjName(task_proj_id:string) {
@@ -289,7 +258,7 @@ export default function Project() {
 					<TRDropdown labels={navLabels} route="/newhire/project" userType="newhire" />
 				</div>
 				<div>
-					<p>You will be able to see your project details after you are matched to a team.</p>
+					<p className="unavailable-content">You will be able to see your project details after you are matched to a team.</p>
 					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>
@@ -304,18 +273,15 @@ export default function Project() {
 					<TRDropdown labels={navLabels} route="/newhire/project" userType="newhire" />
 				</div>
 				<div id="sidebar-2">
-					<h3> Timeline: Stephen 
+					<h3> Timeline: {profile.new_hire.first_name} {profile.new_hire.last_name}
 						<div id="date-bar">
-							<button id="time-scale"> Today ↓</button>
-							<button id="curr-date"> {today} </button>
+							<button className="time-scale"> Today ↓</button>
+							<button className="curr-date"> {today} </button>
 						</div>
 					</h3>
 				</div>
 				<div className="horiz-flex-container">
 					<div id="pm-content">
-						<div className="team-box task-list">
-							Stephen
-						</div>
 						<div className="team-box task-list">
 							<h3> Upcoming Tasks ({taskList.filter((task) => !task.complete).length}) 
 								{!isEditing ? <button type="button" className="edit" 
@@ -329,7 +295,7 @@ export default function Project() {
 
 								Project: <select name="currProj" id="currProj" 
 							          className="proj-dropdown" defaultValue={currProj} 
-									  onChange={(e) => updateProj(e)}>
+									  onChange={(e) => updateProj(e.target.selectedIndex)}>
 								      <input name="projIdx" type="hidden" defaultValue={currProj}/>
 								
 								{projInfo.map(((proj: {project: any, subtasks: []}, i:number) => {
@@ -340,7 +306,7 @@ export default function Project() {
 								<button className="edit" name="_action" value="AddTask">
 								  Confirm
 								</button>
-								<button className="edit" onClick={handleEditClick}>
+								<button className="edit" onClick={() => handleEditClick()}>
 								  Cancel
 								</button> </div>: null}
 							</Form>
@@ -349,7 +315,8 @@ export default function Project() {
 								return <Form method="post" action="/newhire/project"> 
 								         <Checkbox task={task.name} classLabel="check-field"
 								                 checked={task.complete} task_id={task._id} key={task._id} 
-												 proj_name={getProjName(task.project_id)} />
+												 proj_name={getProjName(task.project_id)}
+												 route="/newhire/project" />
 										 <input name="_id" type="hidden" value={task._id}/>
 										 <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -361,7 +328,8 @@ export default function Project() {
 								return <Form method="post" action="/newhire/project"> 
 									      <Checkbox task={task.name} classLabel="check-field"
 									             checked={task.complete} task_id={task._id} key={task._id}
-												 proj_name={getProjName(task.project_id)} />
+												 proj_name={getProjName(task.project_id)}
+												 route="/newhire/project" />
 										  <input name="_id" type="hidden" value={task._id}/>
 										  <input name="complete" type="hidden" value={task.complete}/>
 									   </Form>
@@ -395,7 +363,7 @@ export default function Project() {
 										taskID={proj.project._id}
 										date={today} 
 										updates={[]}
-										mode={"nh"} />
+										route={"/newhire/project"} />
 									
 									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
 										return <TaskBubble classLabel={!task.complete ? 'task-box' : 'task-box done'} 
@@ -408,7 +376,7 @@ export default function Project() {
 												taskID={task._id}
 												progress={-1} date={today} 
 												updates={task.updates}
-												mode={"nh"} />
+												route={"/newhire/project"} />
 									})}
 								</div> 
 							})}

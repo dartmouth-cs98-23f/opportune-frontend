@@ -1,8 +1,6 @@
-import { Form, Link, useLoaderData, useFetcher } from '@remix-run/react';
+import { Form, Link, useLoaderData } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
-import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
 import { json, redirect } from '@remix-run/node';
 import { destroySession, getSession } from '~/utils/sessions';
@@ -12,7 +10,7 @@ import AddTask from '~/components/AddTask';
 import AddProj from '~/components/AddProj';
 import TRDropdown from '~/components/TRDropdown';
 
-const matched = true; // check that company matching is complete
+var matched = true; // check that company matching is complete
 
 export async function action({request}: ActionFunctionArgs) {
 	const body = await request.formData();
@@ -59,27 +57,29 @@ export async function action({request}: ActionFunctionArgs) {
 	}
 
 	if (_action === "AddTask") {
-		// construct subtask post request params
-		let assigned_ids = JSON.parse(body.get("assigned_ids"));
-		if (!assigned_ids.includes(body.get("newhire_id"))) {
-			assigned_ids.push(body.get("newhire_id"));
-		}
+		if (projRes.data.length !== 0 && body.get("description")) {
+			let assigned_ids = JSON.parse(body.get("assigned_ids"));
+			if (!assigned_ids.includes(body.get("newhire_id"))) {
+				assigned_ids.push(body.get("newhire_id"));
+			}
 
-		let myJson = {
-			name: body.get("description"),
-			project_id: projRes.data[Number(body.get("projIdx"))].project._id,
-			start_date: projRes.data[Number(body.get("projIdx"))].project.start_date,
-			end_date: projRes.data[Number(body.get("projIdx"))].project.end_date,
-			assigned_newhire_ids: assigned_ids
-		};
-		console.log("AddTask myJson: ", myJson)
-		
-		const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
-			headers: {
-				"Authorization": session.get("auth"),
-				"Content-Type": "application/json",
-			},
-		})
+			// construct subtask post request params
+			let myJson = {
+				name: body.get("description"),
+				project_id: projRes.data[Number(body.get("projIdx"))].project._id,
+				start_date: projRes.data[Number(body.get("projIdx"))].project.start_date,
+				end_date: projRes.data[Number(body.get("projIdx"))].project.end_date,
+				assigned_newhire_ids: assigned_ids
+			};
+			console.log("AddTask myJson: ", myJson)
+			
+			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
+				headers: {
+					"Authorization": session.get("auth"),
+					"Content-Type": "application/json",
+				},
+			})
+		}
 	}
 
 	if (_action === "AddUpdate") {
@@ -190,11 +190,22 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json",
 		}});
 
+		const companyRes = await axios.get(
+			process.env.BACKEND_URL + "/api/v1/user/company-info",
+			{
+			  headers: {
+				Authorization: session.get("auth"),
+				"Content-Type": "application/json",
+			  },
+			}
+		  );
+
 		return {
 			projInfo: projRes.data,
 			teamInfo: teamProfile.data,
 			newHires: nhRes.data,
 			dates: projRes.config.params,
+			company: companyRes.data
 		};
 	
 	} catch (error) {
@@ -206,119 +217,9 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Tproject() {
 	// load project info + start/end dates
-	const { projInfo, teamInfo, newHires, dates } = useLoaderData<typeof loader>();
+	const { projInfo, teamInfo, newHires, dates, company } = useLoaderData<typeof loader>();
 
-	/* const projInfo = [{
-		project: {
-			_id: '65d5715f1c7cf2404e060451',
-			name: 'Authorization',
-			description: 'A necessary evil of backend',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646cd'],
-			__v: 0 
-		},
-		subtasks: []
-	}, {
-		project: {
-			_id: '65d5715f1c7cf2404e060452',
-			name: 'UI/UX',
-			description: 'A necessary evil of frontend',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			assigned_team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
-			__v: 0 
-		},
-		subtasks: [{
-			id: 'abcd',
-			name: 'Pick Color Scheme',
-			description: '',
-			project_id: '65d5715f1c7cf2404e060452',
-			start_date: '2023-12-01T00:00:00.000Z',
-			end_date: '2024-01-01T00:00:00.000Z',
-			updates: [], 
-			assigned_newhire_ids: ['65aebd6dd9dce799b35646ce'],
-			complete: false,
-		}]
-	}]
-
-	const newHires = {
-		new_hires: [{
-		    age: null,
-		    sex: '',
-		    race: '',
-		    school: '',
-		    major: '',
-		    grad_month: '',
-		    grad_year: null,
-		    address: '',
-		    city: '',
-		    state_province: '',
-		    zip_code: '',
-		    image_url: '',
-		    favorited_teams: [],
-		    survey_complete: false,
-		    matched: false,
-		    company_id: '',
-		    _id: '65aebd6dd9dce799b35646cd',
-		    email: 'email',
-		    first_name: 'Eren',
-		    last_name: 'Aldemir',
-		    team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-		    skills: [],
-		    team_prefs: [],
-		    meetings: []
-		  },
-		  {
-		    age: null,
-		    sex: '',
-		    race: '',
-		    school: '',
-		    major: '',
-		    grad_month: '',
-		    grad_year: null,
-		    address: '',
-		    city: '',
-		    state_province: '',
-		    zip_code: '',
-		    image_url: '',
-		    favorited_teams: [],
-		    survey_complete: false,
-		    matched: false,
-		    company_id: '',
-		    _id: '65aebd6dd9dce799b35646ce',
-		    email: 'email',
-		    first_name: 'Ethan',
-		    last_name: 'Chen',
-		    team_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-		    skills: [],
-		    team_prefs: [],
-		    meetings: []
-		  }
-		]
-	}
-
-	const teamInfo = {
-		email: 'john.doe.team.4@dartmouth.edu',
-		team: {
-			diversity_score: 0,
-			_id: 'a972c358-3128-4ddb-be10-90a7b9aa0306',
-			name: 'Design Research',
-			description: 'This is a great team! Many opportunities for growth!',
-			manager: '',
-			members: [],
-			calendly_link: '',
-			survey_complete: false,
-			max_capacity: 0,
-			company_id: '',
-			skills: [ [Object], [Object], [Object], [Object] ],
-			__v: 84
-		}
-	}
-
-	const dates = { min_date: '2023-12-01', max_date: '2024-02-01' }; */
+	matched = company.company.matching_complete;
 	
 	console.log("Start - Loader ProjInfo: ", projInfo);
 	console.log("Start - Loader TeamInfo: ", teamInfo);
@@ -380,7 +281,7 @@ export default function Tproject() {
 				</div>
 				<div id="content">
 					<div>
-						<p>You will be able to see the PM tool after team matching is complete!</p>
+						<p className="unavailable-content">You will be able to see the PM tool after team matching is complete!</p>
 						<p className="cta"> <Link to="/results">Back to Results </Link></p>
 					</div>
 				</div>
@@ -443,7 +344,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]} 
-											mode={"team"}
+											route={"/team/project"}
 											key={proj.project._id} />
 								}))}
 							</div>
@@ -496,14 +397,14 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]}
-											mode={"team"}
+											route={"/team/project"}
 											key={proj.project._id} />
 								}) : null }
 								{pmMode === "Members" ? newHires.new_hires.map((nh) => {
 									return <div className="team-box task-list" key={nh._id}>
 										<b> 
 											<AddTask label={"+"} header={`${nh.first_name} ${nh.last_name}`} 
-											 projInfo={projInfo} nh_id={nh._id} />
+											 projInfo={projInfo} nh_id={nh._id} route="/team/project" />
 										</b>
 										{projInfo.filter((proj) => proj.project.assigned_newhire_ids.includes(nh._id))
 										    .map((proj) => {
@@ -521,7 +422,7 @@ export default function Tproject() {
 													taskID={proj.project._id}
 													date={today} 
 													updates={[]} 
-													mode={"team"} />
+													route={"/team/project"} />
 												{taskList.filter((task) => (task.project_id === proj.project._id) &&
 												 						   (proj.project.assigned_newhire_ids.includes(nh._id)))
 												    .map((task) => {
@@ -536,7 +437,7 @@ export default function Tproject() {
 																taskID={task._id}
 																date={today} 
 																updates={[]} 
-																mode={"team"} />
+																route={"/team/project"} />
 													})}
 												</div>
 										})}

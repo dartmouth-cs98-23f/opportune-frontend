@@ -63,7 +63,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return profileRes.data;
     }
@@ -76,17 +76,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
             Authorization: session.get('auth'),
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       return teamInfoRes.data;
     }
 
-    const [profileRes, teamInfoRes] = await Promise.all([
+    async function getCompanyInfoRes() {
+      const companyRes = await axios.get(
+        process.env.BACKEND_URL + "/api/v1/user/company-info",
+        {
+          headers: {
+          Authorization: session.get("auth"),
+          "Content-Type": "application/json",
+          },
+        }
+        );
+      return companyRes.data;
+    }
+
+    const [profileRes, teamInfoRes, companyRes] = await Promise.all([
       getProfileRes(),
       getTeamInfoRes(),
+      getCompanyInfoRes()
     ]);
 
-    return json({ profile: profileRes, teamInfo: teamInfoRes });
+    return json({ profile: profileRes, teamInfo: teamInfoRes, companyInfo: companyRes });
   } catch (error) {
     console.log(error);
     return null;
@@ -101,7 +115,9 @@ export default function Results() {
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+        <img
+          className="opportune-logo-small"
+          src="../opportune_newlogo.svg"></img>
         <p className="text-logo">Opportune</p>
         <TRDropdown labels={navLabels} route="/newhire/results" userType="newhire" />
       </div>
@@ -122,7 +138,7 @@ export default function Results() {
 }
 
 export function matchingResults(resultsData: json) {
-  if (resultsData.teamInfo) {
+  if (resultsData.teamInfo && resultsData.companyInfo.company.matching_complete) {
     const team = resultsData.teamInfo.team;
     const [expanded, setExpanded] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -181,7 +197,7 @@ export function matchingResults(resultsData: json) {
                     <div className="calendly-popup">
                       <div className="calendly-popup-content">
                         <InlineWidget
-                          url="https://calendly.com/ryanl23"
+                          url="https://calendly.com/opportune-contact-now"
                           prefill={prefill}
                         />
                       </div>
@@ -207,12 +223,12 @@ export function matchingResults(resultsData: json) {
   } else {
     return (
       <div className="flex-container">
-		<div className="unavailable-content">
-		  Matching results are not out yet.
+        <div className="unavailable-content">
+          Matching results are not out yet.
           <img src="../survey-unavailable.gif"></img>
         </div>
         <p className="cta">
-          <Link to="/newhire/survey">Edit Responses </Link>
+          <Link to="/newhire/survey"> Edit Responses </Link>
         </p>
       </div>
     );
