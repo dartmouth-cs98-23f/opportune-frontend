@@ -275,10 +275,7 @@ export default function Tproject() {
 			<div className="flex-container">
 				<div id="sidebar">
 					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-<<<<<<< HEAD
-=======
 					<p className="text-logo">Opportune</p>
->>>>>>> main
 					<TRDropdown skipLabel="Profile" route="/team/project" userType="team" />
 				</div>
 				<div id="content">
