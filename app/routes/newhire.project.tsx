@@ -1,6 +1,4 @@
 import { Form, Link, useLoaderData, useFetcher } from '@remix-run/react';
-import MainNavigation from '~/components/MainNav';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react';
 import Checkbox from '~/components/Checkbox';
 import TaskBubble from '~/components/TaskBubble';
@@ -36,7 +34,7 @@ export async function action({request}: ActionFunctionArgs) {
 
 	if (_action === "AddTask") {
 		// construct subtask post request params
-		if (projRes.data.length !== 0) {
+		if (projRes.data.length !== 0 && body.get("description")) {
 			let myJson = {
 				name: body.get("description"),
 				project_id: projRes.data[body.get("projIdx")].project._id,
@@ -44,8 +42,6 @@ export async function action({request}: ActionFunctionArgs) {
 				end_date: projRes.data[body.get("projIdx")].project.end_date,
 			};
 			console.log("AddTask myJson: ", myJson);
-			console.log("projIdx: ", body.get("projIdx"));
-
 			
 			const response = await axios.post(process.env.BACKEND_URL + '/api/v1/pm/subtask', myJson, {
 				headers: {
@@ -207,14 +203,15 @@ export default function Project() {
 	// todo and task bubble functions
 	function handleEditClick() {
 		setEditing(!isEditing);
+		updateProj(0);
 	}
 
 	function updateTask(task:string) {
 		setTask(task);
 	}
 
-	function updateProj(event:any) {
-		setCurrProj(event.target.selectedIndex);
+	function updateProj(i:number) {
+		setCurrProj(i);
 	}
 
 	function getProjName(task_proj_id:string) {
@@ -283,7 +280,7 @@ export default function Project() {
 
 								Project: <select name="currProj" id="currProj" 
 							          className="proj-dropdown" defaultValue={currProj} 
-									  onChange={(e) => updateProj(e)}>
+									  onChange={(e) => updateProj(e.target.selectedIndex)}>
 								      <input name="projIdx" type="hidden" defaultValue={currProj}/>
 								
 								{projInfo.map(((proj: {project: any, subtasks: []}, i:number) => {
@@ -294,7 +291,7 @@ export default function Project() {
 								<button className="edit" name="_action" value="AddTask">
 								  Confirm
 								</button>
-								<button className="edit" onClick={handleEditClick}>
+								<button className="edit" onClick={() => handleEditClick()}>
 								  Cancel
 								</button> </div>: null}
 							</Form>

@@ -850,7 +850,6 @@ input[type='checkbox'] {
 }
 
 .task-box-v2 {
-  color: white;
   background-color: var(--color-primary-30);
 }
 
