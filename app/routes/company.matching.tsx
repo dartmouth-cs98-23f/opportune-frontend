@@ -1,13 +1,13 @@
-import { Link, Form, useLoaderData, useFetcher } from "@remix-run/react";
+import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import {
   ArrowLeftOnRectangleIcon,
   LockClosedIcon,
   LockOpenIcon,
-} from "@heroicons/react/24/outline";
-import styles from "~/styles/home.css";
-import { useState } from "react";
-import axios from "axios";
-import ImageUpload from "~/components/ImageUpload";
+} from '@heroicons/react/24/outline';
+import styles from '~/styles/home.css';
+import { useState } from 'react';
+import axios from 'axios';
+import ImageUpload from '~/components/ImageUpload';
 import {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -195,10 +195,10 @@ function getDiversityMetrics(diversity) {
 // ACTION FUNCTION
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
-  const _action = body.get("_action");
+  const _action = body.get('_action');
   console.log(_action);
 
-  const session = await getSession(request.headers.get("Cookie"));
+  const session = await getSession(request.headers.get('Cookie'));
 
   var myJson = {};
   for (const [key, value] of body.entries()) {
@@ -208,83 +208,83 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log(JSON.stringify(myJson));
 
   // Actions
-  if (_action === "LogOut") {
-    return redirect("/login", {
+  if (_action === 'LogOut') {
+    return redirect('/login', {
       headers: {
-        "Set-Cookie": await destroySession(session),
+        'Set-Cookie': await destroySession(session),
       },
     });
-  } else if (_action === "matchingSurvey") {
-    const diversifyOn = myJson["diversify"] == "on";
+  } else if (_action === 'matchingSurvey') {
+    const diversifyOn = myJson['diversify'] == 'on';
 
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + "/api/v1/company/match",
+        process.env.BACKEND_URL + '/api/v1/company/match',
         {},
         {
           headers: {
-            Authorization: session.get("auth"),
-            "Content-Type": "application/json",
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
           },
           params: {
             diversify: diversifyOn,
           },
         }
       );
-      return redirect("/company/matching");
+      return redirect('/company/matching');
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === "newHireLock") {
-    myJson["locked"] = myJson["locked"] == "true";
+  } else if (_action === 'newHireLock') {
+    myJson['locked'] = myJson['locked'] == 'true';
 
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + "/api/v1/company/newhire-lock",
+        process.env.BACKEND_URL + '/api/v1/company/newhire-lock',
         myJson,
         {
           headers: {
-            Authorization: session.get("auth"),
-            "Content-Type": "application/json",
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
           },
         }
       );
-      return redirect("/company/matching");
+      return redirect('/company/matching');
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === "matchManual") {
+  } else if (_action === 'matchManual') {
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + "/api/v1/company/match-manual",
+        process.env.BACKEND_URL + '/api/v1/company/match-manual',
         myJson,
         {
           headers: {
-            Authorization: session.get("auth"),
-            "Content-Type": "application/json",
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
           },
         }
       );
-      return redirect("/company/matching");
+      return redirect('/company/matching');
     } catch (error) {
       console.log(error);
       return null;
     }
-  } else if (_action === "completeMatching") {
+  } else if (_action === 'completeMatching') {
     try {
       const response = await axios.post(
-        process.env.BACKEND_URL + "/api/v1/company/confirm-matches",
+        process.env.BACKEND_URL + '/api/v1/company/confirm-matches',
         myJson,
         {
           headers: {
-            Authorization: session.get("auth"),
-            "Content-Type": "application/json",
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
           },
         }
       );
-      return redirect("/company/profile");
+      return redirect('/company/profile');
     } catch (error) {
       console.log(error);
       return null;
@@ -297,41 +297,41 @@ export async function action({ request }: ActionFunctionArgs) {
 // LOADER FUNCTION
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    const session = await getSession(request.headers.get("Cookie"));
+    const session = await getSession(request.headers.get('Cookie'));
 
     if (
-      !session.has("auth") ||
-      (session.has("user_type") && session.get("user_type") !== "company")
+      !session.has('auth') ||
+      (session.has('user_type') && session.get('user_type') !== 'company')
     ) {
-      return redirect("/login");
+      return redirect('/login');
     }
 
     const companyRes = await axios.get(
-      process.env.BACKEND_URL + "/api/v1/company/profile",
+      process.env.BACKEND_URL + '/api/v1/company/profile',
       {
         headers: {
-          Authorization: session.get("auth"),
-          "Content-Type": "application/json",
+          Authorization: session.get('auth'),
+          'Content-Type': 'application/json',
         },
       }
     );
 
     const newHireRes = await axios.get(
-      process.env.BACKEND_URL + "/api/v1/user/list-newhires",
+      process.env.BACKEND_URL + '/api/v1/user/list-newhires',
       {
         headers: {
-          Authorization: session.get("auth"),
-          "Content-Type": "application/json",
+          Authorization: session.get('auth'),
+          'Content-Type': 'application/json',
         },
       }
     );
 
     const teamsRes = await axios.get(
-      process.env.BACKEND_URL + "/api/v1/user/list-teams",
+      process.env.BACKEND_URL + '/api/v1/user/list-teams',
       {
         headers: {
-          Authorization: session.get("auth"),
-          "Content-Type": "application/json",
+          Authorization: session.get('auth'),
+          'Content-Type': 'application/json',
         },
       }
     );
@@ -344,8 +344,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         { email: team.email },
         {
           headers: {
-            Authorization: session.get("auth"),
-            "Content-Type": "application/json",
+            Authorization: session.get('auth'),
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -393,7 +393,7 @@ export default function CompanyMatching() {
     var teamId = nh.team_id;
 
     // accumulate matched and staged new hires
-    if(nh.matched) {
+    if (nh.matched) {
       if (!teamMatchedNewHires[teamId]) {
         teamMatchedNewHires[teamId] = [];
       }
@@ -403,7 +403,7 @@ export default function CompanyMatching() {
         teamStagedNewHires[teamId] = [];
       }
       teamStagedNewHires[teamId].push(nh);
-    }    
+    }
   }
 
   for (var nh of info.newHires.new_hires) {
@@ -486,7 +486,7 @@ export default function CompanyMatching() {
   };
 
   const getDiversityModalName = () => {
-    return <div>{"Diversity: " + info.teams.teams[diversityModal].name}</div>;
+    return <div>{'Diversity: ' + info.teams.teams[diversityModal].name}</div>;
   };
 
   const [url, updateUrl] = useState();
@@ -502,7 +502,7 @@ export default function CompanyMatching() {
     updateUrl(result?.info?.secure_url);
   };
 
-  const [coverUrl, setCoverUrl] = useState("../defaultCover.png");
+  const [coverUrl, setCoverUrl] = useState('../defaultCover.png');
 
   const handleCoverUpload = (error: any, result: any, widget: any) => {
     if (error) {
@@ -516,9 +516,9 @@ export default function CompanyMatching() {
   };
 
   const handleSelectChange = (event) => {
-    const value = event.target.value.split(" ");
+    const value = event.target.value.split(' ');
     const nhEmail = value[0];
-    const teamEmail = value[1] ?? "";
+    const teamEmail = value[1] ?? '';
 
     // programmatically submit a useFetcher form in Remix
     fetcher.submit(
@@ -534,32 +534,50 @@ export default function CompanyMatching() {
   if (currentDate.getTime() < surveyOpen.getTime() || !allSurveysCompleted) {
     return (
       <div style={{ height: '100vh', textAlign: 'center' }}>
-         <div id="sidebar">
-		       <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-		       <p className="text-logo">Opportune</p>
-		       <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
-	  	   </div>
-         <div className="unavailable-content">
-           The matching page is not available yet!
-         </div>
-         <p className="cta" style={{ textAlign: "center" }}>
-           <Link to="/company/profile">Back</Link>
-         </p>
+        <div id="sidebar">
+          <img
+            className="opportune-logo-small"
+            src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+          <TRDropdown
+            skipLabel="Project"
+            route="/company/profile"
+            userType="company"
+          />
+        </div>
+        <div className="unavailable-content">
+          The matching page is not available yet!
+        </div>
+        <p className="cta" style={{ textAlign: 'center' }}>
+          <Link to="/company/profile">Back</Link>
+        </p>
       </div>
     );
   } else {
     return (
       <div className="company-container">
         <div id="sidebar">
-		      <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
-		      <p className="text-logo">Opportune</p>
-		      <TRDropdown skipLabel="Project" route="/company/profile" userType="company" />
-	  	  </div>
+          <img
+            className="opportune-logo-small"
+            src="../opportune_newlogo.svg"></img>
+          <p className="text-logo">Opportune</p>
+          <TRDropdown
+            skipLabel="Project"
+            route="/company/profile"
+            userType="company"
+          />
+        </div>
         <div
           className="company-preview"
-		  style={{ backgroundImage: `url(${coverUrl})` }}>
-          {url ? (
-            <img src={url} alt="Uploaded" />
+          style={{
+            backgroundImage: `url(${
+              info?.data.company.cover_url
+                ? info?.data.company.cover_url
+                : '../defaultCover.png'
+            })`,
+          }}>
+          {info?.data.company.image_url ? (
+            <img src={info?.data.company.image_url} alt="Uploaded" />
           ) : (
             <img src="../defaultAvatar.png" alt="Placeholder" />
           )}
@@ -573,8 +591,7 @@ export default function CompanyMatching() {
                     <button
                       className="custom-file-upload"
                       onClick={open}
-                      type="button"
-                    >
+                      type="button">
                       Upload Image
                     </button>
                   );
@@ -585,8 +602,7 @@ export default function CompanyMatching() {
                   <button
                     className="custom-file-upload"
                     onClick={open}
-                    style={{ marginLeft: '10px' }}
-                  >
+                    style={{ marginLeft: '10px' }}>
                     Upload Cover
                   </button>
                 )}
@@ -595,7 +611,7 @@ export default function CompanyMatching() {
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
           <div className="company-teams-container">
             <div className="company-teams-title">
               <h2>Teams</h2>
@@ -610,9 +626,8 @@ export default function CompanyMatching() {
                       </div>
                       <p>{team.email}</p>
                     </div>
-                  }
-                >
-                  <div style={{ flexDirection: "row" }}>
+                  }>
+                  <div style={{ flexDirection: 'row' }}>
                     <h3>Staged Hires: </h3>
                     <div className="member-container">
                       {teamStagedNewHires[team._id]?.map((matchedHire) => (
@@ -624,7 +639,7 @@ export default function CompanyMatching() {
                       ))}
                     </div>
                   </div>
-                  <div style={{ flexDirection: "row" }}>
+                  <div style={{ flexDirection: 'row' }}>
                     <h3>Matched Hires: </h3>
                     <div className="member-container">
                       {teamMatchedNewHires[team._id]?.map((matchedHire) => (
@@ -650,12 +665,10 @@ export default function CompanyMatching() {
                       textAlign: 'right',
                       fontSize: '1rem',
                       borderRadius: '0.5rem',
-                    }}
-                  >
+                    }}>
                     <button
                       onClick={() => setDiversityModal(i)}
-                      style={{ fontSize: '1rem', borderRadius: '0.5rem' }}
-                    >
+                      style={{ fontSize: '1rem', borderRadius: '0.5rem' }}>
                       Diversity Metrics
                     </button>
                   </p>
@@ -667,57 +680,56 @@ export default function CompanyMatching() {
               open={diversityModal != null}
               onClose={() => setDiversityModal(null)}
               title={
-                diversityModal != null ? getDiversityModalName() : "Diversity"
-              }
-            >
+                diversityModal != null ? getDiversityModalName() : 'Diversity'
+              }>
               <div className="stat-box">
-                <h2 className="column" style={{ width: "40%" }}>
-                  Before Matching{" "}
+                <h2 className="column" style={{ width: '40%' }}>
+                  Before Matching{' '}
                 </h2>
-                <div className="column" style={{ width: "20%" }}></div>
-                <h2 className="column" style={{ width: "40%" }}>
+                <div className="column" style={{ width: '20%' }}></div>
+                <h2 className="column" style={{ width: '40%' }}>
                   After Matching
                 </h2>
               </div>
               {diversityModal != null ? (
                 <div className="scrollable">
                   <div className="stat-box">
-                    <h3 className="column" style={{ width: "40%" }}>
+                    <h3 className="column" style={{ width: '40%' }}>
                       {parsedDiversity[diversityModal].diversityScoreBefore +
-                        "/100"}
+                        '/100'}
                     </h3>
-                    <h3 className="column" style={{ width: "20%" }}>
+                    <h3 className="column" style={{ width: '20%' }}>
                       Diversity Score
                     </h3>
-                    <div className="column" style={{ width: "40%" }}>
+                    <div className="column" style={{ width: '40%' }}>
                       <h3>
                         {parsedDiversity[diversityModal].diversityScoreAfter +
-                          "/100 "}
+                          '/100 '}
 
                         {getPercentage(
                           parsedDiversity[diversityModal].diversityScoreBefore,
                           parsedDiversity[diversityModal].diversityScoreAfter
                         ) > 0.0 ? (
-                          <span style={{ color: "green", "font-size": "14px" }}>
-                            {"(+" +
+                          <span style={{ color: 'green', 'font-size': '14px' }}>
+                            {'(+' +
                               getPercentage(
                                 parsedDiversity[diversityModal]
                                   .diversityScoreBefore,
                                 parsedDiversity[diversityModal]
                                   .diversityScoreAfter
                               ) +
-                              "%)"}
+                              '%)'}
                           </span>
                         ) : (
-                          <span style={{ color: "red", "font-size": "14px" }}>
-                            {"(" +
+                          <span style={{ color: 'red', 'font-size': '14px' }}>
+                            {'(' +
                               getPercentage(
                                 parsedDiversity[diversityModal]
                                   .diversityScoreBefore,
                                 parsedDiversity[diversityModal]
                                   .diversityScoreAfter
                               ) +
-                              "%)"}
+                              '%)'}
                           </span>
                         )}
                       </h3>
@@ -726,48 +738,48 @@ export default function CompanyMatching() {
 
                   <div className="metric-box">
                     <div className="row-container">
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].ageBefore}
                         />
                       </p>
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].ageAfter}
                         />
                       </p>
                     </div>
 
-                    <h2 style={{ textAlign: "center" }}>Age Metrics</h2>
+                    <h2 style={{ textAlign: 'center' }}>Age Metrics</h2>
                   </div>
 
                   <div className="metric-box">
                     <div className="row-container">
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].raceBefore}
                         />
                       </p>
 
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].raceAfter}
                         />
                       </p>
                     </div>
-                    <h2 className="column" style={{ width: "20%" }}>
+                    <h2 className="column" style={{ width: '20%' }}>
                       Race Metrics
                     </h2>
                   </div>
 
                   <div className="metric-box">
                     <div className="row-container">
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].sexBefore}
                         />
                       </p>
-                      <p className="column" style={{ width: "40%" }}>
+                      <p className="column" style={{ width: '40%' }}>
                         <CustomPieChart
                           data={parsedDiversity[diversityModal].sexAfter}
                         />
@@ -776,8 +788,7 @@ export default function CompanyMatching() {
 
                     <h2
                       className="column"
-                      style={{ width: "40%", marginBottom: "1.5rem" }}
-                    >
+                      style={{ width: '40%', marginBottom: '1.5rem' }}>
                       Gender Identity Metrics
                     </h2>
                   </div>
@@ -786,8 +797,7 @@ export default function CompanyMatching() {
               {(diversityModal != null && diversityModal > 0) ? (
                     <button
                       className="off-left"
-                      onClick={() => setDiversityModal(diversityModal - 1)}
-                    >
+                      onClick={() => setDiversityModal(diversityModal - 1)}>
                       ←
                     </button>
                   ) : null}
@@ -795,8 +805,7 @@ export default function CompanyMatching() {
                   diversityModal < info.teams.teams.length - 1) ? (
                     <button
                       className="off-right"
-                      onClick={() => setDiversityModal(diversityModal + 1)}
-                    >
+                      onClick={() => setDiversityModal(diversityModal + 1)}>
                       →
                     </button>
                   ) : null}
@@ -817,8 +826,7 @@ export default function CompanyMatching() {
                     .map((newHire) => (
                       <div key={newHire.name} className="company-hire">
                         <div
-                          style={{ display: 'flex', flexDirection: 'column' }}
-                        >
+                          style={{ display: 'flex', flexDirection: 'column' }}>
                           <h3>
                             {newHire.first_name} {newHire.last_name}
                           </h3>
@@ -837,8 +845,7 @@ export default function CompanyMatching() {
                                 : 'select-inactive'
                             }
                             onChange={handleSelectChange}
-                            disabled={newHire.matched}
-                          >
+                            disabled={newHire.matched}>
                             <option key={'None'} value={newHire.email}>
                               None
                             </option>
@@ -848,15 +855,13 @@ export default function CompanyMatching() {
                                   <option
                                     key={team.name}
                                     value={newHire.email + ' ' + team.email}
-                                    selected
-                                  >
+                                    selected>
                                     {team.name}
                                   </option>
                                 ) : (
                                   <option
                                     key={team.name}
-                                    value={newHire.email + ' ' + team.email}
-                                  >
+                                    value={newHire.email + ' ' + team.email}>
                                     {team.name}
                                   </option>
                                 )
@@ -867,19 +872,18 @@ export default function CompanyMatching() {
                             <input
                               name="email"
                               type="hidden"
-                              value={newHire.email}
-                            ></input>
+                              value={newHire.email}></input>
                             <input
                               name="locked"
                               type="hidden"
-                              value={newHire.matched ? 'false' : 'true'}
-                            ></input>
+                              value={
+                                newHire.matched ? 'false' : 'true'
+                              }></input>
                             <button
                               className="lock-button"
                               type="submit"
                               name="_action"
-                              value="newHireLock"
-                            >
+                              value="newHireLock">
                               {!newHire.matched ? (
                                 <LockOpenIcon className="lock-icon" />
                               ) : (
@@ -906,8 +910,7 @@ export default function CompanyMatching() {
                     .map((newHire) => (
                       <div key={newHire.name} className="company-hire">
                         <div
-                          style={{ display: 'flex', flexDirection: 'column' }}
-                        >
+                          style={{ display: 'flex', flexDirection: 'column' }}>
                           <h3>
                             {newHire.first_name} {newHire.last_name}
                           </h3>
@@ -926,8 +929,7 @@ export default function CompanyMatching() {
                                 : 'select-inactive'
                             }
                             onChange={handleSelectChange}
-                            disabled={newHire.matched}
-                          >
+                            disabled={newHire.matched}>
                             <option key={'None'} value={newHire.email}>
                               None
                             </option>
@@ -937,15 +939,13 @@ export default function CompanyMatching() {
                                   <option
                                     key={team.name}
                                     value={newHire.email + ' ' + team.email}
-                                    selected
-                                  >
+                                    selected>
                                     {team.name}
                                   </option>
                                 ) : (
                                   <option
                                     key={team.name}
-                                    value={newHire.email + ' ' + team.email}
-                                  >
+                                    value={newHire.email + ' ' + team.email}>
                                     {team.name}
                                   </option>
                                 )
@@ -956,19 +956,18 @@ export default function CompanyMatching() {
                             <input
                               name="email"
                               type="hidden"
-                              value={newHire.email}
-                            ></input>
+                              value={newHire.email}></input>
                             <input
                               name="locked"
                               type="hidden"
-                              value={newHire.matched ? 'false' : 'true'}
-                            ></input>
+                              value={
+                                newHire.matched ? 'false' : 'true'
+                              }></input>
                             <button
                               className="lock-button"
                               type="submit"
                               name="_action"
-                              value="newHireLock"
-                            >
+                              value="newHireLock">
                               {!newHire.matched ? (
                                 <LockOpenIcon className="lock-icon" />
                               ) : (
@@ -989,7 +988,7 @@ export default function CompanyMatching() {
             </div>
           </div>
         </div>
-        <p className="cta" style={{ marginLeft: "1rem" }}>
+        <p className="cta" style={{ marginLeft: '1rem' }}>
           <Link to="/company/profile">Back</Link>
         </p>
         <div className="row-container" style={{ marginRight: '1rem' }}>
@@ -1008,14 +1007,12 @@ export default function CompanyMatching() {
                 className="match"
                 type="submit"
                 name="_action"
-                value="matchingSurvey"
-              >
+                value="matchingSurvey">
                 Run Matching Survey
               </button>
               <div
                 className="row-container"
-                style={{ alignItems: 'center', marginRight: '1rem' }}
-              >
+                style={{ alignItems: 'center', marginRight: '1rem' }}>
                 <p>Enable Diversity Matching?</p>
                 <input
                   type="checkbox"
@@ -1033,8 +1030,7 @@ export default function CompanyMatching() {
                 className="match confirm"
                 type="submit"
                 name="_action"
-                value="completeMatching"
-              >
+                value="completeMatching">
                 Confirm Team Matches
               </button>
             </Form>
@@ -1046,5 +1042,5 @@ export default function CompanyMatching() {
 }
 
 export function links() {
-  return [{ rel: "stylesheet", href: styles }];
+  return [{ rel: 'stylesheet', href: styles }];
 }

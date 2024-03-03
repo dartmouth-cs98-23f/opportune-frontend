@@ -92,7 +92,7 @@ function HowWeWorkPage() {
                             <div className="col-xl-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                                 <div className="icon-box">
                                 <div className="icon"><i className="bi bi-easel"></i></div>
-                                <h4 className="title"><a href="" className="stretched-link">Diverse Team Matching </a></h4>
+                                <h4 className="title"><a href="" className="stretched-link">AI-Powered Diverse Team Matching </a></h4>
                                 </div>
                             </div>
                             {/* <!--End Icon Box --> */}
@@ -135,9 +135,9 @@ function HowWeWorkPage() {
                     <div className="section-header">
                         <h2>About Us</h2>
                         <p>
-                            Starting as a undergraduate Dartmouth College capstone project, our team has innovated and cultivated the perfect product to help
+                            Starting as a undergraduate Dartmouth College capstone project, our team has innovated and cultivated the perfect AI-based product to help
                             companies and new hires alike. With Opportune you can match your skillset and curate diverse teams with
-                            the simple use of algorithms. 
+                            the simple use of cutting-edge advance AI algorithms. 
                         </p>                   
                     </div>
 
@@ -203,7 +203,7 @@ function HowWeWorkPage() {
                                     </h3>
                                     <div id="faq-content-1" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            Our cutting-edge matching algorithm is dedicated to aligning new hires with their prospective teams at your company. Through our comprehensive team-matching survey, stakeholders on both ends provide invaluable insights: teams designate their preferred skill sets in prospective recruits, while new hires designate their current proficiencies and working-style preferences. Leveraging this data, our refined algorithm seamlessly identifies optimal pairings that reflect mutual preferences with the click of a button. However, administrators have the option to intervene and designate team assignments manually according to their discretion should the need arise.
+                                            Our cutting-edge AI matching algorithm is dedicated to aligning new hires with their prospective teams at your company. Through our comprehensive team-matching survey, stakeholders on both ends provide invaluable insights: teams designate their preferred skill sets in prospective recruits, while new hires designate their current proficiencies and working-style preferences. Leveraging this data, our sophisticated AI seamlessly identifies optimal pairings that reflect mutual preferences with the click of a button. However, administrators have the option to intervene and designate team assignments manually according to their discretion should the need arise.
                                         </div>
                                     </div>
                                 </div>
@@ -231,7 +231,7 @@ function HowWeWorkPage() {
                                     </h3>
                                     <div id="faq-content-3" className="accordion-collapse collapse" data-bs-parent="#faqlist">
                                         <div className="accordion-body">
-                                            For every team, the amalgamation of team members and new hire demographics contributes to forming our 'diversity score,' serving as a benchmark to gauge the degree of diversity within a team based on the variance in demographic attributes among its members. Our diversity-based team matching aims to increase this score by assigning additional weight to the matching algorithm whenever a new hire introduces diversity to a team.
+                                            For every team, the amalgamation of team members and new hire demographics contributes to forming our 'diversity score,' serving as a benchmark to gauge the degree of diversity within a team based on the variance in demographic attributes among its members. Our diversity-based AI team matching aims to increase this score by assigning additional weight to the matching AI whenever a new hire introduces diversity to a team.
                                         </div>
                                     </div>
                                 </div>
