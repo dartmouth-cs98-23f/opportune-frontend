@@ -7,6 +7,7 @@ interface Fields {
 	checked: boolean;
 	task_id: number;
 	proj_name: string;
+	route: string;
 }
 
 export default function Checkbox(props:Fields) {
@@ -24,7 +25,7 @@ export default function Checkbox(props:Fields) {
   
   return (
 	<div className={`check-field ${checked ? 'checked': ''}`} key={props.task_id}>
-		<fetcher.Form method="post" action="/project">
+		<fetcher.Form method="post" action={props.route}>
 			<input type="checkbox" id={String(props.task_id)} defaultChecked={checked} 
 			       onClick={(e) => handleCheckChange(e)} />
 			<label htmlFor={String(props.task_id)}>{`${props.task} (${props.proj_name})`}</label>
