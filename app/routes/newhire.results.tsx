@@ -110,6 +110,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Results() {
   const resultsData = useLoaderData<typeof loader>();
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   return (
     <div className="flex-container">
       <div id="sidebar">
@@ -117,11 +119,7 @@ export default function Results() {
           className="opportune-logo-small"
           src="../opportune_newlogo.svg"></img>
         <p className="text-logo">Opportune</p>
-        <TRDropdown
-          skipLabel="Project"
-          route="/newhire/results"
-          userType="newhire"
-        />
+        <TRDropdown labels={navLabels} route="/newhire/results" userType="newhire" />
       </div>
       <div id="content">
         <h2>

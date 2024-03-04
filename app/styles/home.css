@@ -770,6 +770,10 @@ button.edit-clear:hover {
   margin-bottom: 15px;
 }
 
+.form-left .field-container {
+  display: inline-block
+}
+
 .image-input {
   display: inline;
 }

@@ -531,42 +531,32 @@ export default function CompanyMatching() {
   const currentDate = new Date();
   const surveyOpen = parseDatePlus1(info?.data.company.newhire_survey_deadline);
 
+  const navLabels = ["Profile", "Matching", "Settings"]
+
   if (currentDate.getTime() < surveyOpen.getTime() || !allSurveysCompleted) {
     return (
-      <div style={{ height: '100vh', textAlign: 'center' }}>
-        <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <p className="text-logo">Opportune</p>
-          <TRDropdown
-            skipLabel="Project"
-            route="/company/profile"
-            userType="company"
-          />
-        </div>
-        <div className="unavailable-content">
-          The matching page is not available yet!
-        </div>
-        <p className="cta" style={{ textAlign: 'center' }}>
-          <Link to="/company/profile">Back</Link>
-        </p>
+      <div className="company-container" style={{ height: '100vh', textAlign: 'center' }}>
+         <div id="sidebar">
+		       <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		       <p className="text-logo">Opportune</p>
+		       <TRDropdown labels={navLabels} route="/company/profile" userType="company" />
+	  	   </div>
+         <div className="unavailable-content">
+           The matching page is not available yet!
+         </div>
+         <p className="cta" style={{ textAlign: "center" }}>
+           <Link to="/company/profile">Back</Link>
+         </p>
       </div>
     );
   } else {
     return (
       <div className="company-container">
         <div id="sidebar">
-          <img
-            className="opportune-logo-small"
-            src="../opportune_newlogo.svg"></img>
-          <p className="text-logo">Opportune</p>
-          <TRDropdown
-            skipLabel="Project"
-            route="/company/profile"
-            userType="company"
-          />
-        </div>
+		      <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		      <p className="text-logo">Opportune</p>
+		      <TRDropdown labels={navLabels} route="/company/profile" userType="company" />
+	  	  </div>
         <div
           className="company-preview"
           style={{

@@ -137,19 +137,14 @@ export default function Profile() {
     fetcher.submit(formData, { method: 'post', action: '/newhire/profile' });
   };
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   return (
     <div className="flex-container">
       <div id="sidebar">
-        <img
-          className="opportune-logo-small"
-          src="../opportune_newlogo.svg"
-        ></img>
-        <p className="text-logo">Opportune</p>
-        <TRDropdown
-          skipLabel="Project"
-          route="/newhire/profile"
-          userType="newhire"
-        />
+		<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+		<p className="text-logo">Opportune</p>
+		<TRDropdown labels={navLabels} route="/newhire/profile" userType="newhire"/>
       </div>
       <div id="content">
         <h2>

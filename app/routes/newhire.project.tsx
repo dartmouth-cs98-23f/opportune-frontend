@@ -248,17 +248,17 @@ export default function Project() {
 		return dateArray;
 	}
 
+	const navLabels = ["Profile", "Project", "Settings"]
+
 	if (!matched) {
 		return (
 			<div className="flex-container">
 				<div id="sidebar">
-					<img className="opportune-logo-small disable-select" 
-					     src="../opportune_newlogo.svg" draggable={false}></img>
-					<p className="text-logo disable-select"> Opportune </p>
-					<TRDropdown skipLabel="Profile" route="/newhire/project" userType="newhire" />
+					<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
+					<TRDropdown labels={navLabels} route="/newhire/project" userType="newhire" />
 				</div>
 				<div>
-					<p>You will be able to see your project details after you are matched.</p>
+					<p className="unavailable-content">You will be able to see your project details after you are matched to a team.</p>
 					<p className="cta"> <Link to="/newhire/results">Back to Results </Link></p>
 				</div>
 			</div>
@@ -270,7 +270,7 @@ export default function Project() {
 					<img className="opportune-logo-small disable-select" 
 					     src="../opportune_newlogo.svg" draggable={false}></img>
 					<p className="text-logo disable-select"> Opportune </p>
-					<TRDropdown skipLabel="Profile" route="/newhire/project" userType="newhire" />
+					<TRDropdown labels={navLabels} route="/newhire/project" userType="newhire" />
 				</div>
 				<div id="sidebar-2">
 					<h3> Timeline: {profile.new_hire.first_name} {profile.new_hire.last_name}

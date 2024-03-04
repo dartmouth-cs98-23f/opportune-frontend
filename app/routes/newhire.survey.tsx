@@ -319,13 +319,15 @@ export default function Matching() {
   const surveyClosed = parseDatePlus1(companyInfo.newhire_survey_deadline);
   const lastDay = formatDate(parseDate(companyInfo.newhire_survey_deadline));
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   if (currentDate.getTime() < surveyOpen.getTime()) {
     return (
       <div className="flex-container">
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
+		      <TRDropdown labels={navLabels} route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -348,7 +350,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown skipLabel="Project" route="/newhire/survey"/>
+		      <TRDropdown labels={navLabels} route="/newhire/survey"/>
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -371,7 +373,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
+		      <TRDropdown labels={navLabels} route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -434,7 +436,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown skipLabel="Project" route="/newhire/survey" userType="newhire" />
+		      <TRDropdown labels={navLabels} route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
