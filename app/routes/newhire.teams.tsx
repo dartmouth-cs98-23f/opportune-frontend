@@ -273,7 +273,7 @@ export default function Teams() {
                             <div className="calendly-popup">
                               <div className="calendly-popup-content">
                                 <InlineWidget
-                                  url="https://calendly.com/ryanl23"
+                                  url={team.calendly_link}
                                   prefill={prefill}
                                 />
                               </div>
