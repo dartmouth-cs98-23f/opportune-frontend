@@ -241,13 +241,15 @@ export default function Tskills() {
   const surveyClosed = parseDatePlus1(companyInfo.team_survey_deadline);
   const lastDay = formatDate(parseDate(companyInfo.team_survey_deadline));
 
+  const navLabels = ["Profile", "Project", "Settings"]
+
   if (currentDate.getTime() > surveyClosed.getTime()) {
     return (
       <div className="flex-container">
         <div id="sidebar">
 			<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 			<p className="text-logo">Opportune</p>
-			<TRDropdown skipLabel="Project" route="/team/skills" userType="team" />
+			<TRDropdown labels={navLabels} route="/team/skills" userType="team" />
 		</div>
         <div className="unavailable-content">The skills survey is closed. </div>
         <p className="cta" style={{ textAlign: 'center' }}>
@@ -261,7 +263,7 @@ export default function Tskills() {
         <div id="sidebar">
 			<img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
 			<p className="text-logo">Opportune</p>
-			<TRDropdown skipLabel="Project" route="/team/skills" userType="team" />
+			<TRDropdown labels={navLabels} route="/team/skills" userType="team" />
 		</div>
         <div className="content">
           <div className="company-banner">
