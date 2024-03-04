@@ -850,7 +850,6 @@ input[type='checkbox'] {
 }
 
 .task-box-v2 {
-  color: white;
   background-color: var(--color-primary-30);
 }
 
@@ -1211,7 +1210,6 @@ input[type='checkbox'] {
   border-radius: 1rem;
   position: relative;
   text-align: left;
-  overflow: hidden;
 }
 
 .modal-large button.off-right {
