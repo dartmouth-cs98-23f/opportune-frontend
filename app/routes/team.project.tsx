@@ -282,7 +282,7 @@ export default function Tproject() {
 				<div id="content">
 					<div>
 						<p className="unavailable-content">You will be able to see the PM tool after team matching is complete!</p>
-						<p className="cta"> <Link to="/results">Back to Results </Link></p>
+						<p className="cta"> <Link to="/team/profile">Back to Profile </Link></p>
 					</div>
 				</div>
 			</div>
