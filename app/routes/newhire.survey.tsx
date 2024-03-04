@@ -327,7 +327,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown labels={navLabels} route="/newhire/survey"/>
+		      <TRDropdown labels={navLabels} route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -350,7 +350,7 @@ export default function Matching() {
         <div id="sidebar">
           <img className="opportune-logo-small" src="../opportune_newlogo.svg"></img>
           <p className="text-logo">Opportune</p>
-		      <TRDropdown labels={navLabels} route="/newhire/survey"/>
+		      <TRDropdown labels={navLabels} route="/newhire/survey" userType="newhire" />
         </div>
         <div id="content">
           <h2>Welcome {basicInfo.profile.new_hire.first_name} </h2>
@@ -363,6 +363,7 @@ export default function Matching() {
         </div>
 
         <p className="cta">
+		  <Link to="/newhire/teams">{'←'}</Link>
           <Link to="/newhire/results">View Results</Link>
         </p>
       </div>
@@ -447,6 +448,7 @@ export default function Matching() {
             <Progress pct={100} />
             {stepComp}
             <p className="cta">
+			  <Link to="/newhire/results">{'←'}</Link>
               <Link to="/newhire/results">View Results</Link>
             </p>
           </div>

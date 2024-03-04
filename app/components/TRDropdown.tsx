@@ -3,7 +3,7 @@ import { useState } from "react";
 
 interface Field {
 	route: string;
-	labels: [string];
+	labels: string[];
 	userType: string;
 }
 

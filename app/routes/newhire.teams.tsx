@@ -1,11 +1,8 @@
 import { Form, Link, useLoaderData } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import {
-  ArrowLeftOnRectangleIcon,
-  StarIcon,
-} from '@heroicons/react/24/outline';
+import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as SolidStarIcon } from '@heroicons/react/24/solid';
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import {
   useCalendlyEventListener,
   InlineWidget,

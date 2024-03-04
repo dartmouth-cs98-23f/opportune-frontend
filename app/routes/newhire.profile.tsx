@@ -1,10 +1,5 @@
 import { Link, Form, useLoaderData, useFetcher } from '@remix-run/react';
 import MainNavigation from '~/components/MainNav';
-import {
-  ArrowLeftOnRectangleIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from '@heroicons/react/24/outline';
 import TextField from '~/components/TextField';
 import SelectField from '~/components/SelectField';
 import DateField from '~/components/DateField';

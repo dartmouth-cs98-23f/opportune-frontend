@@ -1,7 +1,34 @@
-import { NavData } from '~/components/NavData';
 import { NavLink } from 'react-router-dom';
 
 export default function MainNavigation() {
+  const NavData = [
+	{
+		title: "Basic Info",
+		link: "/profile",
+		class: "pointer"
+	},
+	{
+		title: "Available teams",
+		link: "/teams",
+		class: "pointer"
+	},
+	{
+		title: "Matching",
+		link: "/survey",
+		class: "pointer"
+	},
+	{
+		title: "Results",
+		link: "/results",
+		class: "pointer"
+	},
+	{
+		title: "Project",
+		link: "/project",
+		class: "pointer icon-locked"
+	},
+  ]
+	
   return (
     <nav id="main-navigation">
 		<ul className="nav-list">
