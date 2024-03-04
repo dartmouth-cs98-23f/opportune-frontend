@@ -104,7 +104,7 @@ export async function action({
     }
 }
 
-const navLabels = ["Profile", "Matching", "Settings"]
+const navLabels = ["Profile", "Project", "Settings"]
 
 export default function CompanySettings() {
     const info = useLoaderData<typeof loader>();
