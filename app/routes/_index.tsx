@@ -59,7 +59,7 @@ function HowWeWorkPage() {
             {/* <!-- Navigation--> */}
             <nav className="navbar1" >
                     <img className ="navimg1" src="opportune_newlogo.svg"></img>
-                    <a className="navbar-title" style={{ 'margin-left': '10%' }} href="#!">OPPORTUNE</a>
+                    <a className="navbar-title" style={{ 'marginLeft': '10%' }} href="#!">OPPORTUNE</a>
                     <div>
                         <Link className="navbtns" to="/company/signup">Enroll a Company</Link>
                         <Link className="navbtns" to="/login">Login</Link>

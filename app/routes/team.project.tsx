@@ -225,6 +225,13 @@ export default function Tproject() {
 	console.log("Start - Loader TeamInfo: ", teamInfo);
 	console.log("Start - Loader New Hires: ", newHires);
 	console.log("Start - Loader Dates: ", dates);
+
+	// build newhire id map
+	var nhIdMap = {};
+	for (var i = 0; i < newHires.new_hires.length; i++) {
+		const nh = newHires.new_hires[i];
+		nhIdMap[nh._id] = `${nh.first_name} ${nh.last_name}`;
+	}
 	
 	// build upcoming task lists
 	const taskList = [];
@@ -268,6 +275,18 @@ export default function Tproject() {
 		}
 
 		return dateArray;
+	}
+
+	function getAssignedTo(newhireIds:string[]) {
+		var nameArray = [];
+
+		for (var i = 0; i < newhireIds.length; i++) {
+			var newhireId = newhireIds[i];
+			var newhire = nhIdMap[newhireId];
+			nameArray.push(newhire);
+		}
+
+		return nameArray;
 	}
 
 	const navLabels = ["Profile", "Project", "Settings"]
@@ -344,6 +363,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]} 
+											assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 											route={"/team/project"}
 											key={proj.project._id} />
 								}))}
@@ -397,6 +417,7 @@ export default function Tproject() {
 											taskID={proj.project._id}
 											date={today} 
 											updates={[]}
+											assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 											route={"/team/project"}
 											key={proj.project._id} />
 								}) : null }
@@ -422,6 +443,7 @@ export default function Tproject() {
 													taskID={proj.project._id}
 													date={today} 
 													updates={[]} 
+													assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 													route={"/team/project"} />
 												{taskList.filter((task) => (task.project_id === proj.project._id) &&
 												 						   (proj.project.assigned_newhire_ids.includes(nh._id)))
@@ -437,6 +459,7 @@ export default function Tproject() {
 																taskID={task._id}
 																date={today} 
 																updates={[]} 
+																assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 																route={"/team/project"} />
 													})}
 												</div>

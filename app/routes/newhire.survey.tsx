@@ -293,7 +293,7 @@ export default function Matching() {
       />
     );
     questionList.push(
-      <PlainText text="Thank you for your responses. You are free to edit them until July 1, and matching results will be out on July 2." />
+      <PlainText text="Thank you for your responses. You are free to edit them until the deadline." />
     );
   } else {
     // push results message if new hire already has team
