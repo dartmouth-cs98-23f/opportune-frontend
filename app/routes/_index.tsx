@@ -160,12 +160,12 @@ function HowWeWorkPage() {
                                     <li><i className="bi bi-check-circle-fill"></i> HMW curate diverse teams to ensure employees enjoy their work environment and companies can capitalize on a range of skillsets?</li>
                                 </ul>
                                 <p>
-                                    Take a deeper look into our UI/UX research that lead to our mission statment! 
+                                    Watch our demo video below to see how it works!
                                 </p>
 
                                 <div className="position-relative mt-4">
                                     <img src="assets/img/about-2.jpg" className="img-fluid rounded-4" alt=""/>
-                                    <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" className="glightbox play-btn"></a>
+                                    <a href="https://www.youtube.com/watch?v=dAz8cWilSGI" className="glightbox play-btn"></a>
                                 </div>
                             </div>
                         </div>
