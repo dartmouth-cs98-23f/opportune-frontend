@@ -161,12 +161,19 @@ export async function loader({request}: LoaderFunctionArgs) {
 			  "Content-Type": "application/json"
 		}});
 
+		const newHiresRes = await axios.get(process.env.BACKEND_URL + '/api/v1/user/list-newhires', {
+			headers: {
+			  "Authorization": session.get("auth"),
+			  "Content-Type": "application/json"
+		}});
+
 
 		return {
 			projInfo: projRes.data,
 			dates: projRes.config.params,
 			profile: nhRes.data,
-			company: companyRes.data
+			company: companyRes.data,
+			newHires: newHiresRes.data
 		};
 	
 	} catch (error) {
@@ -178,12 +185,19 @@ export async function loader({request}: LoaderFunctionArgs) {
 
 export default function Project() {
 	// load project info + start/end dates
-	const { projInfo, dates, profile, company } = useLoaderData<typeof loader>();
+	const { projInfo, dates, profile, company, newHires } = useLoaderData<typeof loader>();
 
 	matched = company.company.matching_complete;
 	
 	console.log("Newhire project PROJINFO: ", projInfo);
 	console.log("Newhire project PROFILE: ", profile);
+
+	// build newhire id map
+	var nhIdMap = [];
+	for (var i = 0; i < newHires.length; i++) {
+		const nh = newHires[i];
+		nhIdMap[nh._id] = nh;
+	}
 	
 	// build upcoming task lists
 	const taskList = [];
@@ -246,6 +260,17 @@ export default function Project() {
 		}
 
 		return dateArray;
+	}
+
+	function getAssignedTo(newhireIds:string[]) {
+		var nameArray = [];
+		for(var i = 0; i < newhireIds.length; i++) {
+			var newhireId = newhireIds[i];
+			var newhire = nhIdMap[newhireId];
+			nameArray.push(newhire.first_name + " " + newhire.last_name);
+		}
+
+		return nameArray;
 	}
 
 	const navLabels = ["Profile", "Project", "Settings"]
@@ -363,6 +388,7 @@ export default function Project() {
 										taskID={proj.project._id}
 										date={today} 
 										updates={[]}
+										assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 										route={"/newhire/project"} />
 									
 									{taskList.filter((task) => task.project_id === proj.project._id).map((task, i) => {
@@ -376,6 +402,7 @@ export default function Project() {
 												taskID={task._id}
 												progress={-1} date={today} 
 												updates={task.updates}
+												assignedTo={getAssignedTo(proj.project.assigned_newhire_ids)}
 												route={"/newhire/project"} />
 									})}
 								</div> 
