@@ -188,15 +188,13 @@ export default function Project() {
 	const { projInfo, dates, profile, company, newHires } = useLoaderData<typeof loader>();
 
 	matched = company.company.matching_complete;
-	
-	console.log("Newhire project PROJINFO: ", projInfo);
-	console.log("Newhire project PROFILE: ", profile);
+	console.log("Proj start - Newhires: ", newHires);
 
 	// build newhire id map
-	var nhIdMap = [];
-	for (var i = 0; i < newHires.length; i++) {
-		const nh = newHires[i];
-		nhIdMap[nh._id] = nh;
+	var nhIdMap = {};
+	for (var i = 0; i < newHires.new_hires.length; i++) {
+		const nh = newHires.new_hires[i];
+		nhIdMap[nh._id] = `${nh.first_name} ${nh.last_name}`;
 	}
 	
 	// build upcoming task lists
@@ -264,10 +262,11 @@ export default function Project() {
 
 	function getAssignedTo(newhireIds:string[]) {
 		var nameArray = [];
-		for(var i = 0; i < newhireIds.length; i++) {
+
+		for (var i = 0; i < newhireIds.length; i++) {
 			var newhireId = newhireIds[i];
 			var newhire = nhIdMap[newhireId];
-			nameArray.push(newhire.first_name + " " + newhire.last_name);
+			nameArray.push(newhire);
 		}
 
 		return nameArray;

@@ -227,10 +227,10 @@ export default function Tproject() {
 	console.log("Start - Loader Dates: ", dates);
 
 	// build newhire id map
-	var nhIdMap = [];
-	for (var i = 0; i < newHires.length; i++) {
-		const nh = newHires[i];
-		nhIdMap[nh._id] = nh;
+	var nhIdMap = {};
+	for (var i = 0; i < newHires.new_hires.length; i++) {
+		const nh = newHires.new_hires[i];
+		nhIdMap[nh._id] = `${nh.first_name} ${nh.last_name}`;
 	}
 	
 	// build upcoming task lists
@@ -279,10 +279,11 @@ export default function Tproject() {
 
 	function getAssignedTo(newhireIds:string[]) {
 		var nameArray = [];
-		for(var i = 0; i < newhireIds.length; i++) {
+
+		for (var i = 0; i < newhireIds.length; i++) {
 			var newhireId = newhireIds[i];
 			var newhire = nhIdMap[newhireId];
-			nameArray.push(newhire.first_name + " " + newhire.last_name);
+			nameArray.push(newhire);
 		}
 
 		return nameArray;

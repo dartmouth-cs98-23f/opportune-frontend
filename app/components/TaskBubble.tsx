@@ -58,7 +58,7 @@ export default function TaskBubble(props:Fields) {
 				<div className={props.classLabel} style={{width: `calc(${(endScaled - startScaled) * 20}%)`, marginLeft: `calc(${startScaled * 20}% + 10px)`}}> 
 				  <b> {props.task} </b> 
 				  <span className="task-desc-toggle" onClick={() => handleExpand()}>⬆</span>
-				  {props.route === "/newhire/project" ? <p> <b> Assigned To: </b> {props.assignedTo.join(', ')} </p> : null}
+				  <p> <b> Assigned To: </b> {props.assignedTo.join(', ')} </p>
 				  <p> <b> Description: </b> {props.descrip} </p>
 				  <p> <b> Last Updates: </b> {props.updates.map(update  => {
 					return <li> {update} </li>
