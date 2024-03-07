@@ -59,13 +59,14 @@ export default function TsignUp() {
 	// Access query parameters from location.search
 	const queryParams = new URLSearchParams(location.search);
 	const email = queryParams.get('email');
+	const key = queryParams.get('key');
 	const failstate = queryParams.get('failed');
 
 	const renderFailState = () => {
 	if(failstate == 1) {
 		return (
 			<p className='failed-auth'>
-				Please use the email associated with your account.
+				Please use the signup link and email associated with your account.
 			</p>
 		)
 	} else if(failstate == 2) {
@@ -84,9 +85,16 @@ export default function TsignUp() {
 		<div className="landing-box">
 			<img className="opportune-logo-large" src="../opportune_newlogo.svg"></img>
 			<h1>Opportune</h1>
+			{renderFailState()}
 			<p>Skills matched. Teams built. Projects delivered. Faster with Opportune.</p>
 			<Form method="post" action="/team/signup" id="login">
-				{renderFailState()}
+				{key != null ? 
+					<input
+					name="key"
+					value={key}
+					style={{ display: 'none' }}
+				/> : null}
+
 				<p className="login-field">
 					<label id="email">Enter Email: </label>
 					<input type="email" id="email" name="email" defaultValue={email ?? ""} required />
