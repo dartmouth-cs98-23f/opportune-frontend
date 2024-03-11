@@ -12,7 +12,7 @@ import homeStyles from '~/styles/home.css';
 
 export const links: LinksFunction = () => {
 	return [{ rel: "stylesheet", href: mainStyles },
-			{ rel: "stylesheet", href: homeStyles },
+			{ rel: "stylesheet", href: homeStyles }
 	];
 };
 

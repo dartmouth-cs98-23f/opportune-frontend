@@ -23,17 +23,18 @@
   }
   
   .navbar-title {
+	margin-left: 5%;
+	text-align: center;
     color: white;
     font-size: 1.75rem;
     text-decoration: none;
   }
   
-  .navbtns {
+  .navbtns, .navbtns-q {
     font-family: var(--font-primary);
     font-weight: 500;
     font-size: 15px;
     letter-spacing: 1px;
-    display: inline-block;
     padding: 10px 20px; /* Adjust padding for buttons */
     border-radius: 25px; /* Decrease border radius for a softer look */
     transition: 0.3s;
@@ -42,6 +43,14 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Reduce box shadow */
     border: 2px solid transparent; /* Change border color */
     margin-left: 10px; /* Add spacing between buttons */
+  }
+
+  .navbtns {
+	display: inline-block;
+  }
+
+  .navbtns-q {
+	display: none;
   }
   
   .navbtns:hover {
@@ -52,4 +61,37 @@
     text-decoration: none !important;
     color: white !important;
   }
-  
+
+/* Queries */
+@media only screen and (max-width: 770px) {
+	.navbtns {
+		display: none;
+	}
+
+	.navbar1 {
+		justify-content: start;
+		text-align: center;
+	}
+
+	.navbtns-q {
+		display: inline-block;
+	}
+
+	.navbtns-q-box {
+		background: var(--color-primary);
+		border: none;
+		text-align: center;
+	}
+}
+
+@media only screen and (max-width: 404px) {
+	.navbar-title {
+		font-size: 1.5rem;
+	}
+}
+
+@media only screen and (max-width: 360px) {
+	.navbar-title {
+		font-size: 1.25rem;
+	}
+}
