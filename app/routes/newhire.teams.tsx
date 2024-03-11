@@ -188,8 +188,7 @@ export default function Teams() {
           <Form
             action="/newhire/teams"
             method="post"
-            className="teams-container"
-            style={{ marginLeft: '3rem' }}>
+            className="teams-container">
             {teamInfoList.map((team) => {
               const [expanded, setExpanded] = useState(false);
 
@@ -310,6 +309,30 @@ export default function Teams() {
               <p>No events booked yet!</p>
             )}
           </div>
+        </div>
+
+		<div className="meets-container-q">
+            {events ? (
+              events.map((event) => {
+                return (
+                  <div className="team-box team-list">
+                    <div className="team-text" key={event.resource.name}>
+                      <h3> {event.resource.name}</h3>
+                      <p>
+                        Date:{' '}
+                        {new Date(
+                          event.resource.start_time,
+                        ).toLocaleDateString()}
+                      </p>
+                      <p>Start Time: {formatTime(event.resource.start_time)}</p>
+                      <p>End Time: {formatTime(event.resource.end_time)}</p>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p>No events booked yet!</p>
+            )}
         </div>
 
         <p className="cta">

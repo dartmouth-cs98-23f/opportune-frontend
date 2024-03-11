@@ -226,6 +226,26 @@
   border-left: 20px solid darkgrey;
 }
 
+/* nav bar queries */
+@media only screen and (max-width: 999px) {
+	.pointer {
+		position: static;
+		width: 140px;
+		background: none;
+		border-radius: 5px;
+	}
+
+	.nav-row {
+		display: block;
+		float: center;
+	}
+
+	#main-navigation {
+		padding-top: 0px;
+	}
+}
+
+
 /* PM second side bar */
 #sidebar-2 {
   display: inline;
@@ -511,8 +531,23 @@
   object-fit: cover;
 }
 
-.meets-container {
+.meets-container, .meets-container-q {
   width: 35%;
+}
+
+@media only screen and (max-width: 999px) {
+	.meets-container {
+		display: none;
+	}
+
+	.teams-container {
+		width: 100%;
+	}
+
+	.meets-container-q {
+		display: block;
+		width: 90%;
+	}
 }
 
 .team-box:hover,
