@@ -1,6 +1,6 @@
 # Opportune
 
-[Website Link](https://www.opportune.cc/)
+[Website Link](https://www.opportune.cc/) <br>
 [Original Design Document](https://docs.google.com/document/d/1SeWRSx2n52ijeMqIQWEI0jRcOt1dePZC6fZ5yYvKcaA/edit#heading=h.tmu8pj8tb51n)
 
 ## About
