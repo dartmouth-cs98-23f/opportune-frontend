@@ -1,5 +1,8 @@
 # Opportune
 
+[Website Link](https://www.opportune.cc/)
+[Original Design Document](https://docs.google.com/document/d/1SeWRSx2n52ijeMqIQWEI0jRcOt1dePZC6fZ5yYvKcaA/edit#heading=h.tmu8pj8tb51n)
+
 ## About
  
 <img src="public/team.jpeg" alt="team" width="200"/>
@@ -9,7 +12,7 @@ After the matching, we hope to provide a dedicated hub for the intern so that th
 
 ## Architecture
 Frontend: HTML/CSS/Javascript, React, Remix Run, Axios
-Backend: Express, MongoDB, 
+Backend: Express, MongoDB, Node
 
 **Frontend**
 
@@ -21,7 +24,7 @@ New Hire Portal
 * `newhire/signup` new hire sign-up
 * `newhire/profile` basic information survey for new hire
 * `newhire/teams` information about each team new hire may be matched on
-* `newhire/matching` matching survey
+* `newhire/survey` matching survey
 * `newhire/results` results of matching survey
 * `newhire/project` project management tool
 
@@ -30,11 +33,14 @@ Teams Portal
 * `teams/profile` basic information of the team
 * `teams/skills` quick survey to confirm skills required for the team
 * `teams/survey` survey to define what the team is looking for (skills, work arrangement, independence, etc.)
+* `teams/project` project management tool
+* `teams/settings` settings page
 
 Company Portal
 * `company/signup` company sign-up
 * `company/profile` basic information of the company
 * `company/matching` for running company-wide matching survey
+* `company/settings` settings page
 
 ## Setup Local Development
 Frontend Development
