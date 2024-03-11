@@ -59,12 +59,16 @@ function HowWeWorkPage() {
             {/* <!-- Navigation--> */}
             <nav className="navbar1" >
                     <img className ="navimg1" src="opportune_newlogo.svg"></img>
-                    <a className="navbar-title" style={{ 'marginLeft': '10%' }} href="#!">OPPORTUNE</a>
+                    <a className="navbar-title" href="#!">OPPORTUNE</a>
                     <div>
                         <Link className="navbtns" to="/company/signup">Enroll a Company</Link>
                         <Link className="navbtns" to="/login">Login</Link>
                     </div>
             </nav>
+			<div className="navbtns-q-box">
+				<Link className="navbtns-q" to="/company/signup">Enroll a Company</Link>
+				<Link className="navbtns-q" to="/login">Login</Link>
+			</div>
         
         {/* // <!-- ======= Hero Section ======= --> */}
             <section id="hero" className="hero">
