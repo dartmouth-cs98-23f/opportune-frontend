@@ -421,7 +421,7 @@ export default function Tproject() {
 											route={"/team/project"}
 											key={proj.project._id} />
 								}) : null }
-								{pmMode === "Members" ? newHires.new_hires.map((nh) => {
+								{(projInfo.length > 0 && pmMode === "Members") ? newHires.new_hires.map((nh) => {
 									return <div className="team-box task-list" key={nh._id}>
 										<b> 
 											<AddTask label={"+"} header={`${nh.first_name} ${nh.last_name}`} 
