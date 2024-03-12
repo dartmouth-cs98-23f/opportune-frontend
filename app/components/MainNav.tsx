@@ -23,7 +23,7 @@ export default function MainNavigation() {
 		class: "pointer"
 	},
 	{
-		title: "Project",
+		title: "Project 🔒",
 		link: "/project",
 		class: "pointer icon-locked"
 	},

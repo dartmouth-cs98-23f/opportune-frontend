@@ -857,6 +857,10 @@ input[type='file'] {
   margin-top: 5px;
 }
 
+.login-field label {
+	display: block;
+}
+
 @media only screen and (max-width: 500px) {
 	.login-field {
 		width: 100%;
