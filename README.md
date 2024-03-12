@@ -72,6 +72,39 @@ Matching Engine
 We are using [render](https://render.com/) to host and run our application. It is deployed as a web service run inside a docker container.
 Use this [webhook](https://api.render.com/deploy/srv-cl78shf6e7vc739qgb7g?key=s2AUu7liU0E) to manually redeploy the frontend.
 
+## Testing
+Feel free to make your own accounts, or play around with our dummy accounts!
+
+Dummy Company:
+* Username: `abc@opportune.cc`
+* Password: `abc`
+
+Dummy Team:
+* Username: `frontend@opportune.cc`
+* Password: `frontend`
+<br><br>
+* Username: `backend@opportune.cc`
+* Password: `backend`
+<br><br>
+* Username: `ml@opportune.cc`
+* Password: `ml`
+
+Dummy New Hire:
+* Username: `kevin@opportune.cc`
+* Password: `kevin`
+<br><br>
+* Username: `vyomesh@opportune.cc`
+* Password: `vyomesh`
+<br><br>
+* Username: `maggie@opportune.cc`
+* Password: `maggie`
+<br><br>
+* Username: `rohan@opportune.cc`
+* Password: `rohan`
+<br><br>
+* Username: `sophia@opportune.cc`
+* Password: `sophia`
+
 ## Authors
 Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
 
