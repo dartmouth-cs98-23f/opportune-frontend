@@ -1,24 +1,112 @@
-# Project Name
+# Opportune
 
-![Team Photo](Insert a Team Photo URL here)
-[*how?*](https://help.github.com/articles/about-readmes/#relative-links-and-image-paths-in-readme-files)
+[Website Link](https://www.opportune.cc/) <br>
+[Original Design Document](https://docs.google.com/document/d/1SeWRSx2n52ijeMqIQWEI0jRcOt1dePZC6fZ5yYvKcaA/edit#heading=h.tmu8pj8tb51n)
 
-TODO: short project description, some sample screenshots or mockups
+## About
+ 
+<img src="public/team.jpeg" alt="team" width="200"/>
+
+A platform to tune an internship opportunity to the fullest. After interns receive an offer at a company, we help them get to know the teams and match them to the team of best fit.
+After the matching, we hope to provide a dedicated hub for the intern so that they can monitor their project / day-to-day tasks effortlessly.
 
 ## Architecture
+Frontend: HTML/CSS/Javascript, React, Remix Run, Axios
+Backend: Express, MongoDB, Node
 
-TODO:  descriptions of code organization and tools and libraries used
+**Frontend**
 
-## Setup
+Landing
+* `/` landing page
+* `/login` login page
 
-TODO: how to get the project dev environment up and running, npm install etc
+New Hire Portal
+* `newhire/signup` new hire sign-up
+* `newhire/profile` basic information survey for new hire
+* `newhire/teams` information about each team new hire may be matched on
+* `newhire/survey` matching survey
+* `newhire/results` results of matching survey
+* `newhire/project` project management tool
+
+Teams Portal
+* `teams/signup` team sign-up
+* `teams/profile` basic information of the team
+* `teams/skills` quick survey to confirm skills required for the team
+* `teams/survey` survey to define what the team is looking for (skills, work arrangement, independence, etc.)
+* `teams/project` project management tool
+* `teams/settings` settings page
+
+Company Portal
+* `company/signup` company sign-up
+* `company/profile` basic information of the company
+* `company/matching` for running company-wide matching survey
+* `company/settings` settings page
+
+## Setup Local Development
+Frontend Development
+- Clone this repository
+- Install project dependencies with `npm install`
+- Start the development server with `npm run dev`
+- Navigate to http://localhost:3000 to view the application.
+
+## Setup Testing Environment
+Make sure that Docker is installed prior to running the testing environment.
+
+Frontend
+- Run `docker-compose build`
+- Run `docker-compose up`
+
+Backend
+- Run `docker-compose build`
+- Run `docker-compose up`
+
+Matching Engine
+- Run `docker-compose build`
+- Run `docker-compose up`
+
+*Note:* Each time you make a change to the frontend, you must rerun `docker-compose build` and `docker-compose up`
 
 ## Deployment
+[opportune.cc](https://www.opportune.cc/)
 
-TODO: how to deploy the project
+We are using [render](https://render.com/) to host and run our application. It is deployed as a web service run inside a docker container.
+Use this [webhook](https://api.render.com/deploy/srv-cl78shf6e7vc739qgb7g?key=s2AUu7liU0E) to manually redeploy the frontend.
+
+## Testing
+Feel free to make your own accounts, or play around with our dummy accounts!
+
+Dummy Company:
+* Username: `abc@opportune.cc`
+* Password: `abc`
+
+Dummy Team:
+* Username: `frontend@opportune.cc`
+* Password: `frontend`
+<br><br>
+* Username: `backend@opportune.cc`
+* Password: `backend`
+<br><br>
+* Username: `ml@opportune.cc`
+* Password: `ml`
+
+Dummy New Hire:
+* Username: `kevin@opportune.cc`
+* Password: `kevin`
+<br><br>
+* Username: `vyomesh@opportune.cc`
+* Password: `vyomesh`
+<br><br>
+* Username: `maggie@opportune.cc`
+* Password: `maggie`
+<br><br>
+* Username: `rohan@opportune.cc`
+* Password: `rohan`
+<br><br>
+* Username: `sophia@opportune.cc`
+* Password: `sophia`
 
 ## Authors
-
-TODO: list of authors
+Ethan Chen, Eren Aldemir, Stephen Wang, Karina Montiel, Ryan Luu
 
 ## Acknowledgments
+- [Remix Docs](https://remix.run/docs)
